@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "id": "w95-supervisor",
+  "version": "${version}",
+  "name": "Supervisor for W95",
+  "description": "Powerhouse tool that allows users to control their client",
+  "authors": [
+    "videogamesm12"
+  ],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/w95-supervisor/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "main": [
+      "me.videogamesm12.w95.supervisor.Supervisor"
+    ]
+  },
+  "mixins": [
+    "w95-supervisor.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.12.12",
+    "fabric": "*",
+    "minecraft": ">=1.17.1"
+  },
+  "custom": {
+    "modmenu": {
+      "badges": ["library"],
+      "parent": "w95"
+    }
+  }
+}

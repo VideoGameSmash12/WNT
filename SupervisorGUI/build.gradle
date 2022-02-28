@@ -1,0 +1,14 @@
+group 'me.videogamesm12'
+version '2.0'
+
+dependencies {
+    minecraft "com.mojang:minecraft:1.17.1"
+    mappings "net.fabricmc:yarn:1.17.1+build.65:v2"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:0.46.0+1.17"
+
+    implementation project(":Supervisor")
+    implementation project(":Dumper")
+
+    include compileOnly("com.formdev:flatlaf:1.6.1")
+    include compileOnly("com.formdev:flatlaf-intellij-themes:1.6.1")
+}

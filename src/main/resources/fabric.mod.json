@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "w95",
+  "version": "${version}",
+  "name": "W95",
+  "description": "Administrative mod for TotalFreedom",
+  "authors": [
+    "videogamesm12"
+  ],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/w95/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "main": [
+      "me.videogamesm12.w95.W95"
+    ]
+  },
+  "mixins": [
+    "w95.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.12.12",
+    "fabric": "*",
+    "minecraft": "1.17.1",
+    "cloth-config2": "5.3.58"
+  }
+}

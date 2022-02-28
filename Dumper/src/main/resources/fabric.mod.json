@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "id": "w95-dumper",
+  "version": "${version}",
+  "name": "Data Dumper",
+  "description": "Lets you dump data to disk. (NOT IMPLEMENTED YET)",
+  "authors": [
+    "videogamesm12"
+  ],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/w95-dumper/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "main": [
+      "me.videogamesm12.w95.dumper.Dumper"
+    ]
+  },
+  "mixins": [
+  ],
+  "depends": {
+    "fabricloader": ">=0.12.12",
+    "fabric": "*",
+    "minecraft": ">=1.17.1"
+  },
+  "custom": {
+    "modmenu": {
+      "badges": ["library"],
+      "parent": "w95"
+    }
+  }
+}

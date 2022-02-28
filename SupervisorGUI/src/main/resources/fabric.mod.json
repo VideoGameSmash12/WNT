@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "id": "w95-supervisorgui",
+  "version": "${version}",
+  "name": "SupervisorGUI",
+  "description": "Supervisor's graphical interface.",
+  "authors": [
+    "videogamesm12",
+    "Alco_Rs11 (Icon)"
+  ],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/w95-supervisorgui/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "main": [
+      "me.videogamesm12.w95.supervisorgui.SupervisorGUI"
+    ],
+    "modmenu": [
+      "me.videogamesm12.w95.supervisorgui.integration.ModMenuIntegration"
+    ]
+  },
+  "mixins": [
+  ],
+  "depends": {
+    "fabricloader": ">=0.12.12",
+    "fabric": "*",
+    "minecraft": ">=1.17.1",
+    "w95-supervisor": "*"
+  },
+  "custom": {
+    "modmenu": {
+      "parent": "w95"
+    }
+  }
+}

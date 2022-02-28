@@ -1,0 +1,8 @@
+{
+  "text.autoconfig.w95-0ex.title": "--== Configure 0EX ==--",
+  "text.autoconfig.w95-0ex.option.hoverUUIDPatchMethod": "Invalid UUID Text Patch",
+  "text.autoconfig.w95-0ex.option.hoverUUIDPatchMethod.@Tooltip[0]": "Fixes MC-243607, a bug in 1.16+ that causes",
+  "text.autoconfig.w95-0ex.option.hoverUUIDPatchMethod.@Tooltip[1]": "clients to crash when trying to process",
+  "text.autoconfig.w95-0ex.option.hoverUUIDPatchMethod.@Tooltip[2]": "an invalid UUID.",
+  "text.autoconfig.w95-0ex.option.hoverUUIDPatchMethod.@Tooltip[3]": "This exploit was patched in 1.18.1."
+}

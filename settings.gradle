@@ -1,0 +1,13 @@
+pluginManagement {
+    repositories {
+        maven {
+            name = 'Fabric'
+            url = 'https://maven.fabricmc.net/'
+        }
+        gradlePluginPortal()
+    }
+}
+include 'Supervisor', '0EX'
+include 'SupervisorGUI'
+include 'Dumper'
+

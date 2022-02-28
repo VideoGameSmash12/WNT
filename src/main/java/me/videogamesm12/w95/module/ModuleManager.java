@@ -1,0 +1,45 @@
+package me.videogamesm12.w95.module;
+
+import me.videogamesm12.w95.W95;
+
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * <h1>ModuleManager</h1>
+ * <p>Manages W95's module registration and loading.</p>
+ */
+public class ModuleManager
+{
+    private final Map<Class<? extends WModule>, WModule> MODULES = new HashMap<>();
+
+    public ModuleManager()
+    {
+    }
+
+    public boolean isRegistered(Class<? extends WModule> moduleClass)
+    {
+        return MODULES.containsKey(moduleClass);
+    }
+
+    public void register(Class<? extends WModule> moduleClass)
+    {
+        try
+        {
+            WModule instance = moduleClass.getDeclaredConstructor().newInstance();
+
+            MODULES.put(moduleClass, instance);
+        }
+        catch (Exception ex)
+        {
+            W95.LOGGER.error("Failed to register module " + moduleClass.getSimpleName());
+            W95.LOGGER.error(ex);
+        }
+    }
+
+    public WModule getModule(Class<? extends WModule> moduleClass)
+    {
+        return MODULES.get(moduleClass);
+    }
+
+}

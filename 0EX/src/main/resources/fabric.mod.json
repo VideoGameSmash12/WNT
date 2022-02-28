@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "id": "w95-0ex",
+  "version": "${version}",
+  "name": "0EX",
+  "description": "Patches client-crashing exploits.",
+  "authors": [
+    "videogamesm12"
+  ],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/w95-0ex/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "main": [
+      "me.videogamesm12.w95.zeroex.ZeroEx"
+    ],
+    "modmenu": [
+      "me.videogamesm12.w95.zeroex.integration.ModMenuIntegration"
+    ]
+  },
+  "mixins": [
+    "w95-0ex.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.12.12",
+    "fabric": "*",
+    "minecraft": ">=1.16.5"
+  },
+  "custom": {
+    "modmenu": {
+      "badges": ["library"],
+      "parent": "w95"
+    }
+  }
+}

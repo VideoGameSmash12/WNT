@@ -1,0 +1,72 @@
+plugins {
+    id 'fabric-loom' version '0.11-SNAPSHOT'
+}
+
+group 'me.videogamesm12'
+version '2.0'
+
+repositories {
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:1.17.1"
+    mappings "net.fabricmc:yarn:1.17.1+build.65:v2"
+
+    modImplementation "net.fabricmc.fabric-api:fabric-api:0.46.0+1.17"
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+
+    subprojects.each {
+        include project("${it.name}:")
+    }
+}
+
+allprojects {
+    apply plugin: 'fabric-loom'
+
+    tasks.withType(JavaCompile).configureEach {
+        it.options.release.set(8)
+    }
+
+    repositories {
+        maven {
+            url "https://maven.shedaniel.me/"
+        }
+        maven {
+            url "https://maven.terraformersmc.com/releases/"
+        }
+    }
+
+    dependencies {
+        modImplementation "net.fabricmc:fabric-loader:0.12.12"
+        modApi("me.shedaniel.cloth:cloth-config-fabric:5.3.58") {
+            exclude(group: "net.fabricmc.fabric-api")
+        }
+        modImplementation "com.terraformersmc:modmenu:2.0.14"
+    }
+
+    task sourcesJar(type: Jar, dependsOn: classes) {
+        archiveClassifier.set("sources")
+        from sourceSets.main.allSource
+    }
+
+    processResources {
+        inputs.property "version", project.version
+        filteringCharset "UTF-8"
+
+        filesMatching("fabric.mod.json") {
+            expand "version": project.version
+        }
+    }
+}
+
+subprojects {
+    dependencies {
+        implementation rootProject
+    }
+}
+
+subprojects.each {
+    remapJar.dependsOn("${it.path}:remapJar")
+}
