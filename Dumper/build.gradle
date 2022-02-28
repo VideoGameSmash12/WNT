@@ -1,5 +1,4 @@
 group 'me.videogamesm12'
-version '2.0'
 
 dependencies {
     minecraft "com.mojang:minecraft:1.17.1"

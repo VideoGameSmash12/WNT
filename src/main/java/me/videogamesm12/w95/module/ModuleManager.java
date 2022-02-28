@@ -7,7 +7,7 @@ import java.util.Map;
 
 /**
  * <h1>ModuleManager</h1>
- * <p>Manages W95's module registration and loading.</p>
+ * Manages W95's module registration and loading.
  */
 public class ModuleManager
 {
@@ -22,6 +22,10 @@ public class ModuleManager
         return MODULES.containsKey(moduleClass);
     }
 
+    /**
+     * Registers a module.
+     * @param moduleClass   Class<? extends WModule>
+     */
     public void register(Class<? extends WModule> moduleClass)
     {
         try

@@ -17,8 +17,9 @@ public class MitigationsMenu extends JMenu
     private final JCheckBoxMenuItem tileEntityRendering = new JCheckBoxMenuItem("Disable tile entity rendering", Supervisor.SupervisorModule.CONFIG.rendering().disableTileEntityRendering());
     //--
     private final JMenu networkMenu = new JMenu("Network");
-    private final JCheckBoxMenuItem entitySpawning = new JCheckBoxMenuItem("Ignore entity spawning");
-    private final JCheckBoxMenuItem explosionSpawning = new JCheckBoxMenuItem("Ignore explosions");
+    private final JCheckBoxMenuItem entitySpawning = new JCheckBoxMenuItem("Ignore entity spawning", Supervisor.SupervisorModule.CONFIG.network().ignoreEntitySpawns());
+    private final JCheckBoxMenuItem explosionSpawning = new JCheckBoxMenuItem("Ignore explosions", Supervisor.SupervisorModule.CONFIG.network().ignoreExplosions());
+    private final JCheckBoxMenuItem lightUpdates = new JCheckBoxMenuItem("Ignore light updates", Supervisor.SupervisorModule.CONFIG.network().ignoreLightUpdates());
     //--
     private final JMenu drasticMenu = new JMenu("Drastic");
     private final JMenuItem disconnect = new JMenuItem("Disconnect");
@@ -45,9 +46,11 @@ public class MitigationsMenu extends JMenu
         //==-- NETWORK --==//
         entitySpawning.addActionListener((exd) -> Supervisor.SupervisorModule.CONFIG.network().setIgnoreEntitySpawns(entitySpawning.isSelected()));
         explosionSpawning.addActionListener((exd) -> Supervisor.SupervisorModule.CONFIG.network().setIgnoreExplosionSpawns(explosionSpawning.isSelected()));
+        lightUpdates.addActionListener((exd) -> Supervisor.SupervisorModule.CONFIG.network().setIgnoreLightUpdates(lightUpdates.isSelected()));
 
         networkMenu.add(entitySpawning);
         networkMenu.add(explosionSpawning);
+        networkMenu.add((lightUpdates));
 
         //==-- DRASTIC --==//
         disconnect.addActionListener((exd) -> {

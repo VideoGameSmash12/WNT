@@ -84,7 +84,7 @@ public class SupervisorGUI extends Thread implements ModInitializer, ClientLifec
     {
         if (ignore || (GUI != null && GUI.isVisible()))
         {
-            return ActionResult.FAIL;
+            return ActionResult.PASS;
         }
 
         long now = Instant.now().toEpochMilli();
@@ -93,6 +93,7 @@ public class SupervisorGUI extends Thread implements ModInitializer, ClientLifec
 
         switch (reaction)
         {
+            // The user clicked the Yes button
             case JOptionPane.YES_OPTION:
             {
                 if (GUI == null)
@@ -104,16 +105,20 @@ public class SupervisorGUI extends Thread implements ModInitializer, ClientLifec
                 break;
             }
 
+            /*  The user clicked the Cancel button. This does the same thing as the No button, but also ignores any
+                future detections. */
             case JOptionPane.CANCEL_OPTION:
             {
                 ignore = true;
             }
 
+            // The user clicked the No button.
             case JOptionPane.NO_OPTION:
             {
                 return ActionResult.FAIL;
             }
 
+            // The user somehow clicked another button.
             default:
             {
                 break;
@@ -141,7 +146,7 @@ public class SupervisorGUI extends Thread implements ModInitializer, ClientLifec
             setTitle("Supervisor GUI");
             try
             {
-                //InputStream iconStream = MinecraftClient.getInstance().getResourceManager().getResource(new Identifier("w95-supervisorgui", "supervisor_icon")).getInputStream();
+                // Loads the icon from disk.
                 InputStream iconStream = SupervisorGUI.class.getClassLoader().getResourceAsStream("assets/w95-supervisorgui/supervisor_icon_128.png");
                 setIconImage(ImageIO.read(iconStream));
             }
@@ -197,6 +202,9 @@ public class SupervisorGUI extends Thread implements ModInitializer, ClientLifec
             setJMenuBar(menuBar);
         }
 
+        /**
+         * Disables the timer used for the automatic refresh.
+         */
         public void cancelRefresh()
         {
             if (timer != null)
@@ -206,12 +214,16 @@ public class SupervisorGUI extends Thread implements ModInitializer, ClientLifec
             }
         }
 
+        /**
+         * Creates the timer used by the automatic refresh and schedules it.
+         * @implNote If there is a timer already present, it kills that timer and starts anew.
+         */
         public void scheduleRefresh()
         {
             if (timer != null)
                 cancelRefresh();
-            else
-                timer = new Timer();
+
+            timer = new Timer();
             //--
             timer.schedule(new TimerTask()
             {
@@ -291,6 +303,12 @@ public class SupervisorGUI extends Thread implements ModInitializer, ClientLifec
         }
     }
 
+    /**
+     * <h1>GUITheme</h1>
+     * The method the GUI uses to get the selected theme.
+     * --
+     * TODO: Replace this with something more... modular.
+     */
     public enum GUITheme
     {
         DARK("Material Darker", FlatMaterialDarkerIJTheme.class),
