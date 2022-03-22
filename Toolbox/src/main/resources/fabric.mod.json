@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "id": "w95-toolbox",
+  "version": "${version}",
+  "name": "Toolbox",
+  "description": "Multiple handy administrative tools in a single package.",
+  "authors": [
+    "videogamesm12"
+  ],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/w95-toolbox/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "main": [
+      "me.videogamesm12.w95.toolbox.Toolbox"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.12.12",
+    "fabric": "*",
+    "minecraft": "1.17.1",
+    "cloth-config2": "5.3.58"
+  }
+}

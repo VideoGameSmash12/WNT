@@ -10,4 +10,5 @@ pluginManagement {
 include 'Supervisor', '0EX'
 include 'SupervisorGUI'
 include 'Dumper'
+include 'Toolbox'
 

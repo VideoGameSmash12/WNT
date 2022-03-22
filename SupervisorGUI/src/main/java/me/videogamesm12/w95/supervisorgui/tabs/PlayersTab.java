@@ -8,11 +8,14 @@ import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import java.util.*;
 
+/**
+ * <h1>PlayersTab</h1>
+ * Tab for players showing up in the in-game player list, complete with their display name, UUID, and actual name.
+ */
 public class PlayersTab extends JPanel implements SupervisorTab
 {
     public JScrollPane pane = new JScrollPane();
     public JTable table = new JTable(new PlayersTableModel());
-    //--
 
     public PlayersTab()
     {
@@ -45,23 +48,35 @@ public class PlayersTab extends JPanel implements SupervisorTab
                                 .addContainerGap()))));
     }
 
-    private static List<String> playerToStrList(PlayerListEntry entry)
+    /**
+     * Returns a dataset formatted as an Object list from a player list entry.
+     * @param entry PlayerListEntry
+     * @return      List<String>
+     */
+    private static List<Object> playerToObjList(PlayerListEntry entry)
     {
         Text display = entry.getDisplayName();
 
-        return Arrays.asList(display != null ? display.asString() : null, entry.getProfile().getName(), entry.getProfile().getId().toString());
+        return Arrays.asList(display != null ? display.asString() : null, entry.getProfile().getName(), entry.getProfile().getId().toString(), entry.getLatency());
     }
 
+    /**
+     * Updates the table.
+     */
     @Override
     public void update()
     {
         ((DynamicTableModel) table.getModel()).update();
     }
 
+    /**
+     * <h2>PlayersTableModel</h2>
+     * The model used for the table in the Players tab.
+     */
     public static class PlayersTableModel extends AbstractTableModel implements DynamicTableModel
     {
-        private final List<String> columns = Arrays.asList("Display Name", "Name", "UUID");
-        private final List<List<String>> rows = new ArrayList<>();
+        private final List<String> columns = Arrays.asList("Display Name", "Name", "UUID", "Ping (ms)");
+        private final List<List<Object>> rows = new ArrayList<>();
 
         @Override
         public String getColumnName(int column)
@@ -82,7 +97,7 @@ public class PlayersTab extends JPanel implements SupervisorTab
         }
 
         @Override
-        public String getValueAt(int rowIndex, int columnIndex)
+        public Object getValueAt(int rowIndex, int columnIndex)
         {
             return rows.get(rowIndex).get(columnIndex);
         }
@@ -99,7 +114,7 @@ public class PlayersTab extends JPanel implements SupervisorTab
 
             for (PlayerListEntry entry : MinecraftClient.getInstance().getNetworkHandler().getPlayerList())
             {
-                rows.add(playerToStrList(entry));
+                rows.add(playerToObjList(entry));
             }
 
             fireTableDataChanged();

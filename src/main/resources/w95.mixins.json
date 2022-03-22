@@ -3,9 +3,6 @@
   "minVersion": "0.8",
   "package": "me.videogamesm12.w95.mixin",
   "compatibilityLevel": "JAVA_16",
-  "mixins": [
-
-  ],
   "injectors": {
     "defaultRequire": 1
   }

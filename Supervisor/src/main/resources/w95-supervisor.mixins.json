@@ -9,6 +9,7 @@
     "render.ClientChunkManagerMixin",
     "render.ClientPlayNetworkHandlerMixin",
     "render.GameRendererMixin",
+    "render.InGameHudMixin",
     "render.WorldRendererMixin"
   ],
   "injectors": {

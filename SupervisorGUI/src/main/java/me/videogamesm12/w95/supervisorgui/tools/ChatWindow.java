@@ -1,13 +1,18 @@
 package me.videogamesm12.w95.supervisorgui.tools;
 
+import me.videogamesm12.w95.supervisor.event.HUDMessageAdded;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.network.MessageType;
+import net.minecraft.text.Text;
+import net.minecraft.util.ActionResult;
+
 import javax.swing.*;
 import java.awt.*;
+import java.util.UUID;
 
-public class ChatWindow extends JFrame
+public class ChatWindow extends JFrame implements HUDMessageAdded
 {
     public static ChatWindow INSTANCE = null;
-    //--
-    private JPanel panel = new JPanel();
     //--
     private JLabel label = new JLabel("Message:");
     //--
@@ -30,35 +35,56 @@ public class ChatWindow extends JFrame
         //--
         scrollPane.setViewportView(chatArea);
         //--
-        GroupLayout layout = new GroupLayout(panel);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
+        sendButton.addActionListener((event) -> {
+            if (MinecraftClient.getInstance().getNetworkHandler() != null && MinecraftClient.getInstance().player != null)
+                MinecraftClient.getInstance().player.sendChatMessage(messageField.getText());
+        });
+        //--
+        GroupLayout pLayout = new GroupLayout(getContentPane());
+        getContentPane().setLayout(pLayout);
+        //--
+        pLayout.setHorizontalGroup(
+            pLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                .addGroup(pLayout.createSequentialGroup()
                     .addContainerGap()
-                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 600, Short.MAX_VALUE)
-                        .addGroup(layout.createSequentialGroup()
+                    .addGroup(pLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(scrollPane)
+                        .addGroup(pLayout.createSequentialGroup()
                             .addComponent(label)
                             .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(messageField)
-                            /*.addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(sendButton, GroupLayout.PREFERRED_SIZE, 75, GroupLayout.PREFERRED_SIZE)*/))
+                            .addComponent(messageField, GroupLayout.DEFAULT_SIZE, 486, Short.MAX_VALUE)
+                            .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(sendButton)))
                     .addContainerGap()));
-        layout.setVerticalGroup(
-            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+        pLayout.setVerticalGroup(
+            pLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                .addGroup(GroupLayout.Alignment.TRAILING, pLayout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 320, Short.MAX_VALUE)
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 304, Short.MAX_VALUE)
+                    .addContainerGap()
+                    .addGroup(pLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                         .addComponent(label)
                         .addComponent(messageField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                        /*.addComponent(sendButton)*/)
+                        .addComponent(sendButton))
                     .addContainerGap())
         );
 
-        add(panel);
+        pack();
+
+        HUDMessageAdded.EVENT.register(this);
 
         INSTANCE = this;
+    }
+
+    @Override
+    public ActionResult onMessageAdded(MessageType type, Text message, UUID sender)
+    {
+        chatArea.append(message.getString() + "\n");
+        if (chatArea.getSelectedText() == null)
+        {
+            chatArea.setCaretPosition(chatArea.getDocument().getLength());
+        }
+
+        return ActionResult.PASS;
     }
 }

@@ -21,8 +21,20 @@ public class ZeroEx implements ModInitializer
     @Config(name = "w95-0ex")
     public static class ZeroExConfig implements ConfigData
     {
+        private boolean hoverIdentifierPatch = true;
+
         @ConfigEntry.Gui.Tooltip(count = 4)
         private HoverUUIDPatchMethod hoverUUIDPatchMethod = HoverUUIDPatchMethod.VISIBLE;
+
+        public boolean hoverIdentifierPatch()
+        {
+            return hoverIdentifierPatch;
+        }
+
+        public void setHoverIdentifierPatch(boolean value)
+        {
+            this.hoverIdentifierPatch = value;
+        }
 
         public HoverUUIDPatchMethod getHoverUUIDPatchMethod()
         {

@@ -28,7 +28,7 @@ allprojects {
     apply plugin: 'maven-publish'
 
     tasks.withType(JavaCompile).configureEach {
-        it.options.release.set(8)
+        it.options.release.set(17)
     }
 
     repositories {

@@ -39,10 +39,14 @@ public class Supervisor implements ModInitializer
         }
 
         @Override
-        public void run()
+        public void initialize()
         {
             ClientLifecycleEvents.CLIENT_STOPPING.register(this);
-            //--
+        }
+
+        @Override
+        public void run()
+        {
             AutoConfig.register(SupervisorConfig.class, GsonConfigSerializer::new);
             CONFIG = AutoConfig.getConfigHolder(SupervisorConfig.class).getConfig();
             //--
@@ -68,6 +72,24 @@ public class Supervisor implements ModInitializer
             AutoConfig.getConfigHolder(SupervisorConfig.class).save();
         }
 
+        @Override
+        public boolean isEnabled()
+        {
+            return true;
+        }
+
+        @Override
+        public void setEnabled(boolean value, boolean startStop)
+        {
+            throw new IllegalStateException("The Supervisor cannot be disabled.");
+        }
+
+        @Override
+        public ModuleConfiguration getConfiguration()
+        {
+            return CONFIG;
+        }
+
         public static class FreezeDetector extends TimerTask
         {
             @Override
@@ -88,8 +110,13 @@ public class Supervisor implements ModInitializer
     }
 
     @Config(name = "w95-supervisor")
-    public static class SupervisorConfig implements ConfigData
+    public static class SupervisorConfig extends WModule.ModuleConfiguration
     {
+        public SupervisorConfig()
+        {
+            super();
+        }
+
         private boolean detectFreezes = true;
 
         private Network network = new Network();
@@ -206,6 +233,18 @@ public class Supervisor implements ModInitializer
         public void setDetectFreezes(boolean value)
         {
             this.detectFreezes = value;
+        }
+
+        @Override
+        public boolean isEnabled()
+        {
+            return true;
+        }
+
+        @Override
+        public void setEnabled(boolean value)
+        {
+            throw new IllegalStateException("The state of the Supervisor cannot be changed.");
         }
 
         public Rendering rendering()

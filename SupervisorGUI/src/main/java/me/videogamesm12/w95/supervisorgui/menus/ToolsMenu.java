@@ -40,6 +40,10 @@ public class ToolsMenu extends JMenu
         add(dumpThreads);
     }
 
+    /**
+     * Dumps thread information to the logs.
+     * @param thread    ThreadInfo
+     */
     private void dumpThread(ThreadInfo thread)
     {
         W95.LOGGER.info("--== THREAD DUMP - " + thread.getThreadName() + " (" + thread.getThreadState() + ") ==--");
@@ -52,6 +56,11 @@ public class ToolsMenu extends JMenu
         W95.LOGGER.info("--== END DUMP ==--");
     }
 
+    /**
+     * Takes certain details from threads and sticks them into a single String.
+     * @param info  ThreadInfo
+     * @return      String
+     */
     private String threadToFormat(ThreadInfo info)
     {
         return String.format("Suspended: %s, Native: %s", info.isSuspended() ? "Yes" : "No", info.isInNative() ? "Yes" : "No");

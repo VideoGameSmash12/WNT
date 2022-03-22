@@ -2,6 +2,7 @@ package me.videogamesm12.w95.module;
 
 import me.videogamesm12.w95.W95;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,10 +13,6 @@ import java.util.Map;
 public class ModuleManager
 {
     private final Map<Class<? extends WModule>, WModule> MODULES = new HashMap<>();
-
-    public ModuleManager()
-    {
-    }
 
     public boolean isRegistered(Class<? extends WModule> moduleClass)
     {
@@ -31,7 +28,7 @@ public class ModuleManager
         try
         {
             WModule instance = moduleClass.getDeclaredConstructor().newInstance();
-
+            instance.initialize();
             MODULES.put(moduleClass, instance);
         }
         catch (Exception ex)
@@ -41,9 +38,13 @@ public class ModuleManager
         }
     }
 
+    public Collection<WModule> getModules()
+    {
+        return MODULES.values();
+    }
+
     public WModule getModule(Class<? extends WModule> moduleClass)
     {
         return MODULES.get(moduleClass);
     }
-
 }

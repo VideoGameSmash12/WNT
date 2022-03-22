@@ -4,6 +4,8 @@
   "package": "me.videogamesm12.w95.zeroex.patches",
   "compatibilityLevel": "JAVA_16",
   "mixins": [
+    "HoverIdentifier$Entities",
+    "HoverIdentifier$Items",
     "HoverUUID"
   ],
   "injectors": {

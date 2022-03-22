@@ -4,6 +4,10 @@ import me.videogamesm12.w95.supervisorgui.SupervisorGUI;
 
 import javax.swing.*;
 
+/**
+ * <h1>SettingsMenu</h1>
+ * The menu for all GUI-specific settings.
+ */
 public class SettingsMenu extends JMenu
 {
     private final ThemeMenu themes = new ThemeMenu();
@@ -30,6 +34,10 @@ public class SettingsMenu extends JMenu
         add(autoRefresh);
     }
 
+    /**
+     * <h2>ThemeMenu</h2>
+     * A menu for the theme selection in the Supervisor GUI.
+     */
     public static class ThemeMenu extends JMenu
     {
         private ButtonGroup group = new ButtonGroup();
@@ -38,6 +46,7 @@ public class SettingsMenu extends JMenu
         {
             super("Theme");
 
+            // For every theme, build a radio button for it.
             for (SupervisorGUI.GUITheme guiTheme : SupervisorGUI.GUITheme.values())
             {
                 JRadioButtonMenuItem themeItem = new JRadioButtonMenuItem();
