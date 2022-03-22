@@ -21,6 +21,11 @@ public class HoverIdentifier
     @Mixin(HoverEvent.EntityContent.class)
     public static class Entities
     {
+        /**
+         * Fixes an exploit caused by invalid identifiers in the "show_entity" hover event.
+         * @param json  JsonElement
+         * @param cir   CallbackInfoReturnable
+         */
         @Inject(method = "parse(Lcom/google/gson/JsonElement;)Lnet/minecraft/text/HoverEvent$EntityContent;", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/registry/DefaultedRegistry;get(Lnet/minecraft/util/Identifier;)Ljava/lang/Object;", shift = At.Shift.BEFORE), cancellable = true)
         private static void injectJsonParse(JsonElement json, CallbackInfoReturnable<HoverEvent.EntityContent> cir)
         {
@@ -35,6 +40,11 @@ public class HoverIdentifier
             }
         }
 
+        /**
+         * Fixes an exploit caused by invalid identifiers in the "show_entity" hover event.
+         * @param text  Text
+         * @param cir   CallbackInfoReturnable
+         */
         @Inject(method = "parse(Lnet/minecraft/text/Text;)Lnet/minecraft/text/HoverEvent$EntityContent;", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/registry/DefaultedRegistry;get(Lnet/minecraft/util/Identifier;)Ljava/lang/Object;", shift = At.Shift.BEFORE), cancellable = true)
         private static void injectTextParse(Text text, CallbackInfoReturnable<HoverEvent.EntityContent> cir)
         {
@@ -59,6 +69,11 @@ public class HoverIdentifier
     @Mixin(HoverEvent.ItemStackContent.class)
     public static class Items
     {
+        /**
+         * Fixes an exploit caused by invalid identifiers in the "show_item" hover event.
+         * @param id    String
+         * @return      String
+         */
         @ModifyArg(method = "parse(Lcom/google/gson/JsonElement;)Lnet/minecraft/text/HoverEvent$ItemStackContent;", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Identifier;<init>(Ljava/lang/String;)V"))
         private static String validate(String id)
         {
