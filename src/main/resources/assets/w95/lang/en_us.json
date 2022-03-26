@@ -1,5 +1,5 @@
 {
-  "w95.messages.command.uuid.connect": "Connecting to the Mojang API...",
+  "w95.messages.command.name.result": "%s resolves to %s.",
   "w95.messages.command.uuid.result": "%s's UUID is %s.",
 
   "w95.messages.commands.failed_to_connect": "Failed to connect.",
@@ -7,5 +7,7 @@
   "w95.messages.commands.player_not_found": "Player not found!",
   "w95.messages.commands.usage": "Usage: %s",
 
-  "w95.messages.general.copied": "Copied to clipboard!"
+  "w95.messages.general.connecting.mojang": "Connecting to the Mojang API...",
+  "w95.messages.general.copied": "Copied to clipboard!",
+  "w95.messages.general.file_not_found": "File not found!"
 }

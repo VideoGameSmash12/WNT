@@ -15,17 +15,16 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import java.util.regex.Pattern;
 
-public class UuidCommand extends WCommand
+public class NameCommand extends WCommand
 {
-    private Gson    gson            = new Gson();
-    private Pattern usernamePattern = Pattern.compile("[A-z0-9_]{3,20}");
+    private final Gson gson = new Gson();
 
-    public UuidCommand()
+    public NameCommand()
     {
-        super("uuid", "", "/uuid <player>");
+        super("name", "", "/name <uuid>");
     }
 
     @Override
@@ -38,25 +37,23 @@ public class UuidCommand extends WCommand
 
         CompletableFuture<Void> retrieval = CompletableFuture.runAsync(() ->
         {
-            String username = args[0];
-
             context.getSource().sendFeedback(new TranslatableText("w95.messages.general.connecting.mojang")
                     .formatted(Formatting.GREEN));
 
             try
             {
                 // If the username doesn't match the regex, don't even bother
-                if (!usernamePattern.matcher(username).matches())
-                    throw new IllegalArgumentException();
+                UUID uuid = UUID.fromString(args[0].toLowerCase());
 
                 // Sends the request to Mojang's servers
-                URL url = new URL("https://api.ashcon.app/mojang/v2/user/" + args[0]);
+                URL url = new URL("https://api.ashcon.app/mojang/v2/user/" + args[0].toLowerCase());
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
                 Result result = gson.fromJson(new InputStreamReader(connection.getInputStream()), Result.class);
-                context.getSource().sendFeedback(new TranslatableText("w95.messages.command.uuid.result", result.username,
-                        new LiteralText(result.uuid).setStyle(Style.EMPTY.withClickEvent(
-                                new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, result.uuid)).withUnderline(true)
+                context.getSource().sendFeedback(new TranslatableText("w95.messages.command.name.result",
+                        new LiteralText(uuid.toString()).formatted(Formatting.WHITE),
+                        new LiteralText(result.username).setStyle(Style.EMPTY.withClickEvent(
+                                new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, result.username)).withUnderline(true)
                                 .withColor(TextColor.fromFormatting(Formatting.WHITE))))
                         .formatted(Formatting.GRAY));
             }
@@ -68,7 +65,7 @@ public class UuidCommand extends WCommand
             // Player's name isn't valid
             catch (IllegalArgumentException | MalformedURLException error)
             {
-                context.getSource().sendError(new TranslatableText("w95.messages.commands.invalid_player", username));
+                context.getSource().sendError(new TranslatableText("w95.messages.commands.invalid_player", args[0].toLowerCase()));
             }
             // Some other shit happened
             catch (IOException error)

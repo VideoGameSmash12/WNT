@@ -1,4 +1,4 @@
-package me.videogamesm12.w95.toolbox;
+package me.videogamesm12.w95.toolbox.modules;
 
 /*import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;

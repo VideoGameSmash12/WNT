@@ -3,7 +3,7 @@
   "id": "w95-dumper",
   "version": "${version}",
   "name": "Data Dumper",
-  "description": "Lets you dump data to disk. (NOT IMPLEMENTED YET)",
+  "description": "Lets you dump data to disk.",
   "authors": [
     "videogamesm12"
   ],
@@ -17,6 +17,7 @@
     ]
   },
   "mixins": [
+    "w95-dumper.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.12.12",

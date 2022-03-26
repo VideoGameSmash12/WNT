@@ -2,9 +2,7 @@ package me.videogamesm12.w95.module;
 
 import me.videogamesm12.w95.W95;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * <h1>ModuleManager</h1>
@@ -12,7 +10,7 @@ import java.util.Map;
  */
 public class ModuleManager
 {
-    private final Map<Class<? extends WModule>, WModule> MODULES = new HashMap<>();
+    private final Map<Class<? extends WModule>, WModule> MODULES = new HashMap<>(); // Path
 
     public boolean isRegistered(Class<? extends WModule> moduleClass)
     {
@@ -38,9 +36,31 @@ public class ModuleManager
         }
     }
 
-    public Collection<WModule> getModules()
+    /**
+     * Unregisters a module.
+     * @param moduleClass   Class<? extends WModule>
+     */
+    @SuppressWarnings("unchecked")
+    public <T extends WModule> void unregister(Class<T> moduleClass)
     {
-        return MODULES.values();
+        if (!MODULES.containsKey(moduleClass))
+            return;
+
+        try
+        {
+            T module = (T) MODULES.get(moduleClass);
+
+            // Unregister the module before removing it
+            if (module.isEnabled())
+                module.disable();
+
+            MODULES.remove(moduleClass);
+        }
+        catch (Exception ex)
+        {
+            W95.LOGGER.error("Failed to unregister module " + moduleClass.getSimpleName());
+            W95.LOGGER.error(ex);
+        }
     }
 
     public WModule getModule(Class<? extends WModule> moduleClass)

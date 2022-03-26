@@ -22,7 +22,7 @@ public interface EntityDumpRequest
         return ActionResult.SUCCESS;
     });
 
-    ActionResult onEntityDumpRequested (Notifiable source, int id);
+    ActionResult onEntityDumpRequested(Notifiable source, int id);
 
     default void invoke(Notifiable source, int id)
     {

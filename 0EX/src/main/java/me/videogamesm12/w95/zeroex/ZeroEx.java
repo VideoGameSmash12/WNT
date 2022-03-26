@@ -31,19 +31,9 @@ public class ZeroEx implements ModInitializer
             return hoverIdentifierPatch;
         }
 
-        public void setHoverIdentifierPatch(boolean value)
-        {
-            this.hoverIdentifierPatch = value;
-        }
-
-        public HoverUUIDPatchMethod getHoverUUIDPatchMethod()
+        public HoverUUIDPatchMethod hoverUUIDPatchMethod()
         {
             return hoverUUIDPatchMethod;
-        }
-
-        public void setHoverUUIDPatchMethod(HoverUUIDPatchMethod method)
-        {
-            hoverUUIDPatchMethod = method;
         }
     }
 

@@ -79,12 +79,6 @@ public class Supervisor implements ModInitializer
         }
 
         @Override
-        public void setEnabled(boolean value, boolean startStop)
-        {
-            throw new IllegalStateException("The Supervisor cannot be disabled.");
-        }
-
-        @Override
         public ModuleConfiguration getConfiguration()
         {
             return CONFIG;

@@ -9,17 +9,17 @@ public interface WModule
     {
     }
 
-    default void start()
+    default void onStart()
     {
     }
 
-    default void stop()
+    default void onStop()
     {
     }
 
     default String getName()
     {
-        return getClass().isAnnotationPresent(ModuleInfo.class) ? getClass().getAnnotation(ModuleInfo.class).name() : getClass().getSimpleName();
+        return getMeta().name();
     }
 
     default boolean isEnabled()
@@ -27,32 +27,21 @@ public interface WModule
         return getConfiguration().isEnabled();
     }
 
-    default void setEnabled(boolean value)
+    default void disable()
     {
-        setEnabled(value, true);
+        onStop();
+        getConfiguration().setEnabled(false);
     }
 
-    default void setEnabled(boolean value, boolean startStop)
+    default void enable()
     {
-        getConfiguration().enabled = value;
-
-        if (startStop)
-        {
-            if (value)
-                start();
-            else
-                stop();
-        }
+        onStart();
+        getConfiguration().setEnabled(true);
     }
 
-    default void toggle()
-     {
-         toggle(true);
-     }
-
-    default void toggle(boolean startStop)
+    default ModuleInfo getMeta()
     {
-        setEnabled(!isEnabled(), startStop);
+        return getClass().getAnnotation(ModuleInfo.class);
     }
 
     ModuleConfiguration getConfiguration();

@@ -33,7 +33,7 @@ public class HoverUUID
         cancellable = true)
     private static void injectParseJson(JsonElement json, CallbackInfoReturnable<HoverEvent.EntityContent> cir)
     {
-        if (ZeroEx.CONFIG.getHoverUUIDPatchMethod() == ZeroEx.HoverUUIDPatchMethod.SILENT)
+        if (ZeroEx.CONFIG.hoverUUIDPatchMethod() == ZeroEx.HoverUUIDPatchMethod.SILENT)
         {
             try
             {
@@ -58,7 +58,7 @@ public class HoverUUID
         cancellable = true)
     private static void injectParseText(Text text, CallbackInfoReturnable<HoverEvent.EntityContent> cir)
     {
-        if (ZeroEx.CONFIG.getHoverUUIDPatchMethod() == ZeroEx.HoverUUIDPatchMethod.SILENT)
+        if (ZeroEx.CONFIG.hoverUUIDPatchMethod() == ZeroEx.HoverUUIDPatchMethod.SILENT)
         {
             try
             {
@@ -79,7 +79,7 @@ public class HoverUUID
             at = @At(value = "INVOKE", target = "Ljava/util/UUID;fromString(Ljava/lang/String;)Ljava/util/UUID;"))
     private static String modifyUuidText(String uuid)
     {
-        if (ZeroEx.CONFIG.getHoverUUIDPatchMethod() == ZeroEx.HoverUUIDPatchMethod.VISIBLE)
+        if (ZeroEx.CONFIG.hoverUUIDPatchMethod() == ZeroEx.HoverUUIDPatchMethod.VISIBLE)
         {
             try
             {
@@ -102,7 +102,7 @@ public class HoverUUID
             at = @At(value = "INVOKE", target = "Ljava/util/UUID;fromString(Ljava/lang/String;)Ljava/util/UUID;"))
     private static String modifyUuidJson(String uuid)
     {
-        if (ZeroEx.CONFIG.getHoverUUIDPatchMethod() == ZeroEx.HoverUUIDPatchMethod.VISIBLE)
+        if (ZeroEx.CONFIG.hoverUUIDPatchMethod() == ZeroEx.HoverUUIDPatchMethod.VISIBLE)
         {
             try
             {

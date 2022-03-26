@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "me.videogamesm12.w95.dumper.mixin",
+  "compatibilityLevel": "JAVA_16",
+  "mixins": [
+    "ClientWorldMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
