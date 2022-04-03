@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "id": "w95-dumper",
+  "id": "wnt-dumper",
   "version": "${version}",
   "name": "Data Dumper",
   "description": "Lets you dump data to disk.",
@@ -9,15 +9,15 @@
   ],
   "contact": {},
   "license": "MIT",
-  "icon": "assets/w95-dumper/icon.png",
+  "icon": "assets/wnt-dumper/icon.png",
   "environment": "client",
   "entrypoints": {
     "main": [
-      "me.videogamesm12.w95.dumper.Dumper"
+      "me.videogamesm12.wnt.dumper.Dumper"
     ]
   },
   "mixins": [
-    "w95-dumper.mixins.json"
+    "wnt-dumper.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.12.12",
@@ -27,7 +27,7 @@
   "custom": {
     "modmenu": {
       "badges": ["library"],
-      "parent": "w95"
+      "parent": "wnt"
     }
   }
 }

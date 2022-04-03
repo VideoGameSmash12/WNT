@@ -5,7 +5,6 @@ dependencies {
     mappings "net.fabricmc:yarn:1.17.1+build.65:v2"
     modImplementation "net.fabricmc.fabric-api:fabric-api:0.46.0+1.17"
 
-    // Lombok
-    compileOnly 'org.projectlombok:lombok:1.18.22'
-    annotationProcessor 'org.projectlombok:lombok:1.18.22'
+    include "commons-net:commons-net:3.8.0"
+    implementation "commons-net:commons-net:3.8.0"
 }

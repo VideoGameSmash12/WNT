@@ -1,0 +1,5 @@
+{
+  "wnt.dumper.success": "Dump successful. Check your dumps folder.",
+
+  "wnt.dumper.map_not_loaded": "The map with that ID hasn't been loaded"
+}

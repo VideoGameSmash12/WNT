@@ -1,0 +1,13 @@
+{
+  "wnt.messages.command.name.result": "%s resolves to %s.",
+  "wnt.messages.command.uuid.result": "%s's UUID is %s.",
+
+  "wnt.messages.commands.failed_to_connect": "Failed to connect.",
+  "wnt.messages.commands.invalid_player": "Invalid player: %s",
+  "wnt.messages.commands.player_not_found": "Player not found!",
+  "wnt.messages.commands.usage": "Usage: %s",
+
+  "wnt.messages.general.connecting.mojang": "Connecting to the Mojang API...",
+  "wnt.messages.general.copied": "Copied to clipboard!",
+  "wnt.messages.general.file_not_found": "File not found!"
+}

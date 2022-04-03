@@ -1,0 +1,26 @@
+{
+  "text.autoconfig.wnt-0ex.title": "--== Configure 0EX ==--",
+
+  "text.autoconfig.wnt-0ex.option.attributes": "Network",
+  "text.autoconfig.wnt-0ex.option.attributes.nmsfEnabled": "NaN movement speed patch",
+
+  "text.autoconfig.wnt-0ex.option.text": "Text",
+
+  "text.autoconfig.wnt-0ex.option.text.clickEvents": "Clickable Text",
+  "text.autoconfig.wnt-0ex.option.text.clickEvents.runCommandFix": "Run command patch",
+  "text.autoconfig.wnt-0ex.option.text.clickEvents.scfEnabled": "Suggest command size patch",
+
+  "text.autoconfig.wnt-0ex.option.text.hoverEvents": "Hoverable Text",
+  "text.autoconfig.wnt-0ex.option.text.hoverEvents.beuFix": "Bad entity UUID patch",
+  "text.autoconfig.wnt-0ex.option.text.hoverEvents.beuFix.@Tooltip[0]": "Fixes MC-243607, a bug in 1.16+ that causes",
+  "text.autoconfig.wnt-0ex.option.text.hoverEvents.beuFix.@Tooltip[1]": "clients to crash when trying to process",
+  "text.autoconfig.wnt-0ex.option.text.hoverEvents.beuFix.@Tooltip[2]": "an invalid UUID.",
+  "text.autoconfig.wnt-0ex.option.text.hoverEvents.beuFix.@Tooltip[3]": "This exploit was patched in 1.18.1.",
+  "text.autoconfig.wnt-0ex.option.text.hoverEvents.beiFix": "Bad entity identifier patch",
+  "text.autoconfig.wnt-0ex.option.text.hoverEvents.biiFix": "Bad item identifier patch",
+
+  "text.autoconfig.wnt-0ex.option.network": "Network",
+  "text.autoconfig.wnt-0ex.option.network.disableNbtCap": "NBT size limit patch",
+
+  "wnt.messages.0ex.rcprompt.title": "Are you sure you want to run this command?"
+}

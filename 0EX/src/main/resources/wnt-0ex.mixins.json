@@ -1,0 +1,18 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "me.videogamesm12.wnt.zeroex.patches",
+  "compatibilityLevel": "JAVA_16",
+  "mixins": [
+    "Attributes$FlightSpeed",
+    "Attributes$MovementControlAccessor",
+    "ClickableText",
+    "HoverIdentifier$Entities",
+    "HoverIdentifier$Items",
+    "HoverUUID",
+    "NBTLimit"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

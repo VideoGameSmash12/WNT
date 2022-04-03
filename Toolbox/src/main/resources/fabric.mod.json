@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "id": "w95-toolbox",
+  "id": "wnt-toolbox",
   "version": "${version}",
   "name": "Toolbox",
   "description": "Multiple handy administrative tools in a single package.",
@@ -9,11 +9,11 @@
   ],
   "contact": {},
   "license": "MIT",
-  "icon": "assets/w95-toolbox/icon.png",
+  "icon": "assets/wnt-toolbox/icon.png",
   "environment": "client",
   "entrypoints": {
     "main": [
-      "me.videogamesm12.w95.toolbox.Toolbox"
+      "me.videogamesm12.wnt.toolbox.Toolbox"
     ]
   },
   "depends": {
@@ -25,7 +25,7 @@
   "custom": {
     "modmenu": {
       "badges": ["library"],
-      "parent": "w95"
+      "parent": "wnt"
     }
   }
 }

@@ -1,0 +1,4 @@
+{
+  "wnt.messages.telnet.not_connected": "You are not currently connected to a server.",
+  "wnt.messages.telnet.prefix": "[Telnet] %s"
+}

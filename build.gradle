@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'me.videogamesm12'
-version '2.0-INDEV'
+version '2.0-indev'
 
 repositories {
 }
@@ -28,7 +28,7 @@ allprojects {
     apply plugin: 'maven-publish'
 
     tasks.withType(JavaCompile).configureEach {
-        it.options.release.set(17)
+        it.options.release.set(16)
     }
 
     repositories {
@@ -46,6 +46,10 @@ allprojects {
             exclude(group: "net.fabricmc.fabric-api")
         }
         modImplementation "com.terraformersmc:modmenu:2.0.14"
+
+        // Lombok
+        compileOnly 'org.projectlombok:lombok:1.18.22'
+        annotationProcessor 'org.projectlombok:lombok:1.18.22'
     }
 
     task sourcesJar(type: Jar, dependsOn: classes) {

@@ -1,26 +1,26 @@
 {
   "schemaVersion": 1,
-  "id": "w95-0ex",
+  "id": "wnt-0ex",
   "version": "${version}",
   "name": "0EX",
-  "description": "Patches client-crashing exploits.",
+  "description": "Patches client-side exploits.",
   "authors": [
     "videogamesm12"
   ],
   "contact": {},
   "license": "MIT",
-  "icon": "assets/w95-0ex/icon.png",
+  "icon": "assets/wnt-0ex/icon.png",
   "environment": "client",
   "entrypoints": {
     "main": [
-      "me.videogamesm12.w95.zeroex.ZeroEx"
+      "me.videogamesm12.wnt.zeroex.ZeroEx"
     ],
     "modmenu": [
-      "me.videogamesm12.w95.zeroex.integration.ModMenuIntegration"
+      "me.videogamesm12.wnt.zeroex.integration.ModMenuIntegration"
     ]
   },
   "mixins": [
-    "w95-0ex.mixins.json"
+    "wnt-0ex.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.12.12",
@@ -30,7 +30,7 @@
   "custom": {
     "modmenu": {
       "badges": ["library"],
-      "parent": "w95"
+      "parent": "wnt"
     }
   }
 }

@@ -7,7 +7,8 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
+
 include 'Supervisor', '0EX'
-include 'SupervisorGUI'
+include 'Blackbox'
 include 'Dumper'
 include 'Toolbox'
