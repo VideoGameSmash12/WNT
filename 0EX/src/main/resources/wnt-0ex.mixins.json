@@ -9,8 +9,7 @@
     "ClickableText",
     "HoverIdentifier$Entities",
     "HoverIdentifier$Items",
-    "HoverUUID",
-    "NBTLimit"
+    "HoverUUID"
   ],
   "injectors": {
     "defaultRequire": 1

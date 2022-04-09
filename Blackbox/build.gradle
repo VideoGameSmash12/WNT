@@ -1,5 +1,9 @@
 group 'me.videogamesm12'
 
+repositories {
+    maven { url "https://jitpack.io/" }
+}
+
 dependencies {
     minecraft "com.mojang:minecraft:1.17.1"
     mappings "net.fabricmc:yarn:1.17.1+build.65:v2"

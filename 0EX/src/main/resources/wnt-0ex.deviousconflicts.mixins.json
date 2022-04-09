@@ -1,0 +1,12 @@
+{
+  "required": false,
+  "minVersion": "0.8",
+  "package": "me.videogamesm12.wnt.zeroex.patches",
+  "compatibilityLevel": "JAVA_16",
+  "mixins": [
+    "NBTLimit"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

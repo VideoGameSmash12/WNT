@@ -14,6 +14,8 @@ import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import me.videogamesm12.wnt.WNT;
+import me.videogamesm12.wnt.blackbox.commands.BlackboxCommand;
+import me.videogamesm12.wnt.command.CommandSystem;
 import me.videogamesm12.wnt.supervisor.event.ClientFreezeDetected;
 import me.videogamesm12.wnt.blackbox.menus.MitigationsMenu;
 import me.videogamesm12.wnt.blackbox.menus.SettingsMenu;
@@ -53,6 +55,8 @@ public class SupervisorGUI extends Thread implements ModInitializer, ClientLifec
     {
         System.setProperty("java.awt.headless", "false");
         //--
+        CommandSystem.registerCommand(BlackboxCommand.class);
+        //--
         start();
     }
 
@@ -77,21 +81,24 @@ public class SupervisorGUI extends Thread implements ModInitializer, ClientLifec
         {
             MENU = new GUIMenu();
 
-            SystemTray tray = SystemTray.getSystemTray();
-            trayIcon = new TrayIcon(Toolkit.getDefaultToolkit().createImage(
-                    SupervisorGUI.class.getClassLoader().getResource("assets/wnt-blackbox/supervisor_icon.png")), "WNT");
-            trayIcon.setImageAutoSize(true);
-            trayIcon.addMouseListener(new MouseAdapter()
+            if (SystemTray.isSupported())
             {
-                @Override
-                public void mouseClicked(MouseEvent e)
+                SystemTray tray = SystemTray.getSystemTray();
+                trayIcon = new TrayIcon(Toolkit.getDefaultToolkit().createImage(
+                        SupervisorGUI.class.getClassLoader().getResource("assets/wnt-blackbox/supervisor_icon.png")), "WNT");
+                trayIcon.setImageAutoSize(true);
+                trayIcon.addMouseListener(new MouseAdapter()
                 {
-                    MENU.setLocation(e.getLocationOnScreen());
-                    MENU.setInvoker(MENU);
-                    MENU.setVisible(true);
-                }
-            });
-            tray.add(trayIcon);
+                    @Override
+                    public void mouseClicked(MouseEvent e)
+                    {
+                        MENU.setLocation(e.getLocationOnScreen());
+                        MENU.setInvoker(MENU);
+                        MENU.setVisible(true);
+                    }
+                });
+                tray.add(trayIcon);
+            }
         }
         catch (Exception ex)
         {

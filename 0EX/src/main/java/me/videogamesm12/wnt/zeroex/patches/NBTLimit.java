@@ -7,6 +7,13 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+/**
+ * <h1>NBTLimit</h1>
+ * Patches an exploit where attempting to receive packets with oversized NBT data (not caught by the server) causes the
+ *  client to disconnect.
+ * --
+ * @implNote This is considered an optional patch.
+ */
 @Mixin(NbtTagSizeTracker.class)
 public class NBTLimit
 {
