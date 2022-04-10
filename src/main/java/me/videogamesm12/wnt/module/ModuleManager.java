@@ -10,29 +10,27 @@ import java.util.*;
  */
 public class ModuleManager
 {
-    private final Map<Class<? extends WModule>, WModule> MODULES = new HashMap<>();
+    private final Map<Class<? extends Module>, Module> MODULES = new HashMap<>();
 
-    public boolean isRegistered(Class<? extends WModule> moduleClass)
+    public boolean isRegistered(Class<? extends Module> moduleClass)
     {
         return MODULES.containsKey(moduleClass);
     }
 
     /**
      * Registers a module.
-     * @param moduleClass   Class<? extends WModule>
+     * @param moduleClass   Class<? extends Module>
      */
-    public void register(Class<? extends WModule> moduleClass)
+    public void register(Class<? extends Module> moduleClass)
     {
         try
         {
-            WModule instance = moduleClass.getDeclaredConstructor().newInstance();
-            //--
-            instance.initialize();
+            Module instance = moduleClass.getDeclaredConstructor().newInstance();
             //--
             if (instance.isEnabled())
-                instance.enable();
+                instance.start();
             //--
-            MODULES.put(moduleClass, instance);
+            MODULES.put(instance.getClass(), instance);
         }
         catch (Exception ex)
         {
@@ -43,9 +41,9 @@ public class ModuleManager
 
     /**
      * Unregisters a module.
-     * @param moduleClass   Class<? extends WModule>
+     * @param moduleClass   Class<? extends Module>
      */
-    public <T extends WModule> void unregister(Class<T> moduleClass)
+    public <T extends Module> void unregister(Class<T> moduleClass)
     {
         if (!MODULES.containsKey(moduleClass))
             return;
@@ -56,7 +54,10 @@ public class ModuleManager
 
             // Unregister the module before removing it
             if (module.isEnabled())
+            {
                 module.disable();
+                module.stop();
+            }
 
             MODULES.remove(moduleClass);
         }
@@ -68,7 +69,7 @@ public class ModuleManager
     }
 
     @SuppressWarnings("unchecked")
-    public <T extends WModule> T getModule(Class<T> moduleClass)
+    public <T extends Module> T getModule(Class<T> moduleClass)
     {
         return (T) MODULES.get(moduleClass);
     }

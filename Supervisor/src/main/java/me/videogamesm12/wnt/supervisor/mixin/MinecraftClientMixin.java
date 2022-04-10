@@ -25,6 +25,6 @@ public class MinecraftClientMixin
     @Inject(method = "render", at = @At("RETURN"))
     public void onPostRender(boolean bool, CallbackInfo ci)
     {
-        Supervisor.SupervisorModule.LAST_RENDERED = Instant.now().toEpochMilli();
+        Supervisor.SupervisorThread.LAST_RENDERED = Instant.now().toEpochMilli();
     }
 }

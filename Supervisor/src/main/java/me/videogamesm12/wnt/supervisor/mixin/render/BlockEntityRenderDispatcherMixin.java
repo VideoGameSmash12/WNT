@@ -18,8 +18,8 @@ public class BlockEntityRenderDispatcherMixin
     public <E extends BlockEntity> void injectRenderEntity(E blockEntity, float tickDelta, MatrixStack matrix,
         VertexConsumerProvider vertexConsumerProvider, CallbackInfo ci)
     {
-        if (Supervisor.SupervisorModule.CONFIG.rendering().disableTileEntityRendering()
-                || Supervisor.SupervisorModule.CONFIG.rendering().disableGameRendering())
+        if (Supervisor.CONFIG.rendering().disableTileEntityRendering()
+                || Supervisor.CONFIG.rendering().disableGameRendering())
         {
             ci.cancel();
         }
@@ -29,8 +29,8 @@ public class BlockEntityRenderDispatcherMixin
     private static <E extends BlockEntity> void injectRenderEntityRenderer(BlockEntityRenderer<E> renderer,
         E blockEntity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, CallbackInfo ci)
     {
-        if (Supervisor.SupervisorModule.CONFIG.rendering().disableTileEntityRendering()
-                || Supervisor.SupervisorModule.CONFIG.rendering().disableGameRendering())
+        if (Supervisor.CONFIG.rendering().disableTileEntityRendering()
+                || Supervisor.CONFIG.rendering().disableGameRendering())
         {
             ci.cancel();
         }

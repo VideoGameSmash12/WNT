@@ -19,8 +19,8 @@ public class WorldRendererMixin
         CallbackInfo ci)
     {
         // Don't render the world if it's disabled by the Supervisor.
-        if (Supervisor.SupervisorModule.CONFIG.rendering().disableWorldRendering()
-                || Supervisor.SupervisorModule.CONFIG.rendering().disableGameRendering())
+        if (Supervisor.CONFIG.rendering().disableWorldRendering()
+                || Supervisor.CONFIG.rendering().disableGameRendering())
         {
             ci.cancel();
         }
@@ -30,8 +30,8 @@ public class WorldRendererMixin
     public void startRenderWeather(LightmapTextureManager manager, float f, double d, double e, double g, CallbackInfo ci)
     {
         // Don't render any weather if it's disabled.
-        if (Supervisor.SupervisorModule.CONFIG.rendering().disableWeatherRendering()
-                || Supervisor.SupervisorModule.CONFIG.rendering().disableGameRendering())
+        if (Supervisor.CONFIG.rendering().disableWeatherRendering()
+                || Supervisor.CONFIG.rendering().disableGameRendering())
         {
             ci.cancel();
         }
@@ -42,8 +42,8 @@ public class WorldRendererMixin
         MatrixStack matrices, VertexConsumerProvider vertexConsumers, CallbackInfo ci)
     {
         // Don't render entities if disabled.
-        if (Supervisor.SupervisorModule.CONFIG.rendering().disableEntityRendering()
-                || Supervisor.SupervisorModule.CONFIG.rendering().disableGameRendering())
+        if (Supervisor.CONFIG.rendering().disableEntityRendering()
+                || Supervisor.CONFIG.rendering().disableGameRendering())
         {
             ci.cancel();
         }

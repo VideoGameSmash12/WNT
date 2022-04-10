@@ -1,7 +1,7 @@
 package me.videogamesm12.wnt.blackbox.commands;
 
 import com.mojang.brigadier.context.CommandContext;
-import me.videogamesm12.wnt.blackbox.SupervisorGUI;
+import me.videogamesm12.wnt.blackbox.Blackbox;
 import me.videogamesm12.wnt.command.WCommand;
 import net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource;
 
@@ -29,12 +29,12 @@ public class BlackboxCommand extends WCommand
             case "open":
             {
                 SwingUtilities.invokeLater(() -> {
-                    if (SupervisorGUI.GUI == null)
+                    if (Blackbox.GUI == null)
                     {
-                        SupervisorGUI.GUI = new SupervisorGUI.GUIFrame();
+                        Blackbox.GUI = new Blackbox.GUIFrame();
                     }
 
-                    SupervisorGUI.GUI.setVisible(true);
+                    Blackbox.GUI.setVisible(true);
                 });
                 break;
             }

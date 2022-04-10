@@ -14,7 +14,7 @@ public class GameRendererMixin
     public void startRender(float tickDelta, long startTime, boolean tick, CallbackInfo ci)
     {
         // Refuses to render anything period.
-        if (Supervisor.SupervisorModule.CONFIG.rendering().disableGameRendering())
+        if (Supervisor.CONFIG.rendering().disableGameRendering())
         {
             ci.cancel();
         }

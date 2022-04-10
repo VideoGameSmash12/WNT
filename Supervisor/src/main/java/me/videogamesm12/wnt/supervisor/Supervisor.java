@@ -5,8 +5,6 @@ import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import me.videogamesm12.wnt.WNT;
-import me.videogamesm12.wnt.meta.ModuleInfo;
-import me.videogamesm12.wnt.module.WModule;
 import me.videogamesm12.wnt.supervisor.event.ClientFreezeDetected;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
@@ -20,34 +18,39 @@ import java.util.TimerTask;
  * <h1>Supervisor</h1>
  * A major component in WNT, offering better control over the client
  */
-public class Supervisor implements ModInitializer
+public class Supervisor implements ClientLifecycleEvents.ClientStopping, ModInitializer
 {
+    public static SupervisorConfig CONFIG = null;
+    //--
+    private SupervisorThread THREAD = null;
+
     @Override
     public void onInitialize()
     {
-        WNT.MODULES.register(SupervisorModule.class);
+        AutoConfig.register(SupervisorConfig.class, GsonConfigSerializer::new);
+        CONFIG = AutoConfig.getConfigHolder(SupervisorConfig.class).getConfig();
+        //--
+        ClientLifecycleEvents.CLIENT_STOPPING.register(this);
+        //--
+        THREAD = new SupervisorThread();
     }
 
-    @ModuleInfo(name = "Supervisor", description = "Powerhouse tool that offers control over your Minecraft client.")
-    public static class SupervisorModule extends Thread implements WModule, ClientLifecycleEvents.ClientStopping
+    @Override
+    public void onClientStopping(MinecraftClient client)
+    {
+        AutoConfig.getConfigHolder(SupervisorConfig.class).save();
+    }
+
+    public static class SupervisorThread extends Thread
     {
         public static long LAST_RENDERED = Instant.now().toEpochMilli();
-        public static SupervisorConfig CONFIG = null;
         //--
         private final Timer automation = new Timer();
 
-        public SupervisorModule()
+        public SupervisorThread()
         {
             super("Supervisor");
-            AutoConfig.register(SupervisorConfig.class, GsonConfigSerializer::new);
-            CONFIG = AutoConfig.getConfigHolder(SupervisorConfig.class).getConfig();
             start();
-        }
-
-        @Override
-        public void initialize()
-        {
-            ClientLifecycleEvents.CLIENT_STOPPING.register(this);
         }
 
         @Override
@@ -67,12 +70,6 @@ public class Supervisor implements ModInitializer
         {
             super.interrupt();
             automation.cancel();
-        }
-
-        @Override
-        public void onClientStopping(MinecraftClient client)
-        {
-            AutoConfig.getConfigHolder(SupervisorConfig.class).save();
         }
 
         public static class FreezeDetector extends TimerTask
@@ -97,11 +94,6 @@ public class Supervisor implements ModInitializer
     @Config(name = "wnt-supervisor")
     public static class SupervisorConfig implements ConfigData
     {
-        public SupervisorConfig()
-        {
-            super();
-        }
-
         private boolean detectFreezes = true;
 
         private Network network = new Network();

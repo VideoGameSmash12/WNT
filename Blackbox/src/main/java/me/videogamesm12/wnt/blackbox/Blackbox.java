@@ -21,11 +21,9 @@ import me.videogamesm12.wnt.blackbox.menus.MitigationsMenu;
 import me.videogamesm12.wnt.blackbox.menus.SettingsMenu;
 import me.videogamesm12.wnt.blackbox.menus.ToolsMenu;
 import me.videogamesm12.wnt.blackbox.tabs.*;
-import me.videogamesm12.wnt.supervisor.networking.PacketType;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 
 import javax.imageio.ImageIO;
@@ -37,10 +35,9 @@ import java.awt.event.*;
 import java.io.InputStream;
 import java.time.Instant;
 import java.util.*;
-import java.util.List;
 import java.util.Timer;
 
-public class SupervisorGUI extends Thread implements ModInitializer, ClientLifecycleEvents.ClientStopping, ClientFreezeDetected
+public class Blackbox extends Thread implements ModInitializer, ClientLifecycleEvents.ClientStopping, ClientFreezeDetected
 {
     public static GUIConfig CONFIG = null;
     public static GUIFrame GUI = null;
@@ -85,7 +82,7 @@ public class SupervisorGUI extends Thread implements ModInitializer, ClientLifec
             {
                 SystemTray tray = SystemTray.getSystemTray();
                 trayIcon = new TrayIcon(Toolkit.getDefaultToolkit().createImage(
-                        SupervisorGUI.class.getClassLoader().getResource("assets/wnt-blackbox/supervisor_icon.png")), "WNT");
+                        Blackbox.class.getClassLoader().getResource("assets/wnt-blackbox/supervisor_icon.png")), "WNT");
                 trayIcon.setImageAutoSize(true);
                 trayIcon.addMouseListener(new MouseAdapter()
                 {
@@ -122,7 +119,7 @@ public class SupervisorGUI extends Thread implements ModInitializer, ClientLifec
 
         long now = Instant.now().toEpochMilli();
 
-        int reaction = JOptionPane.showConfirmDialog(null, String.format("The Supervisor has detected a client-side freeze (last render was %sms ago).\nWould you like to open the Supervisor window?", now - lastRender), "Client Freeze Detected", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+        int reaction = JOptionPane.showConfirmDialog(null, String.format("The Supervisor has detected a client-side freeze (last render was %sms ago).\nWould you like to open the Blackbox?", now - lastRender), "Client Freeze Detected", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
 
         switch (reaction)
         {
@@ -225,7 +222,7 @@ public class SupervisorGUI extends Thread implements ModInitializer, ClientLifec
             try
             {
                 // Loads the icon from disk.
-                InputStream iconStream = SupervisorGUI.class.getClassLoader().getResourceAsStream("assets/wnt-blackbox/supervisor_icon_128.png");
+                InputStream iconStream = Blackbox.class.getClassLoader().getResourceAsStream("assets/wnt-blackbox/supervisor_icon_128.png");
                 setIconImage(ImageIO.read(iconStream));
             }
             catch (Exception ex)
@@ -274,7 +271,7 @@ public class SupervisorGUI extends Thread implements ModInitializer, ClientLifec
             tabs.addTab("Maps", new MapsTab());
             //tabs.addTab("Packets", new PacketsTab());
             //--
-            if (SupervisorGUI.CONFIG.autoUpdate())
+            if (Blackbox.CONFIG.autoUpdate())
             {
                 scheduleRefresh();
             }

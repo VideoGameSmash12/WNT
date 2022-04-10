@@ -1,6 +1,5 @@
 package me.videogamesm12.wnt.blackbox.tabs;
 
-import me.videogamesm12.wnt.blackbox.SupervisorGUI;
 import me.videogamesm12.wnt.supervisor.networking.NetworkStorage;
 import me.videogamesm12.wnt.supervisor.event.NetworkStorageCreated;
 import net.fabricmc.fabric.api.client.networking.v1.ClientLoginConnectionEvents;
@@ -104,7 +103,7 @@ public class PacketsTab extends JPanel implements SupervisorTab
         @Override
         public void onStorageCreated(NetworkStorage storage)
         {
-            /*if (!SupervisorGUI.CONFIG.getBlacklistedTypes().contains(storage.getType()))
+            /*if (!Blackbox.CONFIG.getBlacklistedTypes().contains(storage.getType()))
             {
                 rows.add(storage.toList());
                 fireTableDataChanged();

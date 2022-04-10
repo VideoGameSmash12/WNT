@@ -3,7 +3,7 @@ package me.videogamesm12.wnt.toolbox.commands;
 import com.mojang.brigadier.context.CommandContext;
 import me.videogamesm12.wnt.WNT;
 import me.videogamesm12.wnt.command.WCommand;
-import me.videogamesm12.wnt.toolbox.modules.Telnet;
+import me.videogamesm12.wnt.toolbox.modules.NuTelnet;
 import net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource;
 import org.apache.commons.lang3.StringUtils;
 
@@ -21,7 +21,7 @@ public class TelnetCommand extends WCommand
     @Override
     public boolean run(CommandContext<FabricClientCommandSource> context, String[] args)
     {
-        Telnet telnet = WNT.MODULES.getModule(Telnet.class);
+        NuTelnet telnet = WNT.MODULES.getModule(NuTelnet.class);
 
         if (args.length == 0)
         {

@@ -1,5 +1,6 @@
 package me.videogamesm12.wnt.dumper;
 
+import me.shedaniel.autoconfig.annotation.Config;
 import me.videogamesm12.wnt.WNT;
 import me.videogamesm12.wnt.command.CommandSystem;
 import me.videogamesm12.wnt.dumper.commands.DumpCommand;
@@ -8,8 +9,7 @@ import me.videogamesm12.wnt.dumper.event.MapDumpRequest;
 import me.videogamesm12.wnt.dumper.event.MassEntityDumpRequest;
 import me.videogamesm12.wnt.dumper.event.MassMapDumpRequest;
 import me.videogamesm12.wnt.dumper.mixin.ClientWorldMixin;
-import me.videogamesm12.wnt.meta.ModuleInfo;
-import me.videogamesm12.wnt.module.WModule;
+import me.videogamesm12.wnt.module.Module;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
@@ -28,29 +28,134 @@ import java.util.concurrent.CompletableFuture;
 
 public class Dumper implements ModInitializer
 {
+    private static DumperThread thread = null;
+
     @Override
     public void onInitialize()
     {
         WNT.MODULES.register(DumperModule.class);
         CommandSystem.registerCommand(DumpCommand.class);
+        //--
+        thread = new DumperThread();
     }
 
-    @ModuleInfo(name = "Dumper", description = "Allows you to dump entity data to disk.")
-    public static class DumperModule extends Thread implements WModule, EntityDumpRequest, MassEntityDumpRequest, MapDumpRequest, MassMapDumpRequest
+    @Config(name = "wnt-dumper")
+    public static class DumperClass extends Module.MConfig
+    {
+    }
+
+    public static class DumperModule extends Module implements EntityDumpRequest, MassEntityDumpRequest, MapDumpRequest,
+            MassMapDumpRequest
     {
         public DumperModule()
         {
+            super();
+
             EntityDumpRequest.EVENT.register(this);
             MassEntityDumpRequest.EVENT.register(this);
             MapDumpRequest.EVENT.register(this);
             MassMapDumpRequest.EVENT.register(this);
-            //--
-            start();
         }
 
         @Override
-        public void run()
+        public void onStart()
         {
+        }
+
+        @Override
+        public void onStop()
+        {
+        }
+
+        @Override
+        public Class<DumperClass> getConfigClass()
+        {
+            return DumperClass.class;
+        }
+
+        @Override
+        public ActionResult onEntityDumpRequested(FabricClientCommandSource source, int id)
+        {
+            try
+            {
+                CompletableFuture.runAsync(() -> {
+                    thread.dumpEntityData(id);
+                    source.sendFeedback(new TranslatableText("wnt.dumper.success"));
+                });
+                return ActionResult.PASS;
+            }
+            catch (Exception ex)
+            {
+                source.sendError(Text.of(ex.getMessage()));
+                ex.printStackTrace();
+                return ActionResult.FAIL;
+            }
+        }
+
+        @Override
+        public ActionResult onEntityDumpRequested(FabricClientCommandSource source)
+        {
+            try
+            {
+                CompletableFuture.runAsync(() -> {
+                    thread.dumpAllEntityData();
+                    source.sendFeedback(new TranslatableText("wnt.dumper.success"));
+                });
+                return ActionResult.PASS;
+            }
+            catch (Exception ex)
+            {
+                source.sendError(Text.of(ex.getMessage()));
+                ex.printStackTrace();
+                return ActionResult.FAIL;
+            }
+        }
+
+        @Override
+        public ActionResult onMapDumpRequested(FabricClientCommandSource source)
+        {
+            try
+            {
+                CompletableFuture.runAsync(() -> {
+                    thread.dumpAllMapData();
+                    source.sendFeedback(new TranslatableText("wnt.dumper.success"));
+                });
+                return ActionResult.PASS;
+            }
+            catch (Exception ex)
+            {
+                source.sendError(Text.of(ex.getMessage()));
+                ex.printStackTrace();
+                return ActionResult.FAIL;
+            }
+        }
+
+        @Override
+        public ActionResult onMapDumpRequested(int id, FabricClientCommandSource source)
+        {
+            try
+            {
+                CompletableFuture.runAsync(() -> {
+                    thread.dumpMapData(id);
+                    source.sendFeedback(new TranslatableText("wnt.dumper.success"));
+                });
+                return ActionResult.PASS;
+            }
+            catch (Exception ex)
+            {
+                source.sendError(Text.of(ex.getMessage()));
+                ex.printStackTrace();
+                return ActionResult.FAIL;
+            }
+        }
+    }
+
+    public static class DumperThread extends Thread
+    {
+        public DumperThread()
+        {
+            super("Dumper");
+            start();
         }
 
         public synchronized void dumpMapData(int id)
@@ -137,82 +242,6 @@ public class Dumper implements ModInitializer
 
             // This is a stupid way of doing this, but it's fine for now
             ((ClientWorldMixin) world).getMapStates().keySet().forEach((id) -> dumpMapData(Integer.parseInt(id.replace("map_", ""))));
-        }
-
-        @Override
-        public ActionResult onEntityDumpRequested(FabricClientCommandSource source, int id)
-        {
-            try
-            {
-                CompletableFuture.runAsync(() -> {
-                    dumpEntityData(id);
-                    source.sendFeedback(new TranslatableText("wnt.dumper.success"));
-                });
-                return ActionResult.PASS;
-            }
-            catch (Exception ex)
-            {
-                source.sendError(Text.of(ex.getMessage()));
-                ex.printStackTrace();
-                return ActionResult.FAIL;
-            }
-        }
-
-        @Override
-        public ActionResult onEntityDumpRequested(FabricClientCommandSource source)
-        {
-            try
-            {
-                CompletableFuture.runAsync(() -> {
-                    dumpAllEntityData();
-                    source.sendFeedback(new TranslatableText("wnt.dumper.success"));
-                });
-                return ActionResult.PASS;
-            }
-            catch (Exception ex)
-            {
-                source.sendError(Text.of(ex.getMessage()));
-                ex.printStackTrace();
-                return ActionResult.FAIL;
-            }
-        }
-
-        @Override
-        public ActionResult onMapDumpRequested(FabricClientCommandSource source)
-        {
-            try
-            {
-                CompletableFuture.runAsync(() -> {
-                    dumpAllMapData();
-                    source.sendFeedback(new TranslatableText("wnt.dumper.success"));
-                });
-                return ActionResult.PASS;
-            }
-            catch (Exception ex)
-            {
-                source.sendError(Text.of(ex.getMessage()));
-                ex.printStackTrace();
-                return ActionResult.FAIL;
-            }
-        }
-
-        @Override
-        public ActionResult onMapDumpRequested(int id, FabricClientCommandSource source)
-        {
-            try
-            {
-                CompletableFuture.runAsync(() -> {
-                    dumpMapData(id);
-                    source.sendFeedback(new TranslatableText("wnt.dumper.success"));
-                });
-                return ActionResult.PASS;
-            }
-            catch (Exception ex)
-            {
-                source.sendError(Text.of(ex.getMessage()));
-                ex.printStackTrace();
-                return ActionResult.FAIL;
-            }
         }
     }
 

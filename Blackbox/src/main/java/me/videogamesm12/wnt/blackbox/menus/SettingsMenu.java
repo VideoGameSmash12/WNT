@@ -1,7 +1,6 @@
 package me.videogamesm12.wnt.blackbox.menus;
 
-import me.videogamesm12.wnt.blackbox.SupervisorGUI;
-import me.videogamesm12.wnt.supervisor.networking.PacketType;
+import me.videogamesm12.wnt.blackbox.Blackbox;
 
 import javax.swing.*;
 
@@ -13,22 +12,22 @@ public class SettingsMenu extends JMenu
 {
     //private final PacketTypeMenu types = new PacketTypeMenu();
     private final ThemeMenu themes = new ThemeMenu();
-    private final JCheckBoxMenuItem autoRefresh = new JCheckBoxMenuItem("Auto-refresh", SupervisorGUI.CONFIG.autoUpdate());
-    private final JCheckBoxMenuItem showOnStartup = new JCheckBoxMenuItem("Show on startup", SupervisorGUI.CONFIG.showOnStartup());
+    private final JCheckBoxMenuItem autoRefresh = new JCheckBoxMenuItem("Auto-refresh", Blackbox.CONFIG.autoUpdate());
+    private final JCheckBoxMenuItem showOnStartup = new JCheckBoxMenuItem("Show on startup", Blackbox.CONFIG.showOnStartup());
 
     public SettingsMenu()
     {
         super("Settings");
 
         autoRefresh.addActionListener((event) -> {
-            SupervisorGUI.CONFIG.setAutoUpdate(autoRefresh.isSelected());
+            Blackbox.CONFIG.setAutoUpdate(autoRefresh.isSelected());
 
-            if (SupervisorGUI.CONFIG.autoUpdate())
-                SupervisorGUI.GUI.scheduleRefresh();
+            if (Blackbox.CONFIG.autoUpdate())
+                Blackbox.GUI.scheduleRefresh();
             else
-                SupervisorGUI.GUI.cancelRefresh();
+                Blackbox.GUI.cancelRefresh();
         });
-        showOnStartup.addActionListener((event) -> SupervisorGUI.CONFIG.setShowOnStartup(showOnStartup.isSelected()));
+        showOnStartup.addActionListener((event) -> Blackbox.CONFIG.setShowOnStartup(showOnStartup.isSelected()));
 
         add(themes);
         //addSeparator();
@@ -51,17 +50,17 @@ public class SettingsMenu extends JMenu
             super("Theme");
 
             // For every theme, build a radio button for it.
-            for (SupervisorGUI.GUITheme guiTheme : SupervisorGUI.GUITheme.values())
+            for (Blackbox.GUITheme guiTheme : Blackbox.GUITheme.values())
             {
                 JRadioButtonMenuItem themeItem = new JRadioButtonMenuItem();
                 //--
-                if (guiTheme == SupervisorGUI.CONFIG.getTheme())
+                if (guiTheme == Blackbox.CONFIG.getTheme())
                 {
                     themeItem.setSelected(true);
                 }
                 //--
                 themeItem.addActionListener((event) -> {
-                    SupervisorGUI.CONFIG.setTheme(guiTheme);
+                    Blackbox.CONFIG.setTheme(guiTheme);
                     JOptionPane.showMessageDialog(this, "The changes will take effect when you restart Minecraft.", "Notice", JOptionPane.INFORMATION_MESSAGE);
                 });
                 themeItem.setText(guiTheme.getName());
@@ -88,16 +87,16 @@ public class SettingsMenu extends JMenu
             {
                 JCheckBoxMenuItem themeItem = new JCheckBoxMenuItem();
                 //--
-                if (SupervisorGUI.CONFIG.getBlacklistedTypes().contains(type))
+                if (Blackbox.CONFIG.getBlacklistedTypes().contains(type))
                 {
                     themeItem.setSelected(true);
                 }
                 //--
                 themeItem.addActionListener((event) -> {
-                    if (SupervisorGUI.CONFIG.getBlacklistedTypes().contains(type))
-                        SupervisorGUI.CONFIG.getBlacklistedTypes().remove(type);
+                    if (Blackbox.CONFIG.getBlacklistedTypes().contains(type))
+                        Blackbox.CONFIG.getBlacklistedTypes().remove(type);
                     else
-                        SupervisorGUI.CONFIG.getBlacklistedTypes().add(type);
+                        Blackbox.CONFIG.getBlacklistedTypes().add(type);
                 });
                 themeItem.setText(type.getName());
                 //--

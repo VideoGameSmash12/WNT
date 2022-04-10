@@ -14,7 +14,7 @@
   "environment": "client",
   "entrypoints": {
     "main": [
-      "me.videogamesm12.wnt.blackbox.SupervisorGUI"
+      "me.videogamesm12.wnt.blackbox.Blackbox"
     ],
     "modmenu": [
       "me.videogamesm12.wnt.blackbox.integration.ModMenuIntegration"

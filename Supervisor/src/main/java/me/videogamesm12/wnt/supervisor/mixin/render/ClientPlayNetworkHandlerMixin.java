@@ -38,7 +38,7 @@ public class ClientPlayNetworkHandlerMixin
     @Inject(method = "onEntitySpawn", at = @At("HEAD"), cancellable = true)
     public void onEntitySpawn(EntitySpawnS2CPacket packet, CallbackInfo ci)
     {
-        if (Supervisor.SupervisorModule.CONFIG.network().ignoreEntitySpawns())
+        if (Supervisor.CONFIG.network().ignoreEntitySpawns())
         {
             ci.cancel();
         }
@@ -54,7 +54,7 @@ public class ClientPlayNetworkHandlerMixin
     @Inject(method = "onExplosion", at = @At("HEAD"), cancellable = true)
     public void onExplosion(ExplosionS2CPacket packet, CallbackInfo ci)
     {
-        if (Supervisor.SupervisorModule.CONFIG.network().ignoreExplosions())
+        if (Supervisor.CONFIG.network().ignoreExplosions())
         {
             ci.cancel();
         }
@@ -70,7 +70,7 @@ public class ClientPlayNetworkHandlerMixin
     @Inject(method = "onLightUpdate", at = @At("HEAD"), cancellable = true)
     public void onLightUpdate(LightUpdateS2CPacket packet, CallbackInfo ci)
     {
-        if (Supervisor.SupervisorModule.CONFIG.network().ignoreLightUpdates())
+        if (Supervisor.CONFIG.network().ignoreLightUpdates())
         {
             ci.cancel();
         }
