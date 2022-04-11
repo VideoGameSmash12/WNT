@@ -13,10 +13,10 @@ name: "CodeQL"
 
 on:
   push:
-    branches: [ main, automation ]
+    branches: [ main ]
   pull_request:
     # The branches below must be a subset of the branches above
-    branches: [ main, automation ]
+    branches: [ main ]
   schedule:
     - cron: '28 18 * * 5'
 
@@ -40,9 +40,11 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
     
+    # Sets up JDK 17.
+    # CodeQL by default uses Java 8. As WNT is for Java versions 16+, this needs to be done beforehand.
     - uses: actions/setup-java@v3
       with:
-        distribution: 'temurin' # See 'Supported distributions' for available options
+        distribution: 'temurin'
         java-version: '17'
 
     # Initializes the CodeQL tools for scanning.
