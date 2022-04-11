@@ -5,9 +5,9 @@ name: Java CI with Gradle
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, automation2 ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, automation2 ]
 
 jobs:
   build:
@@ -25,3 +25,7 @@ jobs:
         run: chmod +x gradlew
       - name: Build with Gradle
         run: ./gradlew build
+      - name: Upload
+        uses: actions/upload-artifact@v3
+        with:
+          path: /build/libs/*.jar
