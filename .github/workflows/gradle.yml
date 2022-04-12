@@ -25,3 +25,20 @@ jobs:
         run: chmod +x gradlew
       - name: Build with Gradle
         run: ./gradlew build
+      
+      - name: Upload All-in-One Jar
+        uses: actions/upload-artifact@v3
+        with:
+          name: WNT
+          path: build/libs/*.jar
+
+      - name: Upload Separate Jars
+        uses: actions/upload-artifact@v3
+        with:
+          name: WNT Subprojects
+          path: |
+            0EX/build/libs/*.jar
+            Blackbox/build/libs/*.jar
+            Dumper/build/libs/*.jar
+            Supervisor/build/libs/*.jar
+            Toolbox/build/libs/*.jar
