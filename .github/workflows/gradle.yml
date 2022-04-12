@@ -28,4 +28,5 @@ jobs:
       - name: Upload
         uses: actions/upload-artifact@v3
         with:
+          name: WNT
           path: build/libs/*.jar
