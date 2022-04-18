@@ -1,6 +1,5 @@
 package me.videogamesm12.wnt.toolbox.modules;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import me.shedaniel.autoconfig.annotation.Config;

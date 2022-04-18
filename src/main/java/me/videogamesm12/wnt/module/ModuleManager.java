@@ -30,12 +30,12 @@ public class ModuleManager
             if (instance.isEnabled())
                 instance.start();
             //--
-            MODULES.put(instance.getClass(), instance);
+            MODULES.put(moduleClass, instance);
         }
         catch (Exception ex)
         {
             WNT.LOGGER.error("Failed to register module " + moduleClass.getSimpleName());
-            WNT.LOGGER.error(ex);
+            ex.printStackTrace();
         }
     }
 
@@ -64,13 +64,18 @@ public class ModuleManager
         catch (Exception ex)
         {
             WNT.LOGGER.error("Failed to unregister module " + moduleClass.getSimpleName());
-            WNT.LOGGER.error(ex);
+            ex.printStackTrace();
         }
     }
 
     @SuppressWarnings("unchecked")
     public <T extends Module> T getModule(Class<T> moduleClass)
     {
+        if (!isRegistered(moduleClass))
+        {
+            throw new IllegalStateException("The module " + moduleClass.getSimpleName() + " is not currently registered");
+        }
+
         return (T) MODULES.get(moduleClass);
     }
 }

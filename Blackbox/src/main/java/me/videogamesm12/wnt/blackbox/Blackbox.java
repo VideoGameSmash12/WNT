@@ -207,7 +207,7 @@ public class Blackbox extends Thread implements ModInitializer, ClientLifecycleE
     {
         // Menu Bar
         private JMenuBar menuBar;
-        private JMenu wntMenu;
+        public JMenu wntMenu;
         private MitigationsMenu mitigationsMenu;
         private SettingsMenu settingsMenu;
         private ToolsMenu toolsMenu;
