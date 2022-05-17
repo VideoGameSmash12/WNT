@@ -269,7 +269,6 @@ public class Blackbox extends Thread implements ModInitializer, ClientLifecycleE
             tabs.addTab("Players", new PlayersTab());
             tabs.addTab("Entities", new EntityTab());
             tabs.addTab("Maps", new MapsTab());
-            //tabs.addTab("Packets", new PacketsTab());
             //--
             if (Blackbox.CONFIG.autoUpdate())
             {

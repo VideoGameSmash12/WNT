@@ -9,8 +9,6 @@
     "gui.DebugHudMixin",
     "gui.InGameHudMixin",
     "render.BlockEntityRenderDispatcherMixin",
-    "render.ClientChunkManagerMixin",
-    "render.ClientLoginNetworkHandlerMixin",
     "render.ClientPlayNetworkHandlerMixin",
     "render.GameRendererMixin",
     "render.InGameHudMixin",
