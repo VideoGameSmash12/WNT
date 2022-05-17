@@ -1,31 +1,27 @@
 {
   "schemaVersion": 1,
-  "id": "wnt-0ex",
+  "id": "wnt-deviousconflicts",
   "version": "${version}",
-  "name": "0EX",
-  "description": "Patches client-side exploits.",
+  "name": "DeviousConflicts",
+  "description": "WNT components that conflict with DeviousMod",
   "authors": [
     "videogamesm12"
   ],
   "contact": {},
   "license": "MIT",
-  "icon": "assets/wnt-0ex/icon.png",
+  "icon": "assets/wnt-deviousconflicts/icon.png",
   "environment": "client",
-  "entrypoints": {
-    "main": [
-      "me.videogamesm12.wnt.zeroex.ZeroEx"
-    ],
-    "modmenu": [
-      "me.videogamesm12.wnt.zeroex.integration.ModMenuIntegration"
-    ]
-  },
+  "entrypoints": {},
   "mixins": [
-    "wnt-0ex.mixins.json"
+    "wnt.deviousconflicts.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.12.12",
     "fabric": "*",
     "minecraft": ">=1.17.1"
+  },
+  "breaks": {
+    "deviousmod": "*"
   },
   "custom": {
     "modmenu": {

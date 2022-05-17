@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  * Patches an exploit where attempting to receive packets with oversized NBT data (not caught by the server) causes the
  *  client to disconnect.
  * --
- * @implNote This is considered an optional patch.
+ * @implNote This patch does not apply when DeviousMod is installed, as it conflicts with that mod's equivalent.
  */
 @Mixin(NbtTagSizeTracker.class)
 public class NBTLimit

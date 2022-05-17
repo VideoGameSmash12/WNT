@@ -154,9 +154,10 @@ public class NuTelnet extends Module implements IncomingTelnetMessage, OutgoingT
     @Config(name = "wnt-toolbox-telnet")
     public static class TelnetConfig extends MConfig
     {
-        @Getter
-        @Setter
-        private boolean enabled = true;
+        public TelnetConfig()
+        {
+            super();
+        }
 
         @Getter
         @Setter

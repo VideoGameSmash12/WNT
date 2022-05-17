@@ -18,9 +18,6 @@ public class MitigationsMenu extends JMenu
     private final JCheckBoxMenuItem entityRendering = new JCheckBoxMenuItem("Disable entity rendering", Supervisor.CONFIG.rendering().disableEntityRendering());
     private final JCheckBoxMenuItem tileEntityRendering = new JCheckBoxMenuItem("Disable tile entity rendering", Supervisor.CONFIG.rendering().disableTileEntityRendering());
     //--
-    private final JMenu memoryMenu = new JMenu("Memory");
-    private final JMenuItem clearLocalEntities = new JMenuItem("Clear entities locally");
-    //--
     private final JMenu networkMenu = new JMenu("Network");
     private final JCheckBoxMenuItem entitySpawning = new JCheckBoxMenuItem("Ignore entity spawning", Supervisor.CONFIG.network().ignoreEntitySpawns());
     private final JCheckBoxMenuItem explosionSpawning = new JCheckBoxMenuItem("Ignore explosions", Supervisor.CONFIG.network().ignoreExplosions());
@@ -47,15 +44,6 @@ public class MitigationsMenu extends JMenu
         renderingMenu.add(weatherRendering);
         renderingMenu.add(entityRendering);
         renderingMenu.add(tileEntityRendering);
-
-        clearLocalEntities.addActionListener((exd) -> {
-            if (MinecraftClient.getInstance().world != null)
-            {
-                EntityList entityList = ((ClientWorldMixin) MinecraftClient.getInstance().world).getEntityList();
-                entityList.forEach(entityList::remove);
-            }
-        });
-        memoryMenu.add(clearLocalEntities);
 
         //==-- NETWORK --==//
         entitySpawning.addActionListener((exd) -> Supervisor.CONFIG.network().setIgnoreEntitySpawns(entitySpawning.isSelected()));
@@ -85,7 +73,6 @@ public class MitigationsMenu extends JMenu
 
         //==-- ENDGAME --==//
         add(renderingMenu);
-        add(memoryMenu);
         add(networkMenu);
         add(new JPopupMenu.Separator());
         add(drasticMenu);

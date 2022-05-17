@@ -339,8 +339,6 @@ public class Blackbox extends Thread implements ModInitializer, ClientLifecycleE
 
         private boolean autoUpdate = true;
 
-        //private final List<PacketType> blacklisted = new ArrayList<>();
-
         @ConfigEntry.Gui.RequiresRestart
         private GUITheme theme = GUITheme.DARK;
 
@@ -373,11 +371,6 @@ public class Blackbox extends Thread implements ModInitializer, ClientLifecycleE
         {
             this.showOnStartup = value;
         }
-
-        /*public List<PacketType> getBlacklistedTypes()
-        {
-            return blacklisted;
-        }*/
     }
 
     /**

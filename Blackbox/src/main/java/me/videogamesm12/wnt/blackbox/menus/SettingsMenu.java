@@ -10,7 +10,6 @@ import javax.swing.*;
  */
 public class SettingsMenu extends JMenu
 {
-    //private final PacketTypeMenu types = new PacketTypeMenu();
     private final ThemeMenu themes = new ThemeMenu();
     private final JCheckBoxMenuItem autoRefresh = new JCheckBoxMenuItem("Auto-refresh", Blackbox.CONFIG.autoUpdate());
     private final JCheckBoxMenuItem showOnStartup = new JCheckBoxMenuItem("Show on startup", Blackbox.CONFIG.showOnStartup());
@@ -30,8 +29,6 @@ public class SettingsMenu extends JMenu
         showOnStartup.addActionListener((event) -> Blackbox.CONFIG.setShowOnStartup(showOnStartup.isSelected()));
 
         add(themes);
-        //addSeparator();
-        //add(types);
         addSeparator();
         add(showOnStartup);
         add(autoRefresh);
@@ -70,39 +67,4 @@ public class SettingsMenu extends JMenu
             }
         }
     }
-
-    /*
-    /**
-     * <h2>PacketTypeMenu</h2>
-     * A menu for blacklisted packets in the Supervisor GUI.
-     *\/
-    public static class PacketTypeMenu extends JMenu
-    {
-        public PacketTypeMenu()
-        {
-            super("Ignored Packets");
-
-            // For every theme, build a radio button for it.
-            for (PacketType type : PacketType.values())
-            {
-                JCheckBoxMenuItem themeItem = new JCheckBoxMenuItem();
-                //--
-                if (Blackbox.CONFIG.getBlacklistedTypes().contains(type))
-                {
-                    themeItem.setSelected(true);
-                }
-                //--
-                themeItem.addActionListener((event) -> {
-                    if (Blackbox.CONFIG.getBlacklistedTypes().contains(type))
-                        Blackbox.CONFIG.getBlacklistedTypes().remove(type);
-                    else
-                        Blackbox.CONFIG.getBlacklistedTypes().add(type);
-                });
-                themeItem.setText(type.getName());
-                //--
-                add(themeItem);
-            }
-        }
-    }
-    */
 }
