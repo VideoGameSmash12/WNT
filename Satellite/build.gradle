@@ -1,0 +1,22 @@
+group 'me.videogamesm12'
+
+repositories {
+    maven {
+        url 'https://maven.meteordev.org/releases/'
+    }
+    maven {
+        url = "https://maven.meteordev.org/snapshots"
+    }
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:1.17.1"
+    mappings "net.fabricmc:yarn:1.17.1+build.65:v2"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:0.46.0+1.17"
+
+    // Satellite uses the Blackbox to initialize its magical GUI shenanigans.
+    implementation project(":Blackbox")
+
+    // Meteor client itself
+    modImplementation "meteordevelopment:meteor-client:0.4.6"
+}

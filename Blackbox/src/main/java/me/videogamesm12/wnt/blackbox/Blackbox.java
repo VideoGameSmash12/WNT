@@ -30,6 +30,7 @@ import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatMaterialDarker
 import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatMaterialDarkerIJTheme;
 import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatMaterialLighterContrastIJTheme;
 import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatMaterialLighterIJTheme;
+import lombok.Getter;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
@@ -37,11 +38,9 @@ import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import me.videogamesm12.wnt.WNT;
 import me.videogamesm12.wnt.blackbox.commands.BlackboxCommand;
+import me.videogamesm12.wnt.blackbox.menus.*;
 import me.videogamesm12.wnt.command.CommandSystem;
 import me.videogamesm12.wnt.supervisor.event.ClientFreezeDetected;
-import me.videogamesm12.wnt.blackbox.menus.MitigationsMenu;
-import me.videogamesm12.wnt.blackbox.menus.SettingsMenu;
-import me.videogamesm12.wnt.blackbox.menus.ToolsMenu;
 import me.videogamesm12.wnt.blackbox.tabs.*;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
@@ -229,7 +228,8 @@ public class Blackbox extends Thread implements ModInitializer, ClientLifecycleE
     {
         // Menu Bar
         private JMenuBar menuBar;
-        public JMenu wntMenu;
+        @Getter
+        private WNTMenu wntMenu;
         private MitigationsMenu mitigationsMenu;
         private SettingsMenu settingsMenu;
         private ToolsMenu toolsMenu;
@@ -265,7 +265,7 @@ public class Blackbox extends Thread implements ModInitializer, ClientLifecycleE
         private void initComps()
         {
             menuBar = new JMenuBar();
-            wntMenu = new JMenu("WNT");
+            wntMenu = new WNTMenu();
             mitigationsMenu = new MitigationsMenu();
             toolsMenu = new ToolsMenu();
             settingsMenu = new SettingsMenu();

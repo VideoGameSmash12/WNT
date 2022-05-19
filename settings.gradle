@@ -13,3 +13,5 @@ include 'Blackbox'
 include 'Dumper'
 include 'Toolbox'
 include 'DeviousConflicts'
+include 'Satellite'
+
