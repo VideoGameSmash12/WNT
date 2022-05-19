@@ -16,12 +16,14 @@ import java.time.Instant;
 @Mixin(MinecraftClient.class)
 public class MinecraftClientMixin
 {
-    @Inject(method = "render", at = @At("HEAD"), cancellable = true)
-    public void onPreRender(boolean tick, CallbackInfo ci)
-    {
-
-    }
-
+    /**
+     * <p>Supervisor's freeze detection works by injecting some code at the tail-end of the game's rendering method to
+     *  store a timestamp for when the last time a frame successfully rendered occurs, then periodically checking
+     *  through another thread if it exceeds 5 seconds.</p>
+     * <p>This code is what stores the timestamps.</p>
+     * @param bool  boolean
+     * @param ci    CallbackInfo
+     */
     @Inject(method = "render", at = @At("RETURN"))
     public void onPostRender(boolean bool, CallbackInfo ci)
     {

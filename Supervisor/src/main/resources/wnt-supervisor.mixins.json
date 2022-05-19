@@ -4,7 +4,6 @@
   "package": "me.videogamesm12.wnt.supervisor.mixin",
   "compatibilityLevel": "JAVA_16",
   "mixins": [
-    "ClientWorldMixin",
     "MinecraftClientMixin",
     "gui.DebugHudMixin",
     "gui.InGameHudMixin",

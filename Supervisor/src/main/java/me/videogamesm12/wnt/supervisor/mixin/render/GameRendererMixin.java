@@ -10,6 +10,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(GameRenderer.class)
 public class GameRendererMixin
 {
+    /**
+     * <p>Disables rendering if the configuration says to not render anything period.</p>
+     * @param tickDelta float
+     * @param startTime long
+     * @param tick      boolean
+     * @param ci        CallbackInfo
+     */
     @Inject(method = "render", at = @At("HEAD"), cancellable = true)
     public void startRender(float tickDelta, long startTime, boolean tick, CallbackInfo ci)
     {

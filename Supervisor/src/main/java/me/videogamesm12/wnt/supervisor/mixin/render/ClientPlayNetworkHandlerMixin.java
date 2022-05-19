@@ -37,4 +37,13 @@ public class ClientPlayNetworkHandlerMixin
             ci.cancel();
         }
     }
+
+    @Inject(method = "onParticle", at = @At("HEAD"), cancellable = true)
+    public void onParticleSpawn(ParticleS2CPacket packet, CallbackInfo ci)
+    {
+        if (Supervisor.CONFIG.network().ignoreParticleSpawns())
+        {
+            ci.cancel();
+        }
+    }
 }

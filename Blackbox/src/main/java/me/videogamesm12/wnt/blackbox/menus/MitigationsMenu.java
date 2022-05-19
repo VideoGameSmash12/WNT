@@ -1,11 +1,9 @@
 package me.videogamesm12.wnt.blackbox.menus;
 
 import me.videogamesm12.wnt.supervisor.Supervisor;
-import me.videogamesm12.wnt.supervisor.mixin.ClientWorldMixin;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.text.Text;
-import net.minecraft.world.EntityList;
 
 import javax.swing.*;
 
@@ -21,6 +19,7 @@ public class MitigationsMenu extends JMenu
     private final JMenu networkMenu = new JMenu("Network");
     private final JCheckBoxMenuItem entitySpawning = new JCheckBoxMenuItem("Ignore entity spawning", Supervisor.CONFIG.network().ignoreEntitySpawns());
     private final JCheckBoxMenuItem explosionSpawning = new JCheckBoxMenuItem("Ignore explosions", Supervisor.CONFIG.network().ignoreExplosions());
+    private final JCheckBoxMenuItem particleSpawning = new JCheckBoxMenuItem("Ignore particle spawns", Supervisor.CONFIG.network().ignoreParticleSpawns());
     private final JCheckBoxMenuItem lightUpdates = new JCheckBoxMenuItem("Ignore light updates", Supervisor.CONFIG.network().ignoreLightUpdates());
     //--
     private final JMenu drasticMenu = new JMenu("Drastic");
@@ -49,10 +48,12 @@ public class MitigationsMenu extends JMenu
         entitySpawning.addActionListener((exd) -> Supervisor.CONFIG.network().setIgnoreEntitySpawns(entitySpawning.isSelected()));
         explosionSpawning.addActionListener((exd) -> Supervisor.CONFIG.network().setIgnoreExplosionSpawns(explosionSpawning.isSelected()));
         lightUpdates.addActionListener((exd) -> Supervisor.CONFIG.network().setIgnoreLightUpdates(lightUpdates.isSelected()));
+        particleSpawning.addActionListener((exd) -> Supervisor.CONFIG.network().setIgnoreParticleSpawns(particleSpawning.isSelected()));
 
         networkMenu.add(entitySpawning);
         networkMenu.add(explosionSpawning);
         networkMenu.add((lightUpdates));
+        networkMenu.add((particleSpawning));
 
         //==-- DRASTIC --==//
         disconnect.addActionListener((exd) -> {

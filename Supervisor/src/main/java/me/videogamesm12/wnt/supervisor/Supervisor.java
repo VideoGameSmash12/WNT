@@ -72,6 +72,13 @@ public class Supervisor implements ClientLifecycleEvents.ClientStopping, ModInit
             automation.cancel();
         }
 
+        /**
+         * <h3>FreezeDetector</h3>
+         * <p>Supervisor's freeze detection works by injecting some code at the tail-end of the game's rendering method to
+         *  store a timestamp for when the last time a frame successfully rendered occurs, then periodically checking
+         *  through another thread if it exceeds 5 seconds.</p>
+         * <p>This code is what checks the timestamps.</p>
+         */
         public static class FreezeDetector extends TimerTask
         {
             @Override
@@ -108,6 +115,8 @@ public class Supervisor implements ClientLifecycleEvents.ClientStopping, ModInit
 
             private boolean ignoreLightUpdates;
 
+            private boolean ignoreParticleSpawns;
+
             public boolean ignoreEntitySpawns()
             {
                 return ignoreEntitySpawns;
@@ -123,6 +132,11 @@ public class Supervisor implements ClientLifecycleEvents.ClientStopping, ModInit
                 return ignoreLightUpdates;
             }
 
+            public boolean ignoreParticleSpawns()
+            {
+                return ignoreParticleSpawns;
+            }
+
             public void setIgnoreEntitySpawns(boolean bool)
             {
                 this.ignoreEntitySpawns = bool;
@@ -136,6 +150,11 @@ public class Supervisor implements ClientLifecycleEvents.ClientStopping, ModInit
             public void setIgnoreLightUpdates(boolean bool)
             {
                 this.ignoreLightUpdates = bool;
+            }
+
+            public void setIgnoreParticleSpawns(boolean bool)
+            {
+                this.ignoreParticleSpawns = bool;
             }
         }
 

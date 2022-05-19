@@ -178,7 +178,7 @@ public class Dumper implements ModInitializer
 
             try
             {
-                NbtIo.write(root, new File(getDumpsFolder(), "wnt.map_" + id + "_" + new Date().getTime() + ".nbt"));
+                NbtIo.write(root, new File(getDumpsFolder(), "wnt.map_" + id + "_" + new Date().getTime() + ".dat"));
             }
             catch (Exception ex)
             {
