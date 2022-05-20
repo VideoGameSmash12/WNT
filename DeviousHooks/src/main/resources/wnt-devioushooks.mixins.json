@@ -1,0 +1,13 @@
+{
+  "required": false,
+  "minVersion": "0.8",
+  "package": "me.videogamesm12.wnt.devioushooks.mixin",
+  "compatibilityLevel": "JAVA_16",
+  "mixins": [
+    "DeviousModClientMixin",
+    "ModuleManagerMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

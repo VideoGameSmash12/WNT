@@ -15,4 +15,5 @@ include 'Toolbox'
 include 'DeviousConflicts'
 include 'Satellite'
 include 'Mathematics'
+include 'DeviousHooks'
 
