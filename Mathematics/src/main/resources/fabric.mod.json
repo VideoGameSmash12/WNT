@@ -1,29 +1,27 @@
 {
   "schemaVersion": 1,
-  "id": "wnt-satellite",
+  "id": "wnt-mathematics",
   "version": "${version}",
-  "name": "Satellite",
-  "description": "WNT's hooks for Meteor Client",
+  "name": "Mathematics",
+  "description": "WNT's hooks for MatHax",
   "authors": [
     "videogamesm12",
     "Microsoft (Icon)"
   ],
   "contact": {},
   "license": "MIT",
-  "icon": "assets/wnt-satellite/icon.png",
+  "icon": "assets/wnt-mathematics/icon.png",
   "environment": "client",
-  "entrypoints": {
-    "meteor": [
-      "me.videogamesm12.wnt.satellite.Satellite"
-    ]
-  },
   "depends": {
     "fabricloader": ">=0.12.12",
     "fabric": "*",
     "minecraft": ">=1.17.1",
-    "meteor-client": ">=0.4.6",
+    "mathax": "*",
     "wnt-blackbox": "*"
   },
+  "mixins": [
+    "wnt-mathematics.mixins.json"
+  ],
   "custom": {
     "modmenu": {
       "parent": "wnt"

@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "me.videogamesm12.wnt.mathematics.mixin",
+  "compatibilityLevel": "JAVA_16",
+  "mixins": [
+    "MatHaxMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
