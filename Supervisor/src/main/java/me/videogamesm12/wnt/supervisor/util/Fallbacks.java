@@ -27,6 +27,7 @@ import net.minecraft.client.ClientBrandRetriever;
 import net.minecraft.client.MinecraftClient;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -42,8 +43,7 @@ public class Fallbacks
      */
     public static List<String> getLeftText()
     {
-        return Arrays.asList(
-                String.format("Minecraft %s (%s/%s)", SharedConstants.getGameVersion().getName(), MinecraftClient.getInstance().getGameVersion(), ClientBrandRetriever.getClientModName()),
+        return Collections.singletonList(
                 MinecraftClient.getInstance().fpsDebugString
         );
     }
