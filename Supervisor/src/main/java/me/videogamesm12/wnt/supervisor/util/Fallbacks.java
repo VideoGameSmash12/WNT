@@ -22,11 +22,8 @@
 
 package me.videogamesm12.wnt.supervisor.util;
 
-import net.minecraft.SharedConstants;
-import net.minecraft.client.ClientBrandRetriever;
 import net.minecraft.client.MinecraftClient;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
