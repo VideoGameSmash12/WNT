@@ -244,7 +244,7 @@ public class Blackbox extends Thread implements ModInitializer, ClientLifecycleE
             try
             {
                 // Loads the icon from disk.
-                InputStream iconStream = Blackbox.class.getClassLoader().getResourceAsStream("assets/wnt-blackbox/supervisor_icon_128.png");
+                InputStream iconStream = Blackbox.class.getClassLoader().getResourceAsStream("assets/wnt-blackbox/icon.png");
                 setIconImage(ImageIO.read(iconStream));
             }
             catch (Exception ex)
@@ -288,6 +288,7 @@ public class Blackbox extends Thread implements ModInitializer, ClientLifecycleE
                             .addComponent(tabs, GroupLayout.Alignment.TRAILING)
             );
             //--
+            tabs.addTab("General", new GeneralTab());
             tabs.addTab("Players", new PlayersTab());
             tabs.addTab("Entities", new EntityTab());
             tabs.addTab("Maps", new MapsTab());

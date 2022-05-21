@@ -28,11 +28,16 @@ import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import me.videogamesm12.wnt.WNT;
 import me.videogamesm12.wnt.supervisor.event.ClientFreezeDetected;
+import me.videogamesm12.wnt.supervisor.mixin.gui.DebugHudMixin;
+import me.videogamesm12.wnt.supervisor.mixin.gui.InGameHudMixin;
+import me.videogamesm12.wnt.supervisor.util.Fallbacks;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.minecraft.client.MinecraftClient;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -44,7 +49,7 @@ public class Supervisor implements ClientLifecycleEvents.ClientStopping, ModInit
 {
     public static SupervisorConfig CONFIG = null;
     //--
-    private SupervisorThread THREAD = null;
+    private static SupervisorThread THREAD = null;
 
     @Override
     public void onInitialize()
@@ -61,6 +66,11 @@ public class Supervisor implements ClientLifecycleEvents.ClientStopping, ModInit
     public void onClientStopping(MinecraftClient client)
     {
         AutoConfig.getConfigHolder(SupervisorConfig.class).save();
+    }
+
+    public static List<String> getF3Info()
+    {
+        return THREAD != null ? THREAD.getF3Info() : new ArrayList<>();
     }
 
     public static class SupervisorThread extends Thread
@@ -92,6 +102,21 @@ public class Supervisor implements ClientLifecycleEvents.ClientStopping, ModInit
         {
             super.interrupt();
             automation.cancel();
+        }
+
+        public List<String> getF3Info()
+        {
+            synchronized (this)
+            {
+                try
+                {
+                    return ((DebugHudMixin) ((InGameHudMixin) MinecraftClient.getInstance().inGameHud).getDebugHud()).getLeftText();
+                }
+                catch (Exception | Error ex)
+                {
+                    return Fallbacks.getLeftText();
+                }
+            }
         }
 
         /**
