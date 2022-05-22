@@ -30,6 +30,8 @@ import net.minecraft.util.ActionResult;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.UUID;
 
 public class ChatWindow extends JFrame implements HUDMessageAdded
@@ -57,6 +59,17 @@ public class ChatWindow extends JFrame implements HUDMessageAdded
         //--
         scrollPane.setViewportView(chatArea);
         //--
+        messageField.addKeyListener(new KeyAdapter()
+        {
+            @Override
+            public void keyPressed(KeyEvent event)
+            {
+                if (event.getKeyCode() == KeyEvent.VK_ENTER
+                        && MinecraftClient.getInstance().getNetworkHandler() != null
+                        && MinecraftClient.getInstance().player != null)
+                    MinecraftClient.getInstance().player.sendChatMessage(messageField.getText());
+            }
+        });
         sendButton.addActionListener((event) -> {
             if (MinecraftClient.getInstance().getNetworkHandler() != null && MinecraftClient.getInstance().player != null)
                 MinecraftClient.getInstance().player.sendChatMessage(messageField.getText());
