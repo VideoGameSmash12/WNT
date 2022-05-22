@@ -20,34 +20,40 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.videogamesm12.wnt.supervisor.util;
+package me.videogamesm12.wnt.util;
 
+import com.google.gson.Gson;
+import lombok.Getter;
+import me.videogamesm12.wnt.WNT;
 import me.videogamesm12.wnt.data.MinecraftVersion;
-import me.videogamesm12.wnt.util.VersionFetcher;
-import net.minecraft.client.ClientBrandRetriever;
 import net.minecraft.client.MinecraftClient;
 
-import java.util.Arrays;
-import java.util.List;
+import java.io.InputStreamReader;
+import java.util.Objects;
 
 /**
- * <h1>Fallbacks</h1>
- * <p>Under certain circumstances, WNT may run into issues with code that Minecraft has that would break shit. This
- * utility class aims to provide fallbacks for some things to keep it running.</p>
+ * <h1>VersionFetcher</h1>
+ * <p>Version-independent way of retrieving the current game version.</p>
  */
-public class Fallbacks
+public class VersionFetcher
 {
-    /**
-     * Returns a simple string list resembling what Minecraft already provides in its F3 menu on the left side.
-     * @return List<String>
-     */
-    public static List<String> getLeftText()
-    {
-        MinecraftVersion version = VersionFetcher.getVersion();
+    private static final Gson gson = new Gson();
 
-        return Arrays.asList(
-                String.format("Minecraft %s (%s/%s)", version.getId(), version.getName(), ClientBrandRetriever.getClientModName()),
-                MinecraftClient.getInstance().fpsDebugString
-        );
+    @Getter
+    private static final MinecraftVersion version;
+
+    static
+    {
+        try
+        {
+            version = gson.fromJson(new InputStreamReader(Objects.requireNonNull(MinecraftClient.class.getClassLoader().getResourceAsStream("version.json"))), MinecraftVersion.class);
+        }
+        catch (Exception ex)
+        {
+            WNT.LOGGER.fatal("UNABLE TO RETRIEVE VERSION INFORMATION!!!");
+            WNT.LOGGER.fatal("MOJANG WHAT THE FUCK DID YOU DO?????");
+
+            throw ex;
+        }
     }
 }
