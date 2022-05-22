@@ -8,6 +8,8 @@ pluginManagement {
     }
 }
 
+rootProject.name = "WNT"
+
 include 'Supervisor', '0EX'
 include 'Blackbox'
 include 'Dumper'
@@ -16,4 +18,3 @@ include 'DeviousConflicts'
 include 'Satellite'
 include 'Mathematics'
 include 'DeviousHooks'
-
