@@ -20,42 +20,17 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.videogamesm12.wnt.blackbox.menus;
+package me.videogamesm12.wnt.sausage.event;
 
-import me.videogamesm12.wnt.WNT;
+import net.fabricmc.fabric.api.event.Event;
+import net.fabricmc.fabric.api.event.EventFactory;
 
-import javax.swing.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 
-public class WNTMenu extends JMenu
+public interface HackToggled
 {
-    public static List<Class<? extends ModMenu<?>>> QUEUE = new ArrayList<>();
+    Event<HackToggled> EVENT = EventFactory.createArrayBacked(HackToggled.class, (listeners) -> () ->
+            Arrays.stream(listeners).forEach(HackToggled::onHackToggled));
 
-    private final JMenu hooksMenu = new JMenu("Hooks");
-
-    public WNTMenu()
-    {
-        super("WNT");
-
-        QUEUE.forEach((clazz) -> {
-            try
-            {
-                addHook(clazz.getConstructor().newInstance());
-            }
-            catch (Exception | Error ex)
-            {
-                WNT.LOGGER.error("Failed to register queued menu");
-                ex.printStackTrace();
-            }
-        });
-        QUEUE.clear();
-
-        add(hooksMenu);
-    }
-
-    public <V, T extends ModMenu<V>> void addHook(T hook)
-    {
-        hooksMenu.add(hook);
-    }
+    void onHackToggled();
 }

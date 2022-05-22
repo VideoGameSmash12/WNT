@@ -20,42 +20,26 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.videogamesm12.wnt.blackbox.menus;
+package me.videogamesm12.wnt.sausage.mixin;
 
-import me.videogamesm12.wnt.WNT;
+import me.videogamesm12.wnt.blackbox.Blackbox;
+import me.videogamesm12.wnt.blackbox.menus.WNTMenu;
+import me.videogamesm12.wnt.sausage.menu.WurstMenu;
+import net.wurstclient.WurstClient;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import javax.swing.*;
-import java.util.ArrayList;
-import java.util.List;
-
-public class WNTMenu extends JMenu
+@Mixin(WurstClient.class)
+public class WurstClientMixin
 {
-    public static List<Class<? extends ModMenu<?>>> QUEUE = new ArrayList<>();
-
-    private final JMenu hooksMenu = new JMenu("Hooks");
-
-    public WNTMenu()
+    @Inject(method = "initialize", at = @At(value = "INVOKE", target = "Lnet/wurstclient/altmanager/AltManager;<init>(Ljava/nio/file/Path;Ljava/nio/file/Path;)V", shift = At.Shift.AFTER), remap = false)
+    public void injectInitialize(CallbackInfo ci)
     {
-        super("WNT");
-
-        QUEUE.forEach((clazz) -> {
-            try
-            {
-                addHook(clazz.getConstructor().newInstance());
-            }
-            catch (Exception | Error ex)
-            {
-                WNT.LOGGER.error("Failed to register queued menu");
-                ex.printStackTrace();
-            }
-        });
-        QUEUE.clear();
-
-        add(hooksMenu);
-    }
-
-    public <V, T extends ModMenu<V>> void addHook(T hook)
-    {
-        hooksMenu.add(hook);
+        if (Blackbox.GUI == null)
+            WNTMenu.QUEUE.add(WurstMenu.class);
+        else
+            Blackbox.GUI.getWntMenu().addHook(new WurstMenu());
     }
 }
