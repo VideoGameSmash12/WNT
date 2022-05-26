@@ -22,25 +22,48 @@
 
 package me.videogamesm12.wnt.command;
 
+import me.videogamesm12.wnt.WNT;
+
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * <h1>CommandSystem</h1>
+ * Simple command registration and storage system for WNT
+ * @author Video
+ */
 public class CommandSystem
 {
     private static final Map<Class<? extends WCommand>, WCommand> commands = new HashMap<>();
 
+    /**
+     * Registers a command class.
+     * @param command   Class that extends WCommand
+     * @param <T>       WCommand
+     */
     public static <T extends WCommand> void registerCommand(Class<T> command)
     {
         try
         {
+            // The command has already been registered, so we'll just avoid a disaster waiting to happen.
+            if (isRegistered(command))
+                throw new IllegalArgumentException("Command class has already been registered!");
+
             commands.put(command, command.getDeclaredConstructor().newInstance().register());
         }
         catch (Exception ex)
         {
+            WNT.LOGGER.error("Failed to register command class " + command.getName());
             ex.printStackTrace();
         }
     }
 
+    /**
+     * Checks to see whether or not a command class has been registered.
+     * @param command   Class that extends WCommand
+     * @param <T>       WCommand
+     * @return          True if the command is already registered
+     */
     public static <T extends WCommand> boolean isRegistered(Class<T> command)
     {
         return commands.containsKey(command);
