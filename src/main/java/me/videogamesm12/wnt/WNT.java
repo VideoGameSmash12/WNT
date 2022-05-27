@@ -41,12 +41,6 @@ public class WNT implements ModInitializer
         MODULES = new ModuleManager();
     }
 
-    @Deprecated
-    public static File getW95Folder()
-    {
-        return getWNTFolder();
-    }
-
     public static File getWNTFolder()
     {
         File file = new File(MinecraftClient.getInstance().runDirectory, "wnt");

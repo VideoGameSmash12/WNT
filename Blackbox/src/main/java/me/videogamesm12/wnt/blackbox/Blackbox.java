@@ -294,9 +294,9 @@ public class Blackbox extends Thread implements ModInitializer, ClientLifecycleE
             tabs.addTab("Maps", new MapsTab());
             //--
             if (Blackbox.CONFIG.autoUpdate())
-            {
                 scheduleRefresh();
-            }
+            //--
+            tabs.addKeyListener(this);
             //--
             setJMenuBar(menuBar);
         }
@@ -337,15 +337,13 @@ public class Blackbox extends Thread implements ModInitializer, ClientLifecycleE
         @Override
         public void keyTyped(KeyEvent e)
         {
-            if (e.getKeyCode() == KeyEvent.VK_F5)
-            {
-                ((SupervisorTab) tabs.getTabComponentAt(tabs.getSelectedIndex())).update();
-            }
         }
 
         @Override
         public void keyPressed(KeyEvent e)
         {
+            if (e.getKeyCode() == KeyEvent.VK_F5)
+                ((SupervisorTab) tabs.getSelectedComponent()).update();
         }
 
         @Override
