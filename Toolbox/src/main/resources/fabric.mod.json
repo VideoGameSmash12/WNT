@@ -24,7 +24,6 @@
   },
   "custom": {
     "modmenu": {
-      "badges": ["library"],
       "parent": "wnt"
     }
   }
