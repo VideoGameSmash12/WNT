@@ -13,5 +13,5 @@ dependencies {
     // DeviousHooks uses the Blackbox to initialize its magical GUI shenanigans.
     implementation project(":Blackbox")
 
-    implementation "com.github.allinkdev:deviousmod:master"
+    implementation "com.github.VideoGameSmash12:deviousmod:master"
 }
