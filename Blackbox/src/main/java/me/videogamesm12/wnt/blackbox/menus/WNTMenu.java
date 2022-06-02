@@ -25,12 +25,12 @@ package me.videogamesm12.wnt.blackbox.menus;
 import me.videogamesm12.wnt.WNT;
 
 import javax.swing.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class WNTMenu extends JMenu
 {
-    public static List<Class<? extends ModMenu<?>>> QUEUE = new ArrayList<>();
+    public static Set<Class<? extends ModMenu<?>>> QUEUE = new HashSet<>();
 
     private final JMenu hooksMenu = new JMenu("Hooks");
 
