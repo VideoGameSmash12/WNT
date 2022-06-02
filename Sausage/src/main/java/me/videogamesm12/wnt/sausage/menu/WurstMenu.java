@@ -20,42 +20,45 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.videogamesm12.wnt.blackbox.menus;
+package me.videogamesm12.wnt.sausage.menu;
 
-import me.videogamesm12.wnt.WNT;
+import me.videogamesm12.wnt.blackbox.menus.ModMenu;
+import me.videogamesm12.wnt.sausage.event.HackToggled;
+import net.wurstclient.Category;
+import net.wurstclient.WurstClient;
 
-import javax.swing.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Arrays;
 
-public class WNTMenu extends JMenu
+public class WurstMenu extends ModMenu<WurstClient> implements HackToggled
 {
-    public static Set<Class<? extends ModMenu<?>>> QUEUE = new HashSet<>();
-
-    private final JMenu hooksMenu = new JMenu("Hooks");
-
-    public WNTMenu()
+    public WurstMenu()
     {
-        super("WNT");
+        super("Wurst", WurstClient.class);
 
-        QUEUE.forEach((clazz) -> {
-            try
-            {
-                addHook(clazz.getConstructor().newInstance());
-            }
-            catch (Exception | Error ex)
-            {
-                WNT.LOGGER.error("Failed to register queued menu");
-                ex.printStackTrace();
-            }
-        });
-        QUEUE.clear();
+        // Sets up event listeners
+        HackToggled.EVENT.register(this);
 
-        add(hooksMenu);
+        // Adds hacks
+        Arrays.stream(Category.values()).forEach(category -> add(new CategoryMenu(category)));
     }
 
-    public <V, T extends ModMenu<V>> void addHook(T hook)
+    @Override
+    public WurstClient getModInstance()
     {
-        hooksMenu.add(hook);
+        return WurstClient.INSTANCE;
+    }
+
+    public void refresh()
+    {
+        Arrays.stream(getMenuComponents()).forEach((comp) -> {
+            if (comp instanceof CategoryMenu ccc)
+                ccc.refresh();
+        });
+    }
+
+    @Override
+    public void onHackToggled()
+    {
+        refresh();
     }
 }

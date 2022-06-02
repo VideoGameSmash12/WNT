@@ -20,42 +20,28 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.videogamesm12.wnt.blackbox.menus;
+package me.videogamesm12.wnt.sausage.menu;
 
-import me.videogamesm12.wnt.WNT;
+import net.wurstclient.Category;
+import net.wurstclient.WurstClient;
 
 import javax.swing.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Arrays;
 
-public class WNTMenu extends JMenu
+public class CategoryMenu extends JMenu
 {
-    public static Set<Class<? extends ModMenu<?>>> QUEUE = new HashSet<>();
-
-    private final JMenu hooksMenu = new JMenu("Hooks");
-
-    public WNTMenu()
+    public CategoryMenu(Category category)
     {
-        super("WNT");
+        super(category.getName());
 
-        QUEUE.forEach((clazz) -> {
-            try
-            {
-                addHook(clazz.getConstructor().newInstance());
-            }
-            catch (Exception | Error ex)
-            {
-                WNT.LOGGER.error("Failed to register queued menu");
-                ex.printStackTrace();
-            }
-        });
-        QUEUE.clear();
-
-        add(hooksMenu);
+        WurstClient.INSTANCE.getHax().getAllHax().stream().filter(hack -> hack.getCategory() == category).forEach(hack -> add(new HackMenu(hack)));
     }
 
-    public <V, T extends ModMenu<V>> void addHook(T hook)
+    public void refresh()
     {
-        hooksMenu.add(hook);
+        Arrays.stream(getMenuComponents()).forEach((comp) -> {
+            if (comp instanceof HackMenu cc && cc.getHack().isEnabled())
+                cc.getEnabledCheckbox().setSelected(true);
+        });
     }
 }

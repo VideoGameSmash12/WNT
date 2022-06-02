@@ -20,42 +20,33 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.videogamesm12.wnt.blackbox.menus;
+package me.videogamesm12.wnt.sausage.menu;
 
-import me.videogamesm12.wnt.WNT;
+import lombok.Getter;
+import net.wurstclient.hack.Hack;
 
 import javax.swing.*;
-import java.util.HashSet;
-import java.util.Set;
 
-public class WNTMenu extends JMenu
+public class HackMenu extends JMenu
 {
-    public static Set<Class<? extends ModMenu<?>>> QUEUE = new HashSet<>();
+    @Getter
+    private final Hack hack;
+    //--
+    @Getter
+    private final JCheckBoxMenuItem enabledCheckbox = new JCheckBoxMenuItem("Enabled");
 
-    private final JMenu hooksMenu = new JMenu("Hooks");
-
-    public WNTMenu()
+    public HackMenu(Hack hack)
     {
-        super("WNT");
+        this.hack = hack;
 
-        QUEUE.forEach((clazz) -> {
-            try
-            {
-                addHook(clazz.getConstructor().newInstance());
-            }
-            catch (Exception | Error ex)
-            {
-                WNT.LOGGER.error("Failed to register queued menu");
-                ex.printStackTrace();
-            }
-        });
-        QUEUE.clear();
+        setText(hack.getName());
 
-        add(hooksMenu);
-    }
+        // Disabled due to a weird ass bug that causes it to fail trying to translate some shit
+        // setToolTipText(hack.getDescription());
 
-    public <V, T extends ModMenu<V>> void addHook(T hook)
-    {
-        hooksMenu.add(hook);
+        enabledCheckbox.setSelected(hack.isEnabled());
+        enabledCheckbox.addActionListener((event) -> hack.setEnabled(enabledCheckbox.isSelected()));
+
+        add(enabledCheckbox);
     }
 }

@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "me.videogamesm12.wnt.sausage.mixin",
+  "compatibilityLevel": "JAVA_16",
+  "mixins": [
+    "HackMixin",
+    "WurstClientMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

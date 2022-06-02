@@ -20,42 +20,21 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.videogamesm12.wnt.blackbox.menus;
+package me.videogamesm12.wnt.sausage.mixin;
 
-import me.videogamesm12.wnt.WNT;
+import me.videogamesm12.wnt.sausage.event.HackToggled;
+import net.wurstclient.hack.Hack;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import javax.swing.*;
-import java.util.HashSet;
-import java.util.Set;
-
-public class WNTMenu extends JMenu
+@Mixin(Hack.class)
+public class HackMixin
 {
-    public static Set<Class<? extends ModMenu<?>>> QUEUE = new HashSet<>();
-
-    private final JMenu hooksMenu = new JMenu("Hooks");
-
-    public WNTMenu()
+    @Inject(method = "setEnabled", at = @At("TAIL"), remap = false)
+    public void injectSetEnabled(boolean enabled, CallbackInfo ci)
     {
-        super("WNT");
-
-        QUEUE.forEach((clazz) -> {
-            try
-            {
-                addHook(clazz.getConstructor().newInstance());
-            }
-            catch (Exception | Error ex)
-            {
-                WNT.LOGGER.error("Failed to register queued menu");
-                ex.printStackTrace();
-            }
-        });
-        QUEUE.clear();
-
-        add(hooksMenu);
-    }
-
-    public <V, T extends ModMenu<V>> void addHook(T hook)
-    {
-        hooksMenu.add(hook);
+        HackToggled.EVENT.invoker().onHackToggled();
     }
 }
