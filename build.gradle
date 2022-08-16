@@ -22,7 +22,6 @@ dependencies {
 
 allprojects {
     apply plugin: 'fabric-loom'
-    apply plugin: 'maven-publish'
 
     tasks.withType(JavaCompile).configureEach {
         it.options.release.set(16)
@@ -62,27 +61,10 @@ allprojects {
             expand "version": rootProject.version
         }
     }
-
-    // Handles publishing
-    publishing {
-        publications {
-            mavenJava(MavenPublication) {
-                artifact(remapJar) {
-                    builtBy remapJar
-                }
-                artifact(sourcesJar) {
-                    builtBy remapSourcesJar
-                }
-            }
-        }
-
-        // Don't publish anywhere.
-        repositories {}
-    }
-
 }
 
 subprojects {
+    group rootProject.group
     version rootProject.version
 
     dependencies {

@@ -12,6 +12,6 @@ dependencies {
     implementation project(":Supervisor")
     implementation project(":Dumper")
 
-    include compileOnly("com.formdev:flatlaf:1.6.1")
-    include compileOnly("com.formdev:flatlaf-intellij-themes:1.6.1")
+    include compileOnly("com.formdev:flatlaf:2.4")
+    include compileOnly("com.formdev:flatlaf-intellij-themes:2.4")
 }
