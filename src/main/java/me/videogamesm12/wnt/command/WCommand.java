@@ -29,8 +29,12 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
+import joptsimple.internal.Strings;
 import net.fabricmc.fabric.api.client.command.v1.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.platform.fabric.FabricClientAudiences;
+import net.kyori.adventure.text.Component;
 import net.minecraft.command.CommandSource;
 import net.minecraft.text.TranslatableText;
 import org.apache.commons.lang3.ArrayUtils;
@@ -40,6 +44,8 @@ import java.util.concurrent.CompletableFuture;
 
 public abstract class WCommand implements Command<FabricClientCommandSource>, SuggestionProvider<FabricClientCommandSource>
 {
+    protected static final Audience client = FabricClientAudiences.of().audience();
+
     private final String name;
     private final String description;
     private final String usage;
@@ -59,7 +65,14 @@ public abstract class WCommand implements Command<FabricClientCommandSource>, Su
     public final int run(CommandContext<FabricClientCommandSource> context) throws CommandSyntaxException
     {
         if (!run(context, ArrayUtils.remove(context.getInput().split(" "), 0)))
-            context.getSource().sendError(new TranslatableText("wnt.messages.commands.usage", getUsage()));
+        {
+            if (!Strings.isNullOrEmpty(getDescription()))
+            {
+                msg(Component.text(getDescription()));
+            }
+
+            msg(Component.translatable("wnt.messages.commands.usage", Component.text(usage)));
+        }
 
         return 1;
     }
@@ -92,5 +105,10 @@ public abstract class WCommand implements Command<FabricClientCommandSource>, Su
     public final String getUsage()
     {
         return usage;
+    }
+
+    protected final void msg(Component component)
+    {
+        client.sendMessage(component);
     }
 }

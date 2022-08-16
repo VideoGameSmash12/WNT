@@ -22,6 +22,10 @@
 
 package me.videogamesm12.wnt;
 
+import me.shedaniel.autoconfig.AutoConfig;
+import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
+import me.videogamesm12.wnt.config.WConfig;
+import me.videogamesm12.wnt.event.WNTInitializedEvent;
 import me.videogamesm12.wnt.module.ModuleManager;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.client.MinecraftClient;
@@ -33,12 +37,18 @@ import java.io.File;
 public class WNT implements ModInitializer
 {
     public static Logger LOGGER = LogManager.getLogger("WNT");
-    public static ModuleManager MODULES;
+    public static WConfig CONFIG;
 
     @Override
     public void onInitialize()
     {
-        MODULES = new ModuleManager();
+        LOGGER.info("Loading configuration");
+        AutoConfig.register(WConfig.class, GsonConfigSerializer::new);
+        CONFIG = AutoConfig.getConfigHolder(WConfig.class).getConfig();
+        //--
+        LOGGER.info("Loading modules");
+        //--
+        WNTInitializedEvent.EVENT.invoker().onWNTInitialized();
     }
 
     public static File getWNTFolder()

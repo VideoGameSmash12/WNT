@@ -22,8 +22,14 @@
 
 package me.videogamesm12.wnt.module;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import me.videogamesm12.wnt.WNT;
+import me.videogamesm12.wnt.event.module.ModuleDisabledEvent;
+import me.videogamesm12.wnt.event.module.ModuleEnabledEvent;
+import net.kyori.adventure.key.Key;
 
+import java.io.*;
 import java.util.*;
 
 /**
@@ -32,27 +38,23 @@ import java.util.*;
  */
 public class ModuleManager
 {
-    private final Map<Class<? extends Module>, Module> MODULES = new HashMap<>();
-
-    public boolean isRegistered(Class<? extends Module> moduleClass)
-    {
-        return MODULES.containsKey(moduleClass);
-    }
+    private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    //--
+    private static final Map<Key, Module> modules = new HashMap<>();
 
     /**
      * Registers a module.
      * @param moduleClass   Class<? extends Module>
      */
-    public void register(Class<? extends Module> moduleClass)
+    public static void register(Class<? extends Module> moduleClass)
     {
         try
         {
             Module instance = moduleClass.getDeclaredConstructor().newInstance();
-            //--
-            if (instance.isEnabled())
-                instance.start();
-            //--
-            MODULES.put(moduleClass, instance);
+            modules.put(instance.getKey(), instance);
+
+            if (isEnabled(instance.getKey()))
+                enable(instance);
         }
         catch (Exception ex)
         {
@@ -63,41 +65,111 @@ public class ModuleManager
 
     /**
      * Unregisters a module.
-     * @param moduleClass   Class<? extends Module>
+     * @param module   Module
      */
-    public <T extends Module> void unregister(Class<T> moduleClass)
+    public static <T extends Module> void unregister(T module)
     {
-        if (!MODULES.containsKey(moduleClass))
+        if (!isRegistered(module.getKey()))
             return;
 
         try
         {
-            T module = getModule(moduleClass);
-
-            // Unregister the module before removing it
-            if (module.isEnabled())
+            // Disable the module before removing it
+            if (isEnabled(module.getKey()))
             {
-                module.disable();
                 module.stop();
+                disable(module);
             }
 
-            MODULES.remove(moduleClass);
+            modules.remove(module.getKey());
         }
         catch (Exception ex)
         {
-            WNT.LOGGER.error("Failed to unregister module " + moduleClass.getSimpleName());
+            WNT.LOGGER.error("Failed to unregister module " + module.getKey().asString());
             ex.printStackTrace();
         }
     }
 
     @SuppressWarnings("unchecked")
-    public <T extends Module> T getModule(Class<T> moduleClass)
+    public static <T extends Module> T getModule(Key key)
     {
-        if (!isRegistered(moduleClass))
+        if (!isRegistered(key))
         {
-            throw new IllegalStateException("The module " + moduleClass.getSimpleName() + " is not currently registered");
+            throw new IllegalStateException("The module " + key.asString() + " is not currently registered");
         }
 
-        return (T) MODULES.get(moduleClass);
+        return (T) modules.get(key);
+    }
+
+    public static boolean isRegistered(Key key)
+    {
+        return modules.containsKey(key);
+    }
+
+    public static boolean isEnabled(Key key)
+    {
+        return WNT.CONFIG.getEnabledModules().contains(key.asString());
+    }
+
+    public static <M extends Module> void enable(M module)
+    {
+        if (!isEnabled(module.getKey()))
+            WNT.CONFIG.getEnabledModules().add(module.getKey().asString());
+
+        if (!module.isStarted())
+            module.start();
+
+        ModuleEnabledEvent.EVENT.invoker().onEnable(module);
+    }
+
+    public static <M extends Module> void disable(M module)
+    {
+        if (isEnabled(module.getKey()) && module.isStarted())
+            module.stop();
+
+        WNT.CONFIG.getEnabledModules().remove(module.getKey().asString());
+        ModuleDisabledEvent.EVENT.invoker().onDisable(module);
+    }
+
+    public static File getConfigFolder()
+    {
+        File folder = new File(WNT.getWNTFolder(), "modules");
+
+        if (!folder.exists())
+            folder.mkdir();
+
+        return folder;
+    }
+
+    public static <T> T getModuleSettings(Key key, Class<T> settingsClass)
+    {
+        try
+        {
+            FileReader fileReader = new FileReader(new File(getConfigFolder(), key.namespace() + "." + key.value() + ".json"));
+            return gson.fromJson(fileReader, settingsClass);
+        }
+        catch (FileNotFoundException e)
+        {
+            return null;
+        }
+        catch (Exception ex)
+        {
+            WNT.LOGGER.error("Failed to load module settings");
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
+    public static <T> void saveModuleSettings(Key key, T settings)
+    {
+        try (Writer writer = new FileWriter(key.namespace() + "." + key.value() + ".json"))
+        {
+            gson.toJson(settings, writer);
+        }
+        catch (Exception ex)
+        {
+            WNT.LOGGER.error("Failed to save module settings");
+            ex.printStackTrace();
+        }
     }
 }

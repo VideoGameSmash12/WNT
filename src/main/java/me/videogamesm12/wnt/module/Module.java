@@ -22,70 +22,46 @@
 
 package me.videogamesm12.wnt.module;
 
-import lombok.Data;
-import me.shedaniel.autoconfig.AutoConfig;
-import me.shedaniel.autoconfig.ConfigData;
-import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
+import lombok.Getter;
+import net.kyori.adventure.key.Key;
 
 public abstract class Module
 {
-    public MConfig config;
+    @Getter
+    private final Key key;
+    @Getter
+    private final String description;
+    //--
+    @Getter
+    private boolean started;
 
     public Module()
     {
-        AutoConfig.register(getConfigClass(), GsonConfigSerializer::new);
-        config = AutoConfig.getConfigHolder(getConfigClass()).getConfig();
-    }
-
-    public final void enable()
-    {
-        getConfig().setEnabled(true);
-        onEnable();
-    }
-
-    public final void disable()
-    {
-        getConfig().setEnabled(false);
-        onDisable();
+        if (getClass().isAnnotationPresent(ModuleMeta.class))
+        {
+            ModuleMeta meta = getClass().getAnnotation(ModuleMeta.class);
+            key = Key.key(meta.namespace());
+            description = meta.description();
+        }
+        else
+        {
+            throw new IllegalArgumentException("Modules are required to be annotated with @ModuleMeta");
+        }
     }
 
     public final void start()
     {
         onStart();
+        started = true;
     }
 
     public final void stop()
     {
         onStop();
-    }
-
-    public void onDisable()
-    {
-    }
-
-    public void onEnable()
-    {
+        started = false;
     }
 
     public abstract void onStart();
 
     public abstract void onStop();
-
-    public final <T extends MConfig> T getConfig()
-    {
-        return (T) config;
-    }
-
-    public abstract Class<? extends MConfig> getConfigClass();
-
-    public final boolean isEnabled()
-    {
-        return getConfig().isEnabled();
-    }
-
-    @Data
-    public static class MConfig implements ConfigData
-    {
-        private boolean enabled;
-    }
 }

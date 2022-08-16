@@ -2,7 +2,6 @@ group 'me.videogamesm12'
 
 repositories {
     maven { url "https://jitpack.io/" }
-    maven { url = "https://maven.meteordev.org/snapshots" }
     // Why the fuck do I need to add this shit? It doesn't even get used by Mathematics, let alone WNT.
     maven { url 'https://m2.dv8tion.net/releases' }
 }
@@ -15,8 +14,5 @@ dependencies {
     // Blackbox setup
     implementation project(":Blackbox")
 
-    // The current version of MatHax can't be pulled from GitHub through Jitpack currently due to a problem in their
-    // Jitpack configuration. To compensate for this, I've forked MatHax myself and made the one-line change. I will
-    // use the fork until MatHax's can fix the problem.
-    modImplementation "com.github.VideoGameSmash12:MatHax:master"
+    modImplementation "com.github.MatHax:Client:master"
 }

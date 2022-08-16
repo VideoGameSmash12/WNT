@@ -51,9 +51,7 @@ public class DumpCommand extends WCommand
 
         switch (args[0].toLowerCase())
         {
-            case "entities" -> {
-                MassEntityDumpRequest.EVENT.invoker().onEntityDumpRequested(context.getSource());
-            }
+            case "entities" -> MassEntityDumpRequest.EVENT.invoker().onEntityDumpRequested(context.getSource());
             case "entity" -> {
                 if (args.length < 2)
                     return false;

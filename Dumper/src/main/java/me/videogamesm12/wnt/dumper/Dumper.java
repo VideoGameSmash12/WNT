@@ -32,6 +32,7 @@ import me.videogamesm12.wnt.dumper.event.MassEntityDumpRequest;
 import me.videogamesm12.wnt.dumper.event.MassMapDumpRequest;
 import me.videogamesm12.wnt.dumper.mixin.ClientWorldMixin;
 import me.videogamesm12.wnt.module.Module;
+import me.videogamesm12.wnt.module.ModuleManager;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
@@ -55,19 +56,14 @@ public class Dumper implements ModInitializer
     @Override
     public void onInitialize()
     {
-        WNT.MODULES.register(DumperModule.class);
+        ModuleManager.register(DumperModule.class);
         CommandSystem.registerCommand(DumpCommand.class);
         //--
         thread = new DumperThread();
     }
 
-    @Config(name = "wnt-dumper")
-    public static class DumperClass extends Module.MConfig
-    {
-    }
-
-    public static class DumperModule extends Module implements EntityDumpRequest, MassEntityDumpRequest, MapDumpRequest,
-            MassMapDumpRequest
+    public static class DumperModule extends Module
+            implements EntityDumpRequest, MassEntityDumpRequest, MapDumpRequest, MassMapDumpRequest
     {
         public DumperModule()
         {
@@ -87,12 +83,6 @@ public class Dumper implements ModInitializer
         @Override
         public void onStop()
         {
-        }
-
-        @Override
-        public Class<DumperClass> getConfigClass()
-        {
-            return DumperClass.class;
         }
 
         @Override

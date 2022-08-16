@@ -4,16 +4,18 @@ plugins {
 }
 
 group 'me.videogamesm12'
-version '2.0-indev'
+version '2.1'
 
 repositories {
+    mavenCentral()
 }
 
 dependencies {
     minecraft "com.mojang:minecraft:1.17.1"
     mappings "net.fabricmc:yarn:1.17.1+build.65:v2"
-
     modImplementation "net.fabricmc.fabric-api:fabric-api:0.46.0+1.17"
+    modImplementation include("net.kyori:adventure-api:4.9.3")
+    modImplementation include("net.kyori:adventure-platform-fabric:4.1.0")
 
     subprojects.each {
         include project("${it.name}:")
