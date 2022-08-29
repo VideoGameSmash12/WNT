@@ -1,2 +1,8 @@
 {
+  "wnt.toolbox.commands.wntmm.list": "Registered modules: ",
+  "wnt.toolbox.commands.wntmm.list.registered": "There are currently %s modules registered.",
+  "wnt.toolbox.commands.wntmm.not_registered": "That module currently isn't registered",
+  "wnt.toolbox.commands.wntmm.toggled": "The module %s has been toggled.",
+
+  "wnt.toolbox.lockup_protection.ignored": "Ignored a possible lock-up packet sent by the server."
 }

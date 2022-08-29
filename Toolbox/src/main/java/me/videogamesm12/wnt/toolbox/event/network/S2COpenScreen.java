@@ -20,30 +20,16 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.videogamesm12.wnt.toolbox;
+package me.videogamesm12.wnt.toolbox.event.network;
 
-import com.google.common.eventbus.EventBus;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import me.videogamesm12.wnt.WNT;
-import me.videogamesm12.wnt.command.CommandSystem;
-import me.videogamesm12.wnt.toolbox.commands.NameCommand;
-import me.videogamesm12.wnt.toolbox.commands.UuidCommand;
-import me.videogamesm12.wnt.toolbox.commands.WNTMMCommand;
-import me.videogamesm12.wnt.toolbox.modules.LockupProtection;
-import net.fabricmc.api.ModInitializer;
+import me.videogamesm12.wnt.event.CustomEvent;
+import net.minecraft.network.packet.s2c.play.OpenScreenS2CPacket;
 
-public class Toolbox implements ModInitializer
+@AllArgsConstructor
+public class S2COpenScreen extends CustomEvent
 {
     @Getter
-    private static final EventBus eventBus = new EventBus();
-
-    @Override
-    public void onInitialize()
-    {
-        CommandSystem.registerCommand(NameCommand.class);
-        CommandSystem.registerCommand(UuidCommand.class);
-        CommandSystem.registerCommand(WNTMMCommand.class);
-        //--
-        WNT.MODULES.register(LockupProtection.class);
-    }
+    private OpenScreenS2CPacket packet;
 }

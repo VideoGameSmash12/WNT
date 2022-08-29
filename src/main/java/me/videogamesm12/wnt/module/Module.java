@@ -22,41 +22,37 @@
 
 package me.videogamesm12.wnt.module;
 
-import lombok.Data;
-import me.shedaniel.autoconfig.AutoConfig;
-import me.shedaniel.autoconfig.ConfigData;
-import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
+import lombok.Getter;
 
 public abstract class Module
 {
-    public MConfig config;
-
-    public Module()
-    {
-        AutoConfig.register(getConfigClass(), GsonConfigSerializer::new);
-        config = AutoConfig.getConfigHolder(getConfigClass()).getConfig();
-    }
+    @Getter
+    private boolean enabled;
+    @Getter
+    private boolean started;
 
     public final void enable()
     {
-        getConfig().setEnabled(true);
+        enabled = true;
         onEnable();
     }
 
     public final void disable()
     {
-        getConfig().setEnabled(false);
+        enabled = false;
         onDisable();
     }
 
     public final void start()
     {
         onStart();
+        started = true;
     }
 
     public final void stop()
     {
         onStop();
+        started = false;
     }
 
     public void onDisable()
@@ -70,22 +66,4 @@ public abstract class Module
     public abstract void onStart();
 
     public abstract void onStop();
-
-    public final <T extends MConfig> T getConfig()
-    {
-        return (T) config;
-    }
-
-    public abstract Class<? extends MConfig> getConfigClass();
-
-    public final boolean isEnabled()
-    {
-        return getConfig().isEnabled();
-    }
-
-    @Data
-    public static class MConfig implements ConfigData
-    {
-        private boolean enabled;
-    }
 }

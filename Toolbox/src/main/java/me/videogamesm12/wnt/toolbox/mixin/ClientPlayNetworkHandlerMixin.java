@@ -20,30 +20,27 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.videogamesm12.wnt.toolbox;
+package me.videogamesm12.wnt.toolbox.mixin;
 
-import com.google.common.eventbus.EventBus;
-import lombok.Getter;
-import me.videogamesm12.wnt.WNT;
-import me.videogamesm12.wnt.command.CommandSystem;
-import me.videogamesm12.wnt.toolbox.commands.NameCommand;
-import me.videogamesm12.wnt.toolbox.commands.UuidCommand;
-import me.videogamesm12.wnt.toolbox.commands.WNTMMCommand;
-import me.videogamesm12.wnt.toolbox.modules.LockupProtection;
-import net.fabricmc.api.ModInitializer;
+import me.videogamesm12.wnt.toolbox.Toolbox;
+import me.videogamesm12.wnt.toolbox.event.network.S2COpenScreen;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
+import net.minecraft.network.packet.s2c.play.OpenScreenS2CPacket;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-public class Toolbox implements ModInitializer
+@Mixin(ClientPlayNetworkHandler.class)
+public class ClientPlayNetworkHandlerMixin
 {
-    @Getter
-    private static final EventBus eventBus = new EventBus();
-
-    @Override
-    public void onInitialize()
+    @Inject(method = "onOpenScreen", at = @At("HEAD"), cancellable = true)
+    public void injectOpenScreen(OpenScreenS2CPacket packet, CallbackInfo ci)
     {
-        CommandSystem.registerCommand(NameCommand.class);
-        CommandSystem.registerCommand(UuidCommand.class);
-        CommandSystem.registerCommand(WNTMMCommand.class);
-        //--
-        WNT.MODULES.register(LockupProtection.class);
+        S2COpenScreen event = new S2COpenScreen(packet);
+        Toolbox.getEventBus().post(event);
+
+        if (event.isCancelled())
+            ci.cancel();
     }
 }

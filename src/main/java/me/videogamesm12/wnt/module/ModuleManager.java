@@ -24,6 +24,7 @@ package me.videogamesm12.wnt.module;
 
 import me.videogamesm12.wnt.WNT;
 
+import java.io.File;
 import java.util.*;
 
 /**
@@ -48,9 +49,7 @@ public class ModuleManager
         try
         {
             Module instance = moduleClass.getDeclaredConstructor().newInstance();
-            //--
-            if (instance.isEnabled())
-                instance.start();
+            instance.start();
             //--
             MODULES.put(moduleClass, instance);
         }
@@ -99,5 +98,41 @@ public class ModuleManager
         }
 
         return (T) MODULES.get(moduleClass);
+    }
+
+    public <T extends Module> T getModule(String name)
+    {
+        // OH MY GOD WHY MUST I DO THIS OH GOD IT IS HORRIBLE
+        Map.Entry<Class<? extends Module>, Module> entry = MODULES.entrySet().stream().filter(set -> set.getKey().getSimpleName().equalsIgnoreCase(name)).findFirst().orElse(null);
+
+        if (entry == null)
+            return null;
+
+        // OH THE PAIN IT IS UNBEARABLE WHY CAN'T I CHECK IF SHIT IS AN INSTANCE OF THE FUCKING T?
+        return (T) entry.getValue();
+    }
+
+    public boolean isModuleRegistered(String name)
+    {
+        return MODULES.keySet().stream().anyMatch(clazz -> clazz.getSimpleName().equalsIgnoreCase(name));
+    }
+
+    public List<String> getModuleNames()
+    {
+        List<String> names = new ArrayList<>();
+
+        MODULES.forEach((aClass, module) -> names.add(aClass.getSimpleName()));
+
+        return names;
+    }
+
+    public static File getModulesFolder()
+    {
+        File folder = new File(WNT.getWNTFolder(), "modules");
+
+        if (!folder.exists())
+            folder.mkdirs();
+
+        return folder;
     }
 }

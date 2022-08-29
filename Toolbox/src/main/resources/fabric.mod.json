@@ -16,6 +16,9 @@
       "me.videogamesm12.wnt.toolbox.Toolbox"
     ]
   },
+  "mixins": [
+    "wnt-toolbox.mixins.json"
+  ],
   "depends": {
     "fabricloader": ">=0.12.12",
     "fabric": "*",
