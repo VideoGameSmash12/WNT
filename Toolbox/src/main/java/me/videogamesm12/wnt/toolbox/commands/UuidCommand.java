@@ -42,7 +42,7 @@ import java.util.regex.Pattern;
 
 public class UuidCommand extends WCommand
 {
-    private Gson    gson            = new Gson();
+    private Gson gson = new Gson();
     private Pattern usernamePattern = Pattern.compile("[A-z0-9_]{3,20}");
 
     public UuidCommand()
