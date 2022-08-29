@@ -55,6 +55,8 @@ public class ChatWindow extends JFrame implements HUDMessageAdded
         chatArea.setEditable(false);
         chatArea.setColumns(20);
         chatArea.setRows(5);
+        chatArea.setLineWrap(true);
+        chatArea.setWrapStyleWord(true);
         chatArea.setFont(new Font("Courier New", Font.PLAIN, 12));
         //--
         scrollPane.setViewportView(chatArea);
