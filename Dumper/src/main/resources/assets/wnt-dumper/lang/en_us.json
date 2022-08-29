@@ -1,4 +1,8 @@
 {
+  "wnt.dumper.error.not_in_world": "Not currently in a world",
+  "wnt.dumper.error.entity_not_found": "That entity could not be found",
+
+  "wnt.dumper.failed": "Dump failed: %s",
   "wnt.dumper.success": "Dump successful. Check your dumps folder.",
 
   "wnt.dumper.map_not_loaded": "The map with that ID hasn't been loaded"

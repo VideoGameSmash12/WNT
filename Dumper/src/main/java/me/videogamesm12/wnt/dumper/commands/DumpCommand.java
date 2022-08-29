@@ -24,17 +24,18 @@ package me.videogamesm12.wnt.dumper.commands;
 
 import com.mojang.brigadier.context.CommandContext;
 import me.videogamesm12.wnt.command.WCommand;
-import me.videogamesm12.wnt.dumper.event.EntityDumpRequest;
-import me.videogamesm12.wnt.dumper.event.MapDumpRequest;
-import me.videogamesm12.wnt.dumper.event.MassEntityDumpRequest;
-import me.videogamesm12.wnt.dumper.event.MassMapDumpRequest;
+import me.videogamesm12.wnt.dumper.Dumper;
+import me.videogamesm12.wnt.dumper.events.RequestEntityDumpEvent;
+import me.videogamesm12.wnt.dumper.events.RequestMapDumpEvent;
 import me.videogamesm12.wnt.dumper.mixin.ClientWorldMixin;
 import net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.entity.Entity;
 import net.minecraft.text.TranslatableText;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class DumpCommand extends WCommand
 {
@@ -49,35 +50,49 @@ public class DumpCommand extends WCommand
         if (args.length == 0)
             return false;
 
+        if (MinecraftClient.getInstance().world == null)
+        {
+            context.getSource().sendError(new TranslatableText("wnt.dumper.error.not_in_world"));
+            return true;
+        }
+
         switch (args[0].toLowerCase())
         {
-            case "entities" -> {
-                MassEntityDumpRequest.EVENT.invoker().onEntityDumpRequested(context.getSource());
-            }
+            case "entities" -> CompletableFuture.runAsync(() -> Dumper.getHandler().getEventBus().post(new RequestEntityDumpEvent<>(context.getSource())));
             case "entity" -> {
                 if (args.length < 2)
                     return false;
 
                 int id = Integer.parseInt(args[1]);
 
-                EntityDumpRequest.EVENT.invoker().onEntityDumpRequested(context.getSource(), id);
+                CompletableFuture.runAsync(() -> {
+                    Entity entity = MinecraftClient.getInstance().world.getEntityById(id);
+
+                    if (entity == null)
+                    {
+                        context.getSource().sendError(new TranslatableText("wnt.dumper.error.entity_not_found"));
+                        return;
+                    }
+
+                    Dumper.getHandler().getEventBus().post(new RequestEntityDumpEvent<>(entity, context.getSource()));
+                });
             }
+            case "maps" -> CompletableFuture.runAsync(() -> Dumper.getHandler().getEventBus().post(new RequestMapDumpEvent<>(context.getSource())));
             case "map" -> {
                 if (args.length < 2)
                     return false;
 
                 int id = Integer.parseInt(args[1]);
 
-                if (!((ClientWorldMixin) MinecraftClient.getInstance().world).getMapStates().containsKey("map_" + id))
-                {
-                    context.getSource().sendError(new TranslatableText("wnt.dumper.map_not_loaded"));
-                    return true;
-                }
+                CompletableFuture.runAsync(() -> {
+                    if (!((ClientWorldMixin) MinecraftClient.getInstance().world).getMapStates().containsKey("map_" + id))
+                    {
+                        context.getSource().sendError(new TranslatableText("wnt.dumper.map_not_loaded"));
+                        return;
+                    }
 
-                MapDumpRequest.EVENT.invoker().onMapDumpRequested(id, context.getSource());
-            }
-            case "maps" -> {
-                MassMapDumpRequest.EVENT.invoker().onMapDumpRequested(context.getSource());
+                    Dumper.getHandler().getEventBus().post(new RequestMapDumpEvent<>(id, context.getSource()));
+                });
             }
             default -> {
                 return false;

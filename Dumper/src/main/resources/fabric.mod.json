@@ -12,7 +12,7 @@
   "icon": "assets/wnt-dumper/icon.png",
   "environment": "client",
   "entrypoints": {
-    "main": [
+    "client": [
       "me.videogamesm12.wnt.dumper.Dumper"
     ]
   },
