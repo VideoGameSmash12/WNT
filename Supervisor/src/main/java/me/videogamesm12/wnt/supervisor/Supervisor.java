@@ -40,6 +40,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * <h1>Supervisor</h1>
@@ -77,7 +80,7 @@ public class Supervisor implements ClientLifecycleEvents.ClientStopping, ModInit
     {
         public static long LAST_RENDERED = Instant.now().toEpochMilli();
         //--
-        private final Timer automation = new Timer();
+        private final ScheduledExecutorService freezeDetector = new ScheduledThreadPoolExecutor(1);
 
         public SupervisorThread()
         {
@@ -91,7 +94,18 @@ public class Supervisor implements ClientLifecycleEvents.ClientStopping, ModInit
             // Detect client-side freezes
             if (CONFIG.detectFreezes())
             {
-                automation.schedule(new FreezeDetector(), 0, 5000);
+                freezeDetector.scheduleAtFixedRate(() -> {
+                    // The client hasn't rendered something in 5 seconds. This usually indicates that the game has frozen.
+                    if (Instant.now().toEpochMilli() - LAST_RENDERED >= 5000)
+                    {
+                        if (!ClientFreezeDetected.EVENT.invoker().onClientFreeze(LAST_RENDERED).isAccepted())
+                        {
+                            return;
+                        }
+
+                        WNT.LOGGER.error("--== Supervisor has detected a client-side freeze! ==--");
+                    }
+                }, 0, 5, TimeUnit.SECONDS);
             }
             //--
             WNT.LOGGER.info("Supervisor started");
@@ -100,8 +114,8 @@ public class Supervisor implements ClientLifecycleEvents.ClientStopping, ModInit
         @Override
         public void interrupt()
         {
+            freezeDetector.shutdown();
             super.interrupt();
-            automation.cancel();
         }
 
         public List<String> getF3Info()
@@ -115,31 +129,6 @@ public class Supervisor implements ClientLifecycleEvents.ClientStopping, ModInit
                 catch (Exception | Error ex)
                 {
                     return Fallbacks.getLeftText();
-                }
-            }
-        }
-
-        /**
-         * <h3>FreezeDetector</h3>
-         * <p>Supervisor's freeze detection works by injecting some code at the tail-end of the game's rendering method to
-         *  store a timestamp for when the last time a frame successfully rendered occurs, then periodically checking
-         *  through another thread if it exceeds 5 seconds.</p>
-         * <p>This code is what checks the timestamps.</p>
-         */
-        public static class FreezeDetector extends TimerTask
-        {
-            @Override
-            public void run()
-            {
-                // The client hasn't rendered something in 5 seconds. This usually indicates that the game has frozen.
-                if (Instant.now().toEpochMilli() - LAST_RENDERED >= 5000)
-                {
-                    if (!ClientFreezeDetected.EVENT.invoker().onClientFreeze(LAST_RENDERED).isAccepted())
-                    {
-                        return;
-                    }
-
-                    WNT.LOGGER.error("--== Supervisor has detected a client-side freeze! ==--");
                 }
             }
         }
