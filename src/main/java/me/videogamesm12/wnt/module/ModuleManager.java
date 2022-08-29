@@ -22,6 +22,7 @@
 
 package me.videogamesm12.wnt.module;
 
+import lombok.Getter;
 import me.videogamesm12.wnt.WNT;
 
 import java.io.File;
@@ -33,11 +34,12 @@ import java.util.*;
  */
 public class ModuleManager
 {
-    private final Map<Class<? extends Module>, Module> MODULES = new HashMap<>();
+    @Getter
+    private final Map<Class<? extends Module>, Module> modules = new HashMap<>();
 
     public boolean isRegistered(Class<? extends Module> moduleClass)
     {
-        return MODULES.containsKey(moduleClass);
+        return modules.containsKey(moduleClass);
     }
 
     /**
@@ -51,7 +53,10 @@ public class ModuleManager
             Module instance = moduleClass.getDeclaredConstructor().newInstance();
             instance.start();
             //--
-            MODULES.put(moduleClass, instance);
+            if (WNT.getConfig().isEnabled(moduleClass))
+                instance.enable();
+            //--
+            modules.put(moduleClass, instance);
         }
         catch (Exception ex)
         {
@@ -66,7 +71,7 @@ public class ModuleManager
      */
     public <T extends Module> void unregister(Class<T> moduleClass)
     {
-        if (!MODULES.containsKey(moduleClass))
+        if (!modules.containsKey(moduleClass))
             return;
 
         try
@@ -80,7 +85,7 @@ public class ModuleManager
                 module.stop();
             }
 
-            MODULES.remove(moduleClass);
+            modules.remove(moduleClass);
         }
         catch (Exception ex)
         {
@@ -97,13 +102,13 @@ public class ModuleManager
             throw new IllegalStateException("The module " + moduleClass.getSimpleName() + " is not currently registered");
         }
 
-        return (T) MODULES.get(moduleClass);
+        return (T) modules.get(moduleClass);
     }
 
     public <T extends Module> T getModule(String name)
     {
         // OH MY GOD WHY MUST I DO THIS OH GOD IT IS HORRIBLE
-        Map.Entry<Class<? extends Module>, Module> entry = MODULES.entrySet().stream().filter(set -> set.getKey().getSimpleName().equalsIgnoreCase(name)).findFirst().orElse(null);
+        Map.Entry<Class<? extends Module>, Module> entry = modules.entrySet().stream().filter(set -> set.getKey().getSimpleName().equalsIgnoreCase(name)).findFirst().orElse(null);
 
         if (entry == null)
             return null;
@@ -114,14 +119,14 @@ public class ModuleManager
 
     public boolean isModuleRegistered(String name)
     {
-        return MODULES.keySet().stream().anyMatch(clazz -> clazz.getSimpleName().equalsIgnoreCase(name));
+        return modules.keySet().stream().anyMatch(clazz -> clazz.getSimpleName().equalsIgnoreCase(name));
     }
 
     public List<String> getModuleNames()
     {
         List<String> names = new ArrayList<>();
 
-        MODULES.forEach((aClass, module) -> names.add(aClass.getSimpleName()));
+        modules.forEach((aClass, module) -> names.add(aClass.getSimpleName()));
 
         return names;
     }
