@@ -1,8 +1,15 @@
 {
+  "wnt.toolbox.commands.wntmm.info.description": "Description: %s",
+  "wnt.toolbox.commands.wntmm.info.header": "About %s",
+  "wnt.toolbox.commands.wntmm.info.status": "Status: %s",
+
   "wnt.toolbox.commands.wntmm.list": "Registered modules: ",
   "wnt.toolbox.commands.wntmm.list.registered": "There are currently %s modules registered.",
   "wnt.toolbox.commands.wntmm.not_registered": "That module currently isn't registered",
+  "wnt.toolbox.commands.wntmm.status": "%s is currently %s.",
   "wnt.toolbox.commands.wntmm.toggled": "The module %s has been toggled.",
+
+  "wnt.toolbox.header": "--==:: %s ::==--",
 
   "wnt.toolbox.lockup_protection.ignored": "Ignored a possible lock-up packet sent by the server."
 }

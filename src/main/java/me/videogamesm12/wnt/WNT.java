@@ -57,6 +57,7 @@ public class WNT implements ModInitializer, ClientLifecycleEvents.ClientStopping
     public void onClientStopping(MinecraftClient client)
     {
         saveConfig();
+        MODULES.stopAll();
     }
 
     public void loadConfig()

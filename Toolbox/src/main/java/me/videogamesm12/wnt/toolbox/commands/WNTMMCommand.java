@@ -18,7 +18,7 @@ public class WNTMMCommand extends WCommand
 {
     public WNTMMCommand()
     {
-        super("wntmm", "Control modules with a single command", "/wntmm <list | toggle [module]>");
+        super("wntmm", "Control modules with a single command", "/wntmm <list | info [module] | status [module] | toggle [module]>");
     }
 
     @Override
@@ -31,6 +31,32 @@ public class WNTMMCommand extends WCommand
 
         switch (args[0].toLowerCase())
         {
+            case "info", "information" ->
+            {
+                if (args.length == 1)
+                    return false;
+
+                if (!mm.isModuleRegistered(args[1].toLowerCase()))
+                {
+                    context.getSource().sendError(new TranslatableText("wnt.toolbox.commands.wntmm.not_registered"));
+                    return true;
+                }
+
+                Module module = mm.getModule(args[1].toLowerCase());
+                MutableText status = module.isEnabled() ?
+                        new TranslatableText("wnt.generic.enabled").formatted(Formatting.GREEN) :
+                        new TranslatableText("wnt.generic.disabled").formatted(Formatting.RED);
+
+                context.getSource().sendFeedback(new TranslatableText("wnt.toolbox.header",
+                        new TranslatableText("wnt.toolbox.commands.wntmm.info.header",
+                                new LiteralText(module.getMeta().name()).formatted(Formatting.WHITE))
+                                .formatted(Formatting.GRAY)).formatted(Formatting.DARK_GRAY));
+                context.getSource().sendFeedback(new TranslatableText("wnt.toolbox.commands.wntmm.info.description",
+                        new LiteralText(module.getMeta().description()).formatted(Formatting.WHITE)).formatted(Formatting.GRAY));
+                context.getSource().sendFeedback(new TranslatableText("wnt.toolbox.commands.wntmm.info.status",
+                        status).formatted(Formatting.GRAY));
+
+            }
             case "list" ->
             {
                 context.getSource().sendFeedback(new TranslatableText("wnt.toolbox.commands.wntmm.list.registered",
@@ -40,6 +66,28 @@ public class WNTMMCommand extends WCommand
                 mm.getModuleNames().forEach(moduleName -> list.append(new LiteralText(moduleName).formatted(Formatting.WHITE).append(new LiteralText(", ").formatted(Formatting.GRAY))));
 
                 context.getSource().sendFeedback(list);
+            }
+            case "status" ->
+            {
+                if (args.length == 1)
+                    return false;
+
+                if (!mm.isModuleRegistered(args[1].toLowerCase()))
+                {
+                    context.getSource().sendError(new TranslatableText("wnt.toolbox.commands.wntmm.not_registered"));
+                    return true;
+                }
+
+                Module module = mm.getModule(args[1].toLowerCase());
+                MutableText status = module.isEnabled() ?
+                        new TranslatableText("wnt.generic.enabled").formatted(Formatting.GREEN) :
+                        new TranslatableText("wnt.generic.disabled").formatted(Formatting.RED);
+
+                MutableText text = new TranslatableText("wnt.toolbox.commands.wntmm.status",
+                        new LiteralText(module.getClass().getSimpleName()).formatted(Formatting.WHITE),
+                        status).formatted(Formatting.GRAY);
+
+                context.getSource().sendFeedback(text);
             }
             case "toggle" ->
             {
@@ -61,6 +109,9 @@ public class WNTMMCommand extends WCommand
 
                 context.getSource().sendFeedback(new TranslatableText("wnt.toolbox.commands.wntmm.toggled", new LiteralText(module.getClass().getSimpleName()).formatted(Formatting.DARK_GREEN)).formatted(Formatting.GREEN));
             }
+            default -> {
+                return false;
+            }
         }
 
         return true;
@@ -72,10 +123,10 @@ public class WNTMMCommand extends WCommand
         switch (args.length)
         {
             case 0, 1 -> {
-                return Arrays.asList("list", "toggle");
+                return Arrays.asList("info", "list", "status", "toggle");
             }
             case 2 -> {
-                if (args[0].equalsIgnoreCase("toggle"))
+                if (args[0].equalsIgnoreCase("toggle") || args[0].equalsIgnoreCase("info"))
                 {
                     return WNT.MODULES.getModuleNames();
                 }

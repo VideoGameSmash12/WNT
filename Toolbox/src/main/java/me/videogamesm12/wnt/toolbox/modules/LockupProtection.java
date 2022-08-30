@@ -2,11 +2,13 @@ package me.videogamesm12.wnt.toolbox.modules;
 
 import com.google.common.eventbus.Subscribe;
 import me.videogamesm12.wnt.module.Module;
+import me.videogamesm12.wnt.module.ModuleMeta;
 import me.videogamesm12.wnt.toolbox.Toolbox;
 import me.videogamesm12.wnt.toolbox.event.network.S2COpenScreen;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.screen.ScreenHandlerType;
 
+@ModuleMeta(name = "LockupProtection", description = "Resists the effect of TotalFreedomMod's /lockup command")
 public class LockupProtection extends Module
 {
     @Override

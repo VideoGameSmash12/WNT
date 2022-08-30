@@ -27,6 +27,17 @@ import lombok.Getter;
 public abstract class Module
 {
     @Getter
+    private ModuleMeta meta;
+
+    public Module()
+    {
+        if (!getClass().isAnnotationPresent(ModuleMeta.class))
+            throw new IllegalArgumentException("Modules are required to have metadata attached to it");
+        else
+            meta = getClass().getAnnotation(ModuleMeta.class);
+    }
+
+    @Getter
     private boolean enabled;
     @Getter
     private boolean started;

@@ -94,6 +94,11 @@ public class ModuleManager
         }
     }
 
+    public void stopAll()
+    {
+        modules.values().forEach(Module::onStop);
+    }
+
     @SuppressWarnings("unchecked")
     public <T extends Module> T getModule(Class<T> moduleClass)
     {
@@ -126,7 +131,7 @@ public class ModuleManager
     {
         List<String> names = new ArrayList<>();
 
-        modules.forEach((aClass, module) -> names.add(aClass.getSimpleName()));
+        modules.forEach((aClass, module) -> names.add(module.getMeta().name()));
 
         return names;
     }

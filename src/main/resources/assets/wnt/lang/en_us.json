@@ -1,4 +1,7 @@
 {
+  "wnt.generic.disabled": "disabled",
+  "wnt.generic.enabled": "enabled",
+
   "wnt.messages.command.name.result": "%s resolves to %s.",
   "wnt.messages.command.uuid.result": "%s's UUID is %s.",
 
