@@ -97,11 +97,11 @@ public class DQSCommand extends WCommand
                                         .formatted(Formatting.WHITE)).formatted(Formatting.DARK_GRAY));
                 context.getSource().sendFeedback(
                         new TranslatableText("wnt.toolbox.commands.dqs.stats.blocks",
-                                new LiteralText(String.valueOf(module.getBlockDataSets()))
+                                new LiteralText(String.valueOf(module.getBlockDataSets().size()))
                                         .formatted(Formatting.WHITE)).formatted(Formatting.GRAY));
                 context.getSource().sendFeedback(
                         new TranslatableText("wnt.toolbox.commands.dqs.stats.entities",
-                                new LiteralText(String.valueOf(module.getEntityDataSets()))
+                                new LiteralText(String.valueOf(module.getEntityDataSets().size()))
                                         .formatted(Formatting.WHITE)).formatted(Formatting.GRAY));
             }
             default ->
@@ -116,10 +116,10 @@ public class DQSCommand extends WCommand
     @Override
     public List<String> suggest(CommandContext<FabricClientCommandSource> context, String[] args)
     {
-        if (args.length < 1)
+        if (args.length < 2)
             return Arrays.asList("clear", "copy", "stats");
         else
-            if (args[1].equalsIgnoreCase("copy"))
+            if (args[0].equalsIgnoreCase("copy"))
                 return Arrays.asList("block", "entity");
 
         return null;
