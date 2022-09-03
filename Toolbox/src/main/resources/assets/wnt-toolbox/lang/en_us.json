@@ -9,6 +9,12 @@
   "wnt.toolbox.commands.wntmm.status": "%s is currently %s.",
   "wnt.toolbox.commands.wntmm.toggled": "The module %s has been toggled.",
 
+  "wnt.toolbox.commands.dqs.not_found": "That entry could not be found.",
+  "wnt.toolbox.commands.dqs.cleared": "Cleared all stored data from memory.",
+  "wnt.toolbox.commands.dqs.stats.blocks": "Blocks stored in memory: %s",
+  "wnt.toolbox.commands.dqs.stats.entities": "Entities stored in memory: %s",
+  "wnt.toolbox.commands.dqs.stats.header": "DataQueryStorage Statistics",
+
   "wnt.toolbox.header": "--==:: %s ::==--",
 
   "wnt.toolbox.lockup_protection.ignored": "Ignored a possible lock-up packet sent by the server."

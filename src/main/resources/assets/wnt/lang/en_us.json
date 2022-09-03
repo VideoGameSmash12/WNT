@@ -12,5 +12,9 @@
 
   "wnt.messages.general.connecting.mojang": "Connecting to the Mojang API...",
   "wnt.messages.general.copied": "Copied to clipboard!",
-  "wnt.messages.general.file_not_found": "File not found!"
+  "wnt.messages.general.file_not_found": "File not found!",
+
+  "wnt.messages.general.command_error": "Command error: %s",
+  "wnt.messages.general.invalid_number": "Invalid number.",
+  "wnt.messages.general.module_not_enabled": "This command requires the %s module to be enabled in order to work properly."
 }

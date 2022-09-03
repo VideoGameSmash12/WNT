@@ -29,9 +29,12 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
+import me.videogamesm12.wnt.WNT;
+import me.videogamesm12.wnt.module.ModuleNotEnabledException;
 import net.fabricmc.fabric.api.client.command.v1.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource;
 import net.minecraft.command.CommandSource;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -52,15 +55,34 @@ public abstract class WCommand implements Command<FabricClientCommandSource>, Su
         this.usage          = usage;
     }
 
-    public abstract boolean run(CommandContext<FabricClientCommandSource> context, String[] args);
+    public abstract boolean run(CommandContext<FabricClientCommandSource> context, String[] args)
+            throws ModuleNotEnabledException;
 
     public abstract List<String> suggest(CommandContext<FabricClientCommandSource> context, String[] args);
 
     @Override
     public final int run(CommandContext<FabricClientCommandSource> context) throws CommandSyntaxException
     {
-        if (!run(context, ArrayUtils.remove(context.getInput().split(" "), 0)))
-            context.getSource().sendError(new TranslatableText("wnt.messages.commands.usage", getUsage()));
+        try
+        {
+            if (!run(context, ArrayUtils.remove(context.getInput().split(" "), 0)))
+                context.getSource().sendError(new TranslatableText("wnt.messages.commands.usage", getUsage()));
+        }
+        catch (NumberFormatException ex)
+        {
+            context.getSource().sendError(new TranslatableText("wnt.messages.general.invalid_number"));
+        }
+        catch (ModuleNotEnabledException ex)
+        {
+            context.getSource().sendError(new TranslatableText("wnt.messages.general.module_not_enabled",
+                    new LiteralText(ex.getModule().getMeta().name())));
+        }
+        catch (Throwable ex)
+        {
+            context.getSource().sendError(new TranslatableText("wnt.messages.general.command_error",
+                    new LiteralText(ex.getMessage())));
+            WNT.LOGGER.error("Command " + name + " threw an exception whilst attempting to execute", ex);
+        }
 
         return 1;
     }
