@@ -41,7 +41,7 @@ public class DumpCommand extends WCommand
 {
     public DumpCommand()
     {
-        super("dump", "", "/dump <entities | entity <id> | map <id> | maps>");
+        super("dump", "Dump data loaded in memory by the client to disk", "/dump <entities | entity <id> | map <id> | maps>");
     }
 
     @Override
