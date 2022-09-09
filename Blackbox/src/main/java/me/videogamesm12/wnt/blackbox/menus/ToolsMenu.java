@@ -28,31 +28,22 @@ import me.videogamesm12.wnt.blackbox.tools.ChatWindow;
 import javax.swing.*;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadInfo;
+import java.util.Arrays;
 import java.util.Objects;
 
 public class ToolsMenu extends JMenu
 {
-    private final JMenuItem chatWindow = new JMenuItem("Chat");
-    //--
-    private final JMenuItem dumpThreads = new JMenuItem("Dump thread information");
-
     public ToolsMenu()
     {
         super("Tools");
 
-        chatWindow.addActionListener((event) -> {
-            Objects.requireNonNullElseGet(ChatWindow.INSTANCE, ChatWindow::new).setVisible(true);
-        });
-
-        dumpThreads.addActionListener((event) -> {
-            for (ThreadInfo info : ManagementFactory.getThreadMXBean().dumpAllThreads(true, true))
-            {
-                dumpThread(info);
-            }
-        });
+        JMenuItem chatWindow = new JMenuItem("Chat");
+        chatWindow.addActionListener((event) -> Objects.requireNonNullElseGet(ChatWindow.INSTANCE, ChatWindow::new).setVisible(true));
+        JMenuItem dumpThreads = new JMenuItem("Dump thread information");
+        dumpThreads.addActionListener((event) -> Arrays.stream(ManagementFactory.getThreadMXBean().dumpAllThreads(true, true)).forEach(this::dumpThread));
 
         add(chatWindow);
-        add(new JPopupMenu.Separator());
+        addSeparator();
         add(dumpThreads);
     }
 
@@ -64,11 +55,8 @@ public class ToolsMenu extends JMenu
     {
         WNT.LOGGER.info("--== THREAD DUMP - " + thread.getThreadName() + " (" + thread.getThreadState() + ") ==--");
         WNT.LOGGER.info("DETAILS: " + threadToFormat(thread));
-        WNT.LOGGER.info("STACK: ");
-
-        for (StackTraceElement stack : thread.getStackTrace())
-            WNT.LOGGER.info(stack);
-
+        WNT.LOGGER.info("STACKTRACE: ");
+        Arrays.stream(thread.getStackTrace()).forEach(stack -> WNT.LOGGER.info(stack));
         WNT.LOGGER.info("--== END DUMP ==--");
     }
 

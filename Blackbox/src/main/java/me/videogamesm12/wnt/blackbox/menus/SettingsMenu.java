@@ -32,7 +32,6 @@ import javax.swing.*;
  */
 public class SettingsMenu extends JMenu
 {
-    private final ThemeMenu themes = new ThemeMenu();
     private final JCheckBoxMenuItem autoRefresh = new JCheckBoxMenuItem("Auto-refresh", Blackbox.CONFIG.autoUpdate());
     private final JCheckBoxMenuItem showOnStartup = new JCheckBoxMenuItem("Show on startup", Blackbox.CONFIG.showOnStartup());
 
@@ -50,6 +49,7 @@ public class SettingsMenu extends JMenu
         });
         showOnStartup.addActionListener((event) -> Blackbox.CONFIG.setShowOnStartup(showOnStartup.isSelected()));
 
+        ThemeMenu themes = new ThemeMenu();
         add(themes);
         addSeparator();
         add(showOnStartup);
