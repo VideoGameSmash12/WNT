@@ -1,0 +1,35 @@
+{
+  "wnt.messages.cfx.rcprompt.title": "Are you sure you want to run this command?",
+
+  "text.autoconfig.wnt-cfx.title": "CFX Settings",
+
+  "text.autoconfig.wnt-cfx.category.nbt": "NBT",
+  "text.autoconfig.wnt-cfx.option.nbtPatches.sizeLimitEnabled": "Enforce NBT size limitations",
+  "text.autoconfig.wnt-cfx.option.nbtPatches.sizeLimitEnabled.@Tooltip": "Patches a client-side exploit where encountering an item with\ntoo much NBT kicks the client from the server.\n\nThis does not have any effect for users running DeviousMod.",
+
+  "text.autoconfig.wnt-cfx.category.render": "Rendering",
+  "text.autoconfig.wnt-cfx.option.rendererPatches.entities": "Entities",
+  "text.autoconfig.wnt-cfx.option.rendererPatches.entities.entityNameSizeLimitEnabled": "Limit how large entity names can be when rendered",
+  "text.autoconfig.wnt-cfx.option.rendererPatches.entities.entityNameSizeLimitEnabled.@Tooltip": "When rendering entities, the client has a tendency to lag horridly\nwhen dealing with entities with massive names.\n\nThis option determines whether or not to limit how large an\nentity's name can be before it gets cut off.",
+  "text.autoconfig.wnt-cfx.option.rendererPatches.entities.entityNameSizeLimit": "Maximum length of entity names when rendered",
+  "text.autoconfig.wnt-cfx.option.rendererPatches.entities.entityNameSizeLimit.@Tooltip": "This has no effect if the above setting is set to \"No\".",
+  "text.autoconfig.wnt-cfx.option.rendererPatches.hud": "In-Game Hud",
+  "text.autoconfig.wnt-cfx.option.rendererPatches.hud.heartCountLimitEnabled": "Limit how many hearts can be rendered at once",
+  "text.autoconfig.wnt-cfx.option.rendererPatches.hud.heartCountLimitEnabled.@Tooltip": "When rendering the HUD, the client has a tendency to lag horridly\nwhen you have an excessive amount of health.\n\nThis option determines whether or not to limit how many hearts\ncan be rendered.",
+  "text.autoconfig.wnt-cfx.option.rendererPatches.hud.maxHeartsToRender": "Maximum number of hearts to render",
+  "text.autoconfig.wnt-cfx.option.rendererPatches.hud.maxHeartsToRender.@Tooltip": "This has no effect if the above setting is set to \"No\".",
+
+  "text.autoconfig.wnt-cfx.category.text": "Text Components",
+  "text.autoconfig.wnt-cfx.option.compPatches.hoverPatches": "Hoverable Text",
+  "text.autoconfig.wnt-cfx.option.compPatches.hoverPatches.idPatchEnabled": "Fix invalid Identifier crash exploit",
+  "text.autoconfig.wnt-cfx.option.compPatches.hoverPatches.idPatchEnabled.@Tooltip": "An exploit is present in 1.17.1 - 1.18 where clients can crash\ntrying to process certain texts that contain invalid identifiers.\n\nThis setting decides whether or not to patch the exploit.\nThis does not have any effect for users running 1.18.1+.",
+  "text.autoconfig.wnt-cfx.option.compPatches.hoverPatches.uuidPatchMode": "Method of handling invalid entity UUID crash exploit",
+  "text.autoconfig.wnt-cfx.option.compPatches.hoverPatches.uuidPatchMode.@Tooltip": "An exploit is present in 1.17.1 - 1.18 where clients can crash\ntrying to process certain texts that contain invalid UUIDs.\n\nThis setting decides how it will be patched, which is noted below:\n - \u00A7aSILENT: \u00A7rSilently discards the hoverable part altogether.\n - \u00A7aVISIBLE: \u00A7rReplaces exploit UUIDs with\n \"DEADDEAD-DEAD-DEAD-DEAD-DEADDEADDEAD\".\n - \u00A7aOFF: \u00A7rDoes nothing, causing affected clients to crash.\n\nThis does not have any effect for users running 1.18.1+.",
+  "text.autoconfig.wnt-cfx.option.compPatches.clickPatches": "Clickable Text",
+  "text.autoconfig.wnt-cfx.option.compPatches.clickPatches.rcMode": "Method of handling text that runs commands",
+  "text.autoconfig.wnt-cfx.option.compPatches.clickPatches.rcMode.@Tooltip": "Perhaps one of the most well-known exploits is the infamous \"command\nbooks\" exploit, where it is possible (by design) to run commands by\nclicking text that has a hidden payload in it.\n\nThis setting decides how the exploit is processed, which is noted below:\n - \u00A7aSILENT: \u00A7rSilently ignores all clicks.\n - \u00A7aPROMPT: \u00A7rPrompts you to confirm on whether or not you want to run it.\n - \u00A7aOFF: \u00A7rRuns the command without any hesitation.",
+  "text.autoconfig.wnt-cfx.option.compPatches.clickPatches.suggestLimitEnabled": "Limit how much text can be suggested by clicking text",
+  "text.autoconfig.wnt-cfx.option.compPatches.clickPatches.suggestLimitEnabled.@Tooltip": "An exploit is present in the client where it is possible to crash\nclients by clicking text with a massive payload in them that\ntells the client to suggest it as a command.\n\nThis decides whether or not to cap said payload. The setting\nbelow is what determines the cap.",
+  "text.autoconfig.wnt-cfx.option.compPatches.clickPatches.suggestLimit": "Maximum length of command suggestions from clicking text",
+  "text.autoconfig.wnt-cfx.option.compPatches.clickPatches.suggestLimit.@Tooltip": "This has no effect if the above setting is set to \"No\"."
+}

@@ -1,0 +1,17 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "me.videogamesm12.wnt.cfx.patches",
+  "plugin": "me.videogamesm12.wnt.cfx.PatchManager",
+  "compatibilityLevel": "JAVA_16",
+  "mixins": [
+    "ExcessiveHearts",
+    "ExcessivelyLongText$EntityRendering",
+    "HoverableText$Entities",
+    "HoverableText$Items",
+    "NBTLimit"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
