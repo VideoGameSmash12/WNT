@@ -8,7 +8,7 @@ public class BleachModuleMenu extends PModModuleMenu<Module>
 {
     public BleachModuleMenu(Module module)
     {
-        super(new Identifier("poker", "wurst"), module);
+        super(new Identifier("poker", "bleachhack"), module);
     }
 
     @Override
