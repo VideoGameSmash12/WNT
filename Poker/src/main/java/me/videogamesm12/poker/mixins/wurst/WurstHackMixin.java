@@ -20,43 +20,24 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.videogamesm12.wnt.blackbox.menus;
+package me.videogamesm12.poker.mixins.wurst;
 
-import lombok.Getter;
-import me.videogamesm12.wnt.WNT;
+import me.videogamesm12.poker.Poker;
+import me.videogamesm12.poker.core.event.ModuleToggleEvent;
+import net.minecraft.util.Identifier;
+import net.wurstclient.hack.Hack;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import javax.swing.*;
-import java.util.HashSet;
-import java.util.Queue;
-import java.util.Set;
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-
-public class WNTMenu extends JMenu
+@Mixin(Hack.class)
+public class WurstHackMixin
 {
-    @Getter
-    private static final Queue<ModMenu<?>> queue = new ConcurrentLinkedQueue<>();
-    //--
-    private ScheduledExecutorService hookManager = new ScheduledThreadPoolExecutor(1);
-
-    private final JMenu hooksMenu = new JMenu("Hooks");
-
-    public WNTMenu()
+    @Inject(method = "setEnabled", at = @At("TAIL"), remap = false)
+    public void injectSetEnabled(boolean enabled, CallbackInfo ci)
     {
-        super("WNT");
-
-        hookManager.scheduleAtFixedRate(() -> {
-            for (int i = 0; i < queue.size(); i++)
-                addHook(queue.poll());
-        }, 0, 1000, TimeUnit.MILLISECONDS);
-
-        add(hooksMenu);
-    }
-
-    public <V, T extends ModMenu<V>> void addHook(T hook)
-    {
-        hooksMenu.add(hook);
+        // Calls the event
+        Poker.getHouse(new Identifier("poker", "wurst")).post(new ModuleToggleEvent<>(this, enabled));
     }
 }

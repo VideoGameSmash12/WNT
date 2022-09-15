@@ -20,9 +20,8 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.videogamesm12.wnt.cfx;
+package me.videogamesm12.poker;
 
-import me.videogamesm12.wnt.cfx.base.CPatch;
 import net.fabricmc.loader.api.FabricLoader;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
@@ -35,16 +34,15 @@ import java.util.Set;
  * <h1>PatchManager</h1>
  * Manages most of the patches CFX provides, primarily by determining whether not a patch should be applied.
  */
-public class PatchManager implements IMixinConfigPlugin
+public class PokerMixinPlugin implements IMixinConfigPlugin
 {
-    private static final String packaqe = "me.videogamesm12.wnt.cfx.patches";
+    private static final String packaqe = "me.videogamesm12.poker.mixins.";
     //--
     private final FabricLoader loader = FabricLoader.getInstance();
 
     @Override
     public void onLoad(String mixinPackage)
     {
-        CFX.getLogger().info("Starting up...");
     }
 
     @Override
@@ -56,41 +54,22 @@ public class PatchManager implements IMixinConfigPlugin
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName)
     {
-        // Ignore non-patch mixins
+        // Ignore irrelevant mixins
         if (!mixinClassName.startsWith(packaqe))
         {
             return true;
         }
 
-        try
+        String[] split = mixinClassName.replace(packaqe, "").split("\\.");
+
+        if (split.length == 2)
         {
-            Class<?> patchClass = Class.forName(mixinClassName);
-
-            // WTF?
-            if (!patchClass.isAnnotationPresent(CPatch.class))
-            {
-                CFX.getLogger().warn("The patch class " + mixinClassName + " is missing the CPatch annotation!");
-                return false;
-            }
-
-            // Gets the patch metadata
-            CPatch metadata = patchClass.getAnnotation(CPatch.class);
-
-            // Ignore patches if mods they conflict with are loaded
-            for (String id : metadata.conflicts())
-            {
-                if (loader.isModLoaded(id))
-                {
-                    CFX.getLogger().warn("Ignoring patch " + mixinClassName + " as it conflicts with mod '" + id + "'");
-                    return false;
-                }
-            }
+            return loader.isModLoaded(split[0].toLowerCase());
         }
-        catch (Exception ignored)
+        else
         {
+            return false;
         }
-
-        return true;
     }
 
     @Override

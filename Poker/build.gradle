@@ -1,0 +1,19 @@
+repositories {
+    maven { url 'https://m2.dv8tion.net/releases' }
+    maven { url 'https://jitpack.io/' }
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:1.17.1"
+    mappings "net.fabricmc:yarn:1.17.1+build.65:v2"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:0.46.0+1.17"
+
+    implementation project(":Blackbox")
+
+    // DeviousMod
+    implementation "com.github.VideoGameSmash12:deviousmod:master"
+    // Wurst
+    modApi "com.github.VideoGameSmash12:Wurst7:master"
+    // BleachHack
+    modApi "com.github.VideoGameSmash12:BleachHack:d17c38bbf784c47616cc4668853daaea0d31ff73"
+}

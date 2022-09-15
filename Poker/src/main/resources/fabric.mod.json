@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "wnt-poker",
+  "version": "${version}",
+  "name": "Poker",
+  "description": "Hooks for various mods to add functionality to WNT",
+  "authors": [
+    "videogamesm12"
+  ],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/wnt-poker/icon.png",
+  "environment": "client",
+  "mixins": [
+    "wnt.poker.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.12.12",
+    "fabric": "*",
+    "minecraft": ">=1.17.1",
+    "wnt-blackbox": "*"
+  },
+  "custom": {
+    "modmenu": {
+      "parent": "wnt"
+    }
+  }
+}
