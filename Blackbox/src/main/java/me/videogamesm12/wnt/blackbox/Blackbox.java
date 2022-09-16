@@ -46,6 +46,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Util;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -71,10 +72,26 @@ public class Blackbox extends Thread implements ModInitializer, ClientLifecycleE
     @Override
     public void onInitialize()
     {
+        switch (Util.getOperatingSystem())
+        {
+            case SOLARIS, UNKNOWN ->
+            {
+                WNT.LOGGER.warn("The Blackbox has not been properly tested under this operating system, so in the "
+                        + "interest of maintaining client stability, it has been disabled.");
+                return;
+            }
+            case LINUX, OSX ->
+            {
+                WNT.LOGGER.warn("The Blackbox is known to cause crashes with clients running on this operating system "
+                        + "due to a strange issue with how Java behaves with it. As such, it has been disabled in the "
+                        + "interest of maintaining client stability.");
+                return;
+            }
+        }
+
         System.setProperty("java.awt.headless", "false");
-        //--
         CommandSystem.registerCommand(BlackboxCommand.class);
-        //--
+
         start();
     }
 
