@@ -31,5 +31,8 @@
   "text.autoconfig.wnt-cfx.option.compPatches.clickPatches.suggestLimitEnabled": "Limit how much text can be suggested by clicking text",
   "text.autoconfig.wnt-cfx.option.compPatches.clickPatches.suggestLimitEnabled.@Tooltip": "An exploit is present in the client where it is possible to crash\nclients by clicking text with a massive payload in them that\ntells the client to suggest it as a command.\n\nThis decides whether or not to cap said payload. The setting\nbelow is what determines the cap.",
   "text.autoconfig.wnt-cfx.option.compPatches.clickPatches.suggestLimit": "Maximum length of command suggestions from clicking text",
-  "text.autoconfig.wnt-cfx.option.compPatches.clickPatches.suggestLimit.@Tooltip": "This has no effect if the above setting is set to \"No\"."
+  "text.autoconfig.wnt-cfx.option.compPatches.clickPatches.suggestLimit.@Tooltip": "This has no effect if the above setting is set to \"No\".",
+  "text.autoconfig.wnt-cfx.option.compPatches.translatePatches": "Translatable Text",
+  "text.autoconfig.wnt-cfx.option.compPatches.translatePatches.boundaryPatchEnabled": "Enforce boundaries on selective translation arguments",
+  "text.autoconfig.wnt-cfx.option.compPatches.translatePatches.boundaryPatchEnabled.@Tooltip": "An exploit is present in 1.17+ clients where it is possible to\ncrash them by causing them to try to process out-of-bounds\ntranslation string arguments.\n\nThis setting decides whether to patch said exploit."
 }

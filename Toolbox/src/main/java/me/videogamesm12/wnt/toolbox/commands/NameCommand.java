@@ -23,8 +23,11 @@
 package me.videogamesm12.wnt.toolbox.commands;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonParseException;
 import com.mojang.brigadier.context.CommandContext;
+import me.videogamesm12.wnt.WNT;
 import me.videogamesm12.wnt.command.WCommand;
+import me.videogamesm12.wnt.toolbox.util.AshconUtil;
 import net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource;
 import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
@@ -39,11 +42,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 
 public class NameCommand extends WCommand
 {
-    private final Gson gson = new Gson();
-
     public NameCommand()
     {
         super("name", "", "/name <uuid>");
@@ -57,44 +59,39 @@ public class NameCommand extends WCommand
             return false;
         }
 
-        CompletableFuture<Void> retrieval = CompletableFuture.runAsync(() ->
-        {
-            context.getSource().sendFeedback(new TranslatableText("wnt.messages.general.connecting.mojang")
-                    .formatted(Formatting.GREEN));
-
+        CompletableFuture.supplyAsync(() -> {
             try
             {
-                // If the username doesn't match the regex, don't even bother
-                UUID uuid = UUID.fromString(args[0].toLowerCase());
+                return AshconUtil.getAshconData(UUID.fromString(args[0].toLowerCase()).toString());
+            }
+            catch (FileNotFoundException ex)
+            {
+                context.getSource().sendError(new TranslatableText("wnt.toolbox.ashcon.error.player_not_found"));
+            }
+            catch (JsonParseException ex)
+            {
+                context.getSource().sendError(new TranslatableText("wnt.toolbox.ashcon.error.bad_json"));
+            }
+            catch (IllegalArgumentException ex)
+            {
+                context.getSource().sendError(new TranslatableText("wnt.toolbox.ashcon.error.not_a_uuid", args[0].toLowerCase()));
+            }
+            catch (Throwable ex)
+            {
+                context.getSource().sendError(new TranslatableText("wnt.toolbox.ashcon.error.unknown"));
+                WNT.LOGGER.error("Details of the error: ", ex);
+            }
 
-                // Sends the request to Mojang's servers
-                URL url = new URL("https://api.ashcon.app/mojang/v2/user/" + args[0].toLowerCase());
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            return null;
+        }).whenComplete((result, ex) -> {
+            if (result == null) return;
 
-                Result result = gson.fromJson(new InputStreamReader(connection.getInputStream()), Result.class);
-                context.getSource().sendFeedback(new TranslatableText("wnt.messages.command.name.result",
-                        new LiteralText(uuid.toString()).formatted(Formatting.WHITE),
-                        new LiteralText(result.username).setStyle(Style.EMPTY.withClickEvent(
-                                new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, result.username)).withUnderline(true)
-                                .withColor(TextColor.fromFormatting(Formatting.WHITE))))
-                        .formatted(Formatting.GRAY));
-            }
-            // Player was not found
-            catch (FileNotFoundException error)
-            {
-                context.getSource().sendError(new TranslatableText("wnt.messages.commands.player_not_found"));
-            }
-            // Player's name isn't valid
-            catch (IllegalArgumentException | MalformedURLException error)
-            {
-                context.getSource().sendError(new TranslatableText("wnt.messages.commands.invalid_player", args[0].toLowerCase()));
-            }
-            // Some other shit happened
-            catch (IOException error)
-            {
-                context.getSource().sendError(new TranslatableText("wnt.messages.commands.failed_to_connect"));
-                error.printStackTrace();
-            }
+            context.getSource().sendFeedback(new TranslatableText("wnt.messages.command.name.result",
+                    new LiteralText(result.getUuid()).formatted(Formatting.WHITE),
+                    new LiteralText(result.getUsername()).setStyle(Style.EMPTY.withClickEvent(
+                                    new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, result.getUsername())).withUnderline(true)
+                            .withColor(TextColor.fromFormatting(Formatting.WHITE))))
+                    .formatted(Formatting.GRAY));
         });
 
         return true;
@@ -104,12 +101,5 @@ public class NameCommand extends WCommand
     public List<String> suggest(CommandContext<FabricClientCommandSource> context, String[] args)
     {
         return new ArrayList<>();
-    }
-
-    private static class Result
-    {
-        private String username;
-
-        private String uuid;
     }
 }

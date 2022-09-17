@@ -15,6 +15,12 @@
   "wnt.toolbox.commands.dqs.stats.entities": "Entities stored in memory: %s",
   "wnt.toolbox.commands.dqs.stats.header": "DataQueryStorage Statistics",
 
+  "wnt.toolbox.ashcon.error.bad_json": "The API sent a response that couldn't be processed.",
+  "wnt.toolbox.ashcon.error.bad_username": "Not a valid username: %s",
+  "wnt.toolbox.ashcon.error.not_a_uuid": "Not a UUID: %s",
+  "wnt.toolbox.ashcon.error.player_not_found": "That player could not be found.",
+  "wnt.toolbox.ashcon.error.unknown": "An error occurred whilst communicating with the API. Check the logs for more information.",
+
   "wnt.toolbox.header": "--==:: %s ::==--",
 
   "wnt.toolbox.lockup_protection.ignored": "Ignored a possible lock-up packet sent by the server."

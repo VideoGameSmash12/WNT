@@ -96,6 +96,10 @@ public class CFXConfig implements ConfigData
 
         @ConfigEntry.Category("text")
         @ConfigEntry.Gui.CollapsibleObject(startExpanded = true)
+        private TText translatePatches = new TText();
+
+        @ConfigEntry.Category("text")
+        @ConfigEntry.Gui.CollapsibleObject(startExpanded = true)
         private CText clickPatches = new CText();
 
         @Getter
@@ -135,6 +139,14 @@ public class CFXConfig implements ConfigData
                 PROMPT,
                 SILENT
             }
+        }
+
+        @Getter
+        @Setter
+        public static class TText
+        {
+            @ConfigEntry.Gui.Tooltip
+            private boolean boundaryPatchEnabled = true;
         }
     }
 }

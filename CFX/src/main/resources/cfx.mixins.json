@@ -5,6 +5,7 @@
   "plugin": "me.videogamesm12.wnt.cfx.PatchManager",
   "compatibilityLevel": "JAVA_16",
   "mixins": [
+    "BoundlessTranslation",
     "ExcessiveHearts",
     "ExcessivelyLongText$EntityRendering",
     "HoverableText$Entities",
