@@ -22,6 +22,7 @@
 
 package me.videogamesm12.wnt;
 
+import com.google.common.eventbus.EventBus;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import lombok.Getter;
@@ -41,15 +42,19 @@ public class WNT implements ModInitializer, ClientLifecycleEvents.ClientStopping
 {
     @Getter
     private static WConfig config = null;
-    public static Logger LOGGER = LogManager.getLogger("WNT");
-    public static ModuleManager MODULES;
+    @Getter
+    private static final EventBus eventBus = new EventBus();
+    @Getter
+    private static final Logger logger = LogManager.getLogger("WNT");
+    @Getter
+    private static ModuleManager moduleManager;
 
     @Override
     public void onInitialize()
     {
         loadConfig();
         //--
-        MODULES = new ModuleManager();
+        moduleManager = new ModuleManager();
         ClientLifecycleEvents.CLIENT_STOPPING.register(this);
     }
 
@@ -57,7 +62,7 @@ public class WNT implements ModInitializer, ClientLifecycleEvents.ClientStopping
     public void onClientStopping(MinecraftClient client)
     {
         saveConfig();
-        MODULES.stopAll();
+        moduleManager.stopAll();
     }
 
     public void loadConfig()
@@ -72,7 +77,7 @@ public class WNT implements ModInitializer, ClientLifecycleEvents.ClientStopping
             }
             catch (Exception ex)
             {
-                LOGGER.error("Failed to read WNT configuration", ex);
+                logger.error("Failed to read WNT configuration", ex);
             }
         }
 
@@ -90,7 +95,7 @@ public class WNT implements ModInitializer, ClientLifecycleEvents.ClientStopping
         }
         catch (Exception ex)
         {
-            LOGGER.error("Failed to write WNT configuration", ex);
+            logger.error("Failed to write WNT configuration", ex);
         }
     }
 
@@ -113,7 +118,7 @@ public class WNT implements ModInitializer, ClientLifecycleEvents.ClientStopping
 
         public void setEnabledModules()
         {
-            MODULES.getModules().keySet().forEach(moduleClass -> enabledModules.add(moduleClass.getName()));
+            moduleManager.getModules().keySet().forEach(moduleClass -> enabledModules.add(moduleClass.getName()));
         }
 
         public <T extends Module> boolean isEnabled(Class<T> moduleClass)

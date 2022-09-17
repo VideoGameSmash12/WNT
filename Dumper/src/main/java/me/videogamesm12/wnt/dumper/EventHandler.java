@@ -104,7 +104,7 @@ public class EventHandler extends Thread
         }
         catch (Exception ex)
         {
-            WNT.LOGGER.error("Unable to dump entities", ex);
+            WNT.getLogger().error("Failed to dump entities", ex);
             source.sendError(new TranslatableText("wnt.dumper.failed", new LiteralText(ex.getClass().getName())));
             return;
         }
@@ -124,7 +124,7 @@ public class EventHandler extends Thread
         }
         catch (Exception ex)
         {
-            WNT.LOGGER.error("Unable to dump entity " + entity.getUuidAsString(), ex);
+            WNT.getLogger().error("Unable to dump entity " + entity.getUuidAsString(), ex);
         }
     }
 
@@ -141,7 +141,7 @@ public class EventHandler extends Thread
         }
         catch (Exception ex)
         {
-            WNT.LOGGER.error("Unable to dump map " + id, ex);
+            WNT.getLogger().error("Unable to dump map " + id, ex);
         }
     }
 

@@ -47,7 +47,7 @@ public class Toolbox implements ModInitializer
         CommandSystem.registerCommand(WNTMMCommand.class);
         CommandSystem.registerCommand(DQSCommand.class);
         //--
-        WNT.MODULES.register(LockupProtection.class);
-        WNT.MODULES.register(DataQueryStorage.class);
+        WNT.getModuleManager().register(LockupProtection.class);
+        WNT.getModuleManager().register(DataQueryStorage.class);
     }
 }

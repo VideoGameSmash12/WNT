@@ -76,15 +76,15 @@ public class Blackbox extends Thread implements ModInitializer, ClientLifecycleE
         {
             case SOLARIS, UNKNOWN ->
             {
-                WNT.LOGGER.warn("The Blackbox has not been properly tested under this operating system, so in the "
+                WNT.getLogger().warn("The Blackbox has not been properly tested under this operating system, so in the "
                         + "interest of maintaining client stability, it has been disabled.");
                 return;
             }
             case LINUX, OSX ->
             {
-                WNT.LOGGER.warn("The Blackbox is known to cause crashes with clients running on this operating system "
-                        + "due to a strange issue with how Java behaves with it. As such, it has been disabled in the "
-                        + "interest of maintaining client stability.");
+                WNT.getLogger().warn("The Blackbox is known to cause crashes with clients running on this operating "
+                        + "system due to a strange issue with how Java behaves with it. As such, it has been disabled "
+                        + "in the interest of maintaining client stability.");
                 return;
             }
         }
@@ -266,7 +266,7 @@ public class Blackbox extends Thread implements ModInitializer, ClientLifecycleE
             }
             catch (Exception ex)
             {
-                WNT.LOGGER.error(ex);
+                WNT.getLogger().error("Failed to load icon image", ex);
             }
 
             setMinimumSize(new Dimension(420, 560));
@@ -459,7 +459,7 @@ public class Blackbox extends Thread implements ModInitializer, ClientLifecycleE
                 }
                 catch (Exception ex)
                 {
-                    WNT.LOGGER.error(ex);
+                    WNT.getLogger().error("Failed to apply currently active theme", ex);
                 }
             }
         }

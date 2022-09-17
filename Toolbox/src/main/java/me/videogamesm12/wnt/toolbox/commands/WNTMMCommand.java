@@ -49,7 +49,7 @@ public class WNTMMCommand extends WCommand
         if (args.length == 0)
             return false;
 
-        ModuleManager mm = WNT.MODULES;
+        ModuleManager mm = WNT.getModuleManager();
 
         switch (args[0].toLowerCase())
         {
@@ -150,7 +150,7 @@ public class WNTMMCommand extends WCommand
             case 2 -> {
                 if (args[0].equalsIgnoreCase("toggle") || args[0].equalsIgnoreCase("info"))
                 {
-                    return WNT.MODULES.getModuleNames();
+                    return WNT.getModuleManager().getModuleNames();
                 }
             }
         }

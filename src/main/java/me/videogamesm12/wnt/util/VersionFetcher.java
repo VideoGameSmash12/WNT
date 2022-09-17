@@ -50,9 +50,7 @@ public class VersionFetcher
         }
         catch (Exception ex)
         {
-            WNT.LOGGER.fatal("UNABLE TO RETRIEVE VERSION INFORMATION!!!");
-            WNT.LOGGER.fatal("MOJANG WHAT THE FUCK DID YOU DO?????");
-
+            WNT.getLogger().error("Unable to get the version information, this is extremely likely to cause stability issues.", ex);
             throw ex;
         }
     }

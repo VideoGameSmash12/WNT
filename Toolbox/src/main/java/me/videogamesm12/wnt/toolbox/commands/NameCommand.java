@@ -79,7 +79,7 @@ public class NameCommand extends WCommand
             catch (Throwable ex)
             {
                 context.getSource().sendError(new TranslatableText("wnt.toolbox.ashcon.error.unknown"));
-                WNT.LOGGER.error("Details of the error: ", ex);
+                WNT.getLogger().error("Details of the error: ", ex);
             }
 
             return null;

@@ -24,6 +24,8 @@ package me.videogamesm12.wnt.module;
 
 import lombok.Getter;
 import me.videogamesm12.wnt.WNT;
+import me.videogamesm12.wnt.events.ModuleRegisteredEvent;
+import me.videogamesm12.wnt.events.ModuleUnregisteredEvent;
 
 import java.io.File;
 import java.util.*;
@@ -43,10 +45,10 @@ public class ModuleManager
     }
 
     /**
-     * Registers a module.
+     * Registers and (if enabled) starts a module.
      * @param moduleClass   Class<? extends Module>
      */
-    public void register(Class<? extends Module> moduleClass)
+    public <T extends Module> void register(Class<T> moduleClass)
     {
         try
         {
@@ -57,11 +59,11 @@ public class ModuleManager
                 instance.enable();
             //--
             modules.put(moduleClass, instance);
+            WNT.getEventBus().post(new ModuleRegisteredEvent<>(moduleClass));
         }
-        catch (Exception ex)
+        catch (Throwable ex)
         {
-            WNT.LOGGER.error("Failed to register module " + moduleClass.getSimpleName());
-            ex.printStackTrace();
+            WNT.getLogger().error("Failed to register module " + moduleClass.getSimpleName(), ex);
         }
     }
 
@@ -86,11 +88,11 @@ public class ModuleManager
             }
 
             modules.remove(moduleClass);
+            WNT.getEventBus().post(new ModuleUnregisteredEvent<>(moduleClass));
         }
         catch (Exception ex)
         {
-            WNT.LOGGER.error("Failed to unregister module " + moduleClass.getSimpleName());
-            ex.printStackTrace();
+            WNT.getLogger().error("Failed to unregister module " + moduleClass.getSimpleName(), ex);
         }
     }
 

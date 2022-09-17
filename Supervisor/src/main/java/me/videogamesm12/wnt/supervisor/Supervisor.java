@@ -101,12 +101,12 @@ public class Supervisor implements ClientLifecycleEvents.ClientStopping, ModInit
                             return;
                         }
 
-                        WNT.LOGGER.error("--== Supervisor has detected a client-side freeze! ==--");
+                        WNT.getLogger().error("--== Supervisor has detected a client-side freeze! ==--");
                     }
                 }, 0, 5, TimeUnit.SECONDS);
             }
             //--
-            WNT.LOGGER.info("Supervisor started");
+            WNT.getLogger().info("Supervisor started");
         }
 
         @Override

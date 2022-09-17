@@ -23,6 +23,8 @@
 package me.videogamesm12.wnt.module;
 
 import lombok.Getter;
+import me.videogamesm12.wnt.WNT;
+import me.videogamesm12.wnt.events.ModuleToggledEvent;
 
 public abstract class Module
 {
@@ -46,12 +48,14 @@ public abstract class Module
     {
         enabled = true;
         onEnable();
+        WNT.getEventBus().post(new ModuleToggledEvent(getClass(), this, true));
     }
 
     public final void disable()
     {
         enabled = false;
         onDisable();
+        WNT.getEventBus().post(new ModuleToggledEvent(getClass(), this, false));
     }
 
     public final void start()

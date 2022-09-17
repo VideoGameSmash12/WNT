@@ -23,12 +23,9 @@
 package me.videogamesm12.wnt.blackbox.menus;
 
 import lombok.Getter;
-import me.videogamesm12.wnt.WNT;
 
 import javax.swing.*;
-import java.util.HashSet;
 import java.util.Queue;
-import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -52,6 +49,7 @@ public class WNTMenu extends JMenu
                 addHook(queue.poll());
         }, 0, 1000, TimeUnit.MILLISECONDS);
 
+        add(new ModulesMenu());
         add(hooksMenu);
     }
 
@@ -59,4 +57,5 @@ public class WNTMenu extends JMenu
     {
         hooksMenu.add(hook);
     }
+
 }

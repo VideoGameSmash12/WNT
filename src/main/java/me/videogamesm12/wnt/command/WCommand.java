@@ -81,7 +81,7 @@ public abstract class WCommand implements Command<FabricClientCommandSource>, Su
         {
             context.getSource().sendError(new TranslatableText("wnt.messages.general.command_error",
                     new LiteralText(ex.getMessage())));
-            WNT.LOGGER.error("Command " + name + " threw an exception whilst attempting to execute", ex);
+            WNT.getLogger().error("Command " + name + " threw an exception whilst attempting to execute", ex);
         }
 
         return 1;

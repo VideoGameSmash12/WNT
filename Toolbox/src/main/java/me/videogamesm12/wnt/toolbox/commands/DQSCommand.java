@@ -50,7 +50,7 @@ public class DQSCommand extends WCommand
     @Override
     public boolean run(CommandContext<FabricClientCommandSource> context, String[] args) throws ModuleNotEnabledException
     {
-        DataQueryStorage module = WNT.MODULES.getModule(DataQueryStorage.class);
+        DataQueryStorage module = WNT.getModuleManager().getModule(DataQueryStorage.class);
 
         if (!module.isEnabled())
             throw new ModuleNotEnabledException(module);

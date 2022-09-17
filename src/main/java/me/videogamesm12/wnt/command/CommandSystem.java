@@ -53,8 +53,7 @@ public class CommandSystem
         }
         catch (Exception ex)
         {
-            WNT.LOGGER.error("Failed to register command class " + command.getName());
-            ex.printStackTrace();
+            WNT.getLogger().error("Failed to register command class " + command.getName(), ex);
         }
     }
 
