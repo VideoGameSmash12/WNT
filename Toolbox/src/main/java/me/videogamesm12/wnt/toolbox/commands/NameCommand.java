@@ -29,20 +29,16 @@ import me.videogamesm12.wnt.WNT;
 import me.videogamesm12.wnt.command.WCommand;
 import me.videogamesm12.wnt.toolbox.util.AshconUtil;
 import net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource;
-import net.minecraft.text.*;
-import net.minecraft.util.Formatting;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionException;
 
 public class NameCommand extends WCommand
 {
@@ -66,19 +62,20 @@ public class NameCommand extends WCommand
             }
             catch (FileNotFoundException ex)
             {
-                context.getSource().sendError(new TranslatableText("wnt.toolbox.ashcon.error.player_not_found"));
+                msg(Component.translatable("wnt.toolbox.ashcon.error.player_not_found", NamedTextColor.RED));
             }
             catch (JsonParseException ex)
             {
-                context.getSource().sendError(new TranslatableText("wnt.toolbox.ashcon.error.bad_json"));
+                msg(Component.translatable("wnt.toolbox.ashcon.error.bad_json", NamedTextColor.RED));
             }
             catch (IllegalArgumentException ex)
             {
-                context.getSource().sendError(new TranslatableText("wnt.toolbox.ashcon.error.not_a_uuid", args[0].toLowerCase()));
+                msg(Component.translatable("wnt.toolbox.ashcon.error.not_a_uuid",
+                        Component.text(args[0].toLowerCase())).color(NamedTextColor.RED));
             }
             catch (Throwable ex)
             {
-                context.getSource().sendError(new TranslatableText("wnt.toolbox.ashcon.error.unknown"));
+                msg(Component.translatable("wnt.toolbox.ashcon.error.unknown", NamedTextColor.RED));
                 WNT.getLogger().error("Details of the error: ", ex);
             }
 
@@ -86,12 +83,14 @@ public class NameCommand extends WCommand
         }).whenComplete((result, ex) -> {
             if (result == null) return;
 
-            context.getSource().sendFeedback(new TranslatableText("wnt.messages.command.name.result",
-                    new LiteralText(result.getUuid()).formatted(Formatting.WHITE),
-                    new LiteralText(result.getUsername()).setStyle(Style.EMPTY.withClickEvent(
-                                    new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, result.getUsername())).withUnderline(true)
-                            .withColor(TextColor.fromFormatting(Formatting.WHITE))))
-                    .formatted(Formatting.GRAY));
+            msg(Component.translatable("wnt.messages.command.name.result",
+                    Component.text(result.getUuid())
+                            .color(NamedTextColor.WHITE),
+                    Component.text(result.getUsername())
+                            .color(NamedTextColor.WHITE)
+                            .decorate(TextDecoration.UNDERLINED)
+                            .clickEvent(ClickEvent.copyToClipboard(result.getUsername())))
+                    .colorIfAbsent(NamedTextColor.GRAY));
         });
 
         return true;

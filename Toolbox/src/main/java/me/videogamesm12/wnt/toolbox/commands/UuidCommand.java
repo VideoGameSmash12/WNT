@@ -28,8 +28,10 @@ import me.videogamesm12.wnt.WNT;
 import me.videogamesm12.wnt.command.WCommand;
 import me.videogamesm12.wnt.toolbox.util.AshconUtil;
 import net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource;
-import net.minecraft.text.*;
-import net.minecraft.util.Formatting;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -56,7 +58,8 @@ public class UuidCommand extends WCommand
 
         if (!usernamePattern.matcher(args[0]).matches())
         {
-            context.getSource().sendError(new TranslatableText("wnt.toolbox.ashcon.error.bad_username", args[0]));
+            msg(Component.translatable("wnt.toolbox.ashcon.error.bad_username",
+                    Component.text(args[0])).color(NamedTextColor.RED));
             return true;
         }
 
@@ -67,15 +70,15 @@ public class UuidCommand extends WCommand
             }
             catch (FileNotFoundException ex)
             {
-                context.getSource().sendError(new TranslatableText("wnt.toolbox.ashcon.error.player_not_found"));
+                msg(Component.translatable("wnt.toolbox.ashcon.error.player_not_found", NamedTextColor.RED));
             }
             catch (JsonParseException ex)
             {
-                context.getSource().sendError(new TranslatableText("wnt.toolbox.ashcon.error.bad_json"));
+                msg(Component.translatable("wnt.toolbox.ashcon.error.bad_json", NamedTextColor.RED));
             }
             catch (Throwable ex)
             {
-                context.getSource().sendError(new TranslatableText("wnt.toolbox.ashcon.error.unknown"));
+                msg(Component.translatable("wnt.toolbox.ashcon.error.unknown", NamedTextColor.RED));
                 WNT.getLogger().error("Details of the error: ", ex);
             }
 
@@ -83,12 +86,14 @@ public class UuidCommand extends WCommand
         }).whenComplete((result, ex) -> {
             if (result == null) return;
 
-            context.getSource().sendFeedback(new TranslatableText("wnt.messages.command.uuid.result",
-                    new LiteralText(result.getUsername()).formatted(Formatting.WHITE),
-                    new LiteralText(result.getUuid()).setStyle(Style.EMPTY.withClickEvent(
-                                    new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, result.getUuid())).withUnderline(true)
-                            .withColor(TextColor.fromFormatting(Formatting.WHITE))))
-                    .formatted(Formatting.GRAY));
+            msg(Component.translatable("wnt.messages.command.uuid.result",
+                    Component.text(result.getUsername())
+                            .color(NamedTextColor.WHITE),
+                    Component.text(result.getUuid())
+                            .color(NamedTextColor.WHITE)
+                            .decorate(TextDecoration.UNDERLINED)
+                            .clickEvent(ClickEvent.copyToClipboard(result.getUuid())))
+                    .colorIfAbsent(NamedTextColor.GRAY));
         });
 
         return true;

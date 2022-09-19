@@ -31,11 +31,12 @@ import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import me.videogamesm12.wnt.WNT;
 import me.videogamesm12.wnt.module.ModuleNotEnabledException;
+import me.videogamesm12.wnt.util.Messenger;
 import net.fabricmc.fabric.api.client.command.v1.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.minecraft.command.CommandSource;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.TranslatableText;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.ArrayList;
@@ -66,21 +67,22 @@ public abstract class WCommand implements Command<FabricClientCommandSource>, Su
         try
         {
             if (!run(context, ArrayUtils.remove(context.getInput().split(" "), 0)))
-                context.getSource().sendError(new TranslatableText("wnt.messages.commands.usage", getUsage()));
+                msg(Component.translatable("wnt.messages.commands.usage", Component.text(getUsage()))
+                        .color(NamedTextColor.RED));
         }
         catch (NumberFormatException ex)
         {
-            context.getSource().sendError(new TranslatableText("wnt.messages.general.invalid_number"));
+            msg(Component.translatable("wnt.messages.general.invalid_number", NamedTextColor.RED));
         }
         catch (ModuleNotEnabledException ex)
         {
-            context.getSource().sendError(new TranslatableText("wnt.messages.general.module_not_enabled",
-                    new LiteralText(ex.getModule().getMeta().name())));
+            msg(Component.translatable("wnt.messages.general.module_not_enabled",
+                    Component.text(ex.getModule().getMeta().name())).color(NamedTextColor.RED));
         }
         catch (Throwable ex)
         {
-            context.getSource().sendError(new TranslatableText("wnt.messages.general.command_error",
-                    new LiteralText(ex.getMessage())));
+            msg(Component.translatable("wnt.messages.general.command_error", Component.text(ex.getMessage()))
+                    .color(NamedTextColor.RED));
             WNT.getLogger().error("Command " + name + " threw an exception whilst attempting to execute", ex);
         }
 
@@ -116,5 +118,10 @@ public abstract class WCommand implements Command<FabricClientCommandSource>, Su
     public final String getUsage()
     {
         return usage;
+    }
+
+    protected void msg(Component component)
+    {
+        Messenger.sendChatMessage(component);
     }
 }

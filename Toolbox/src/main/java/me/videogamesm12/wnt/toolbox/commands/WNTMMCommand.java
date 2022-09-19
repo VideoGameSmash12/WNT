@@ -28,13 +28,13 @@ import me.videogamesm12.wnt.command.WCommand;
 import me.videogamesm12.wnt.module.Module;
 import me.videogamesm12.wnt.module.ModuleManager;
 import net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Formatting;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TranslatableComponent;
+import net.kyori.adventure.text.format.NamedTextColor;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class WNTMMCommand extends WCommand
 {
@@ -60,34 +60,45 @@ public class WNTMMCommand extends WCommand
 
                 if (!mm.isModuleRegistered(args[1].toLowerCase()))
                 {
-                    context.getSource().sendError(new TranslatableText("wnt.toolbox.commands.wntmm.not_registered"));
+                    msg(Component.translatable("wnt.toolbox.commands.wntmm.not_registered").color(NamedTextColor.RED));
                     return true;
                 }
 
                 Module module = mm.getModule(args[1].toLowerCase());
-                MutableText status = module.isEnabled() ?
-                        new TranslatableText("wnt.generic.enabled").formatted(Formatting.GREEN) :
-                        new TranslatableText("wnt.generic.disabled").formatted(Formatting.RED);
+                Component status = module.isEnabled() ?
+                        Component.translatable("wnt.generic.enabled", NamedTextColor.GREEN) :
+                        Component.translatable("wnt.generic.disabled", NamedTextColor.RED);
 
-                context.getSource().sendFeedback(new TranslatableText("wnt.toolbox.header",
-                        new TranslatableText("wnt.toolbox.commands.wntmm.info.header",
-                                new LiteralText(module.getMeta().name()).formatted(Formatting.WHITE))
-                                .formatted(Formatting.GRAY)).formatted(Formatting.DARK_GRAY));
-                context.getSource().sendFeedback(new TranslatableText("wnt.toolbox.commands.wntmm.info.description",
-                        new LiteralText(module.getMeta().description()).formatted(Formatting.WHITE)).formatted(Formatting.GRAY));
-                context.getSource().sendFeedback(new TranslatableText("wnt.toolbox.commands.wntmm.info.status",
-                        status).formatted(Formatting.GRAY));
+                msg(Component.translatable("wnt.toolbox.header",
+                        Component.translatable("wnt.toolbox.commands.wntmm.info.header",
+                                Component.text(module.getMeta().name()).color(NamedTextColor.WHITE))
+                                .color(NamedTextColor.GRAY))
+                        .color(NamedTextColor.DARK_GRAY));
 
+                msg(Component.translatable("wnt.toolbox.commands.wntmm.info.description",
+                        Component.text(module.getMeta().description()).color(NamedTextColor.WHITE))
+                        .color(NamedTextColor.GRAY));
+
+                msg(Component.translatable("wnt.toolbox.commands.wntmm.info.status", status));
             }
             case "list" ->
             {
-                context.getSource().sendFeedback(new TranslatableText("wnt.toolbox.commands.wntmm.list.registered",
-                        new LiteralText(String.valueOf(mm.getModuleNames().size())).formatted(Formatting.WHITE)).formatted(Formatting.GRAY));
+                msg(Component.translatable("wnt.toolbox.commands.wntmm.list.registered",
+                        Component.text(mm.getModuleNames().size()).color(NamedTextColor.WHITE))
+                        .color(NamedTextColor.GRAY));
 
-                MutableText list = new TranslatableText("wnt.toolbox.commands.wntmm.list").formatted(Formatting.GRAY);
-                mm.getModuleNames().forEach(moduleName -> list.append(new LiteralText(moduleName).formatted(Formatting.WHITE).append(new LiteralText(", ").formatted(Formatting.GRAY))));
+                TranslatableComponent.Builder builder = Component.translatable("wnt.toolbox.commands.wntmm.list", NamedTextColor.GRAY).toBuilder();
 
-                context.getSource().sendFeedback(list);
+                // This is a stupid way of doing this, but I don't have any other choice.
+                AtomicInteger number = new AtomicInteger(0);
+                mm.getModuleNames().stream().sorted().forEach(moduleName -> {
+                    if (number.getAndIncrement() <= mm.getModuleNames().size())
+                        builder.append(Component.text(", ").color(NamedTextColor.GRAY));
+
+                    builder.append(Component.text(moduleName).color(NamedTextColor.WHITE));
+                });
+
+                msg(builder.build());
             }
             case "status" ->
             {
@@ -96,20 +107,19 @@ public class WNTMMCommand extends WCommand
 
                 if (!mm.isModuleRegistered(args[1].toLowerCase()))
                 {
-                    context.getSource().sendError(new TranslatableText("wnt.toolbox.commands.wntmm.not_registered"));
+                    msg(Component.translatable("wnt.toolbox.commands.wntmm.not_registered").color(NamedTextColor.RED));
                     return true;
                 }
 
                 Module module = mm.getModule(args[1].toLowerCase());
-                MutableText status = module.isEnabled() ?
-                        new TranslatableText("wnt.generic.enabled").formatted(Formatting.GREEN) :
-                        new TranslatableText("wnt.generic.disabled").formatted(Formatting.RED);
+                Component status = module.isEnabled() ?
+                        Component.translatable("wnt.generic.enabled", NamedTextColor.GREEN) :
+                        Component.translatable("wnt.generic.disabled", NamedTextColor.RED);
 
-                MutableText text = new TranslatableText("wnt.toolbox.commands.wntmm.status",
-                        new LiteralText(module.getClass().getSimpleName()).formatted(Formatting.WHITE),
-                        status).formatted(Formatting.GRAY);
-
-                context.getSource().sendFeedback(text);
+                msg(Component.translatable("wnt.toolbox.commands.wntmm.status",
+                        Component.text(module.getMeta().name())
+                                .color(NamedTextColor.WHITE))
+                        .color(NamedTextColor.GRAY));
             }
             case "toggle" ->
             {
@@ -118,7 +128,7 @@ public class WNTMMCommand extends WCommand
 
                 if (!mm.isModuleRegistered(args[1].toLowerCase()))
                 {
-                    context.getSource().sendError(new TranslatableText("wnt.toolbox.commands.wntmm.not_registered"));
+                    msg(Component.translatable("wnt.toolbox.commands.wntmm.not_registered").color(NamedTextColor.RED));
                     return true;
                 }
 
@@ -129,7 +139,10 @@ public class WNTMMCommand extends WCommand
                 else
                     module.enable();
 
-                context.getSource().sendFeedback(new TranslatableText("wnt.toolbox.commands.wntmm.toggled", new LiteralText(module.getClass().getSimpleName()).formatted(Formatting.DARK_GREEN)).formatted(Formatting.GREEN));
+                msg(Component.translatable("wnt.toolbox.commands.wntmm.toggled",
+                        Component.text(module.getMeta().name())
+                                .color(NamedTextColor.DARK_GREEN))
+                        .color(NamedTextColor.GREEN));
             }
             default -> {
                 return false;

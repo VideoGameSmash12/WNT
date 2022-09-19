@@ -9,32 +9,27 @@ import net.minecraft.item.map.MapState;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RequestMapDumpEvent<T> extends CustomEvent
+public class RequestMapDumpEvent extends CustomEvent
 {
     @Getter
     private final List<Integer> maps = new ArrayList<>();
     @Getter
-    private final T source;
-    @Getter
     @Setter
     private RequestType requestType;
 
-    public RequestMapDumpEvent(T source)
+    public RequestMapDumpEvent()
     {
-        this.source = source;
         this.requestType = RequestType.MASS;
     }
 
-    public RequestMapDumpEvent(int map, T source)
+    public RequestMapDumpEvent(int map)
     {
-        this.source = source;
         this.requestType = RequestType.SINGULAR;
         this.maps.add(map);
     }
 
-    public RequestMapDumpEvent(List<Integer> maps, T source)
+    public RequestMapDumpEvent(List<Integer> maps)
     {
-        this.source = source;
         this.requestType = RequestType.MULTIPLE;
         this.maps.addAll(maps);
     }

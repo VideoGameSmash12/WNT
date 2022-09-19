@@ -29,14 +29,14 @@ import me.videogamesm12.wnt.WNT;
 import me.videogamesm12.wnt.dumper.events.RequestEntityDumpEvent;
 import me.videogamesm12.wnt.dumper.events.RequestMapDumpEvent;
 import me.videogamesm12.wnt.dumper.mixin.ClientWorldMixin;
-import net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource;
+import me.videogamesm12.wnt.util.Messenger;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.map.MapState;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtIo;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
@@ -62,14 +62,13 @@ public class EventHandler extends Thread
     }
 
     @Subscribe
-    public synchronized void onEntityDumpRequest(RequestEntityDumpEvent<FabricClientCommandSource> event)
+    public synchronized void onEntityDumpRequest(RequestEntityDumpEvent event)
     {
         World world = MinecraftClient.getInstance().world;
-        FabricClientCommandSource source = event.getSource();
 
         if (world == null)
         {
-            source.sendError(new TranslatableText("wnt.dumper.error.not_in_world"));
+            Messenger.sendChatMessage(Component.translatable("wnt.dumper.error.not_in_world", NamedTextColor.RED));
             return;
         }
 
@@ -79,18 +78,17 @@ public class EventHandler extends Thread
             case MULTIPLE, SINGULAR -> event.getEntities().forEach(this::tryDump);
         }
 
-        source.sendFeedback(new TranslatableText("wnt.dumper.success"));
+        Messenger.sendChatMessage(Component.translatable("wnt.dumper.success", NamedTextColor.GREEN));
     }
 
     @Subscribe
-    public synchronized void onMapDumpRequest(RequestMapDumpEvent<FabricClientCommandSource> event)
+    public synchronized void onMapDumpRequest(RequestMapDumpEvent event)
     {
         World world = MinecraftClient.getInstance().world;
-        FabricClientCommandSource source = event.getSource();
 
         if (world == null)
         {
-            source.sendError(new TranslatableText("wnt.dumper.error.not_in_world"));
+            Messenger.sendChatMessage(Component.translatable("wnt.dumper.error.not_in_world", NamedTextColor.RED));
             return;
         }
 
@@ -104,12 +102,13 @@ public class EventHandler extends Thread
         }
         catch (Exception ex)
         {
+            Messenger.sendChatMessage(Component.translatable("wnt.dumper.failed", Component.text(ex.getMessage()))
+                    .color(NamedTextColor.RED));
             WNT.getLogger().error("Failed to dump entities", ex);
-            source.sendError(new TranslatableText("wnt.dumper.failed", new LiteralText(ex.getClass().getName())));
             return;
         }
 
-        source.sendFeedback(new TranslatableText("wnt.dumper.success"));
+        Messenger.sendChatMessage(Component.translatable("wnt.dumper.success", NamedTextColor.GREEN));
     }
 
     /**

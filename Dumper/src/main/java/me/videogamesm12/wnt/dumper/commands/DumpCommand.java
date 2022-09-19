@@ -29,9 +29,10 @@ import me.videogamesm12.wnt.dumper.events.RequestEntityDumpEvent;
 import me.videogamesm12.wnt.dumper.events.RequestMapDumpEvent;
 import me.videogamesm12.wnt.dumper.mixin.ClientWorldMixin;
 import net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
-import net.minecraft.text.TranslatableText;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,13 +53,13 @@ public class DumpCommand extends WCommand
 
         if (MinecraftClient.getInstance().world == null)
         {
-            context.getSource().sendError(new TranslatableText("wnt.dumper.error.not_in_world"));
+            msg(Component.translatable("wnt.dumper.error.not_in_world").color(NamedTextColor.RED));
             return true;
         }
 
         switch (args[0].toLowerCase())
         {
-            case "entities" -> CompletableFuture.runAsync(() -> Dumper.getHandler().getEventBus().post(new RequestEntityDumpEvent<>(context.getSource())));
+            case "entities" -> CompletableFuture.runAsync(() -> Dumper.getHandler().getEventBus().post(new RequestEntityDumpEvent()));
             case "entity" -> {
                 if (args.length < 2)
                     return false;
@@ -70,14 +71,14 @@ public class DumpCommand extends WCommand
 
                     if (entity == null)
                     {
-                        context.getSource().sendError(new TranslatableText("wnt.dumper.error.entity_not_found"));
+                        msg(Component.translatable("wnt.dumper.error.entity_not_found").color(NamedTextColor.RED));
                         return;
                     }
 
-                    Dumper.getHandler().getEventBus().post(new RequestEntityDumpEvent<>(entity, context.getSource()));
+                    Dumper.getHandler().getEventBus().post(new RequestEntityDumpEvent(entity));
                 });
             }
-            case "maps" -> CompletableFuture.runAsync(() -> Dumper.getHandler().getEventBus().post(new RequestMapDumpEvent<>(context.getSource())));
+            case "maps" -> CompletableFuture.runAsync(() -> Dumper.getHandler().getEventBus().post(new RequestMapDumpEvent()));
             case "map" -> {
                 if (args.length < 2)
                     return false;
@@ -87,11 +88,11 @@ public class DumpCommand extends WCommand
                 CompletableFuture.runAsync(() -> {
                     if (!((ClientWorldMixin) MinecraftClient.getInstance().world).getMapStates().containsKey("map_" + id))
                     {
-                        context.getSource().sendError(new TranslatableText("wnt.dumper.map_not_loaded"));
+                        msg(Component.translatable("wnt.dumper.error.map_not_loaded").color(NamedTextColor.RED));
                         return;
                     }
 
-                    Dumper.getHandler().getEventBus().post(new RequestMapDumpEvent<>(id, context.getSource()));
+                    Dumper.getHandler().getEventBus().post(new RequestMapDumpEvent(id));
                 });
             }
             default -> {

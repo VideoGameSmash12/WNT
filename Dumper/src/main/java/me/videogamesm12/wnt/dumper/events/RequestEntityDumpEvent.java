@@ -8,32 +8,28 @@ import net.minecraft.entity.Entity;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RequestEntityDumpEvent<T> extends CustomEvent
+public class RequestEntityDumpEvent extends CustomEvent
 {
     @Getter
     private final List<Entity> entities = new ArrayList<>();
-    @Getter
-    private final T source;
+
     @Getter
     @Setter
     private RequestType requestType;
 
-    public RequestEntityDumpEvent(T source)
+    public RequestEntityDumpEvent()
     {
-        this.source = source;
         this.requestType = RequestType.MASS;
     }
 
-    public RequestEntityDumpEvent(Entity entity, T source)
+    public RequestEntityDumpEvent(Entity entity)
     {
-        this.source = source;
         this.requestType = RequestType.SINGULAR;
         this.entities.add(entity);
     }
 
-    public RequestEntityDumpEvent(List<Entity> entities, T source)
+    public RequestEntityDumpEvent(List<Entity> entities)
     {
-        this.source = source;
         this.requestType = RequestType.MULTIPLE;
         this.entities.addAll(entities);
     }

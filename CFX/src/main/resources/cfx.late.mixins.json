@@ -1,5 +1,5 @@
 {
-  "required": true,
+  "required": false,
   "minVersion": "0.8",
   "package": "me.videogamesm12.wnt.cfx.latepatches",
   "compatibilityLevel": "JAVA_16",
@@ -7,6 +7,6 @@
     "ClickableText"
   ],
   "injectors": {
-    "defaultRequire": 1
+    "defaultRequire": 0
   }
 }

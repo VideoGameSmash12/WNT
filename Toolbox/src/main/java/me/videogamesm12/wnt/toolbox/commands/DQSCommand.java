@@ -31,10 +31,9 @@ import me.videogamesm12.wnt.toolbox.data.QueriedEntityDataSet;
 import me.videogamesm12.wnt.toolbox.mixin.KeyboardMixin;
 import me.videogamesm12.wnt.toolbox.modules.DataQueryStorage;
 import net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Formatting;
 
 import java.util.Arrays;
 import java.util.List;
@@ -63,7 +62,7 @@ public class DQSCommand extends WCommand
             case "clear" ->
             {
                 module.clearData();
-                context.getSource().sendFeedback(new TranslatableText("wnt.toolbox.commands.dqs.cleared").formatted(Formatting.GREEN));
+                msg(Component.translatable("wnt.toolbox.commands.dqs.cleared").color(NamedTextColor.GREEN));
             }
             case "copy", "recopy" ->
             {
@@ -81,12 +80,11 @@ public class DQSCommand extends WCommand
                         {
                             ((KeyboardMixin.KBAccessor) MinecraftClient.getInstance().keyboard).invokeCopyEntity(
                                     dataSet.getEntityIdentifier(), dataSet.getPos(), dataSet.getNbt());
-                            ((KeyboardMixin.KBAccessor) MinecraftClient.getInstance().keyboard).invokeDebugLog(
-                                    new TranslatableText("debug.inspect.server.entity"));
+                            msg(Component.translatable("debug.inspect.server.entity").color(NamedTextColor.GREEN));
                         }
                         else
                         {
-                            context.getSource().sendError(new TranslatableText("wnt.toolbox.commands.dqs.not_found"));
+                            msg(Component.translatable("wnt.toolbox.commands.dqs.not_found").color(NamedTextColor.RED));
                         }
                     }
                     case "block" ->
@@ -97,12 +95,11 @@ public class DQSCommand extends WCommand
                         {
                             ((KeyboardMixin.KBAccessor) MinecraftClient.getInstance().keyboard).invokeCopyBlock(
                                     dataSet.getState(), dataSet.getPos(), dataSet.getNbt());
-                            ((KeyboardMixin.KBAccessor) MinecraftClient.getInstance().keyboard).invokeDebugLog(
-                                    new TranslatableText("debug.inspect.server.block"));
+                            msg(Component.translatable("debug.inspect.server.block").color(NamedTextColor.GREEN));
                         }
                         else
                         {
-                            context.getSource().sendError(new TranslatableText("wnt.toolbox.commands.dqs.not_found"));
+                            msg(Component.translatable("wnt.toolbox.commands.dqs.not_found").color(NamedTextColor.RED));
                         }
                     }
                     default ->
@@ -113,18 +110,15 @@ public class DQSCommand extends WCommand
             }
             case "stats" ->
             {
-                context.getSource().sendFeedback(
-                        new TranslatableText("wnt.toolbox.header",
-                                new TranslatableText("wnt.toolbox.commands.dqs.stats.header")
-                                        .formatted(Formatting.WHITE)).formatted(Formatting.DARK_GRAY));
-                context.getSource().sendFeedback(
-                        new TranslatableText("wnt.toolbox.commands.dqs.stats.blocks",
-                                new LiteralText(String.valueOf(module.getBlockDataSets().size()))
-                                        .formatted(Formatting.WHITE)).formatted(Formatting.GRAY));
-                context.getSource().sendFeedback(
-                        new TranslatableText("wnt.toolbox.commands.dqs.stats.entities",
-                                new LiteralText(String.valueOf(module.getEntityDataSets().size()))
-                                        .formatted(Formatting.WHITE)).formatted(Formatting.GRAY));
+                msg(Component.translatable("wnt.toolbox.header",
+                        Component.translatable("wnt.toolbox.commands.dqs.stats.header", NamedTextColor.WHITE))
+                        .color(NamedTextColor.DARK_GRAY));
+                msg(Component.translatable("wnt.toolbox.commands.dqs.stats.blocks",
+                        Component.text(module.getBlockDataSets().size(), NamedTextColor.WHITE))
+                        .color(NamedTextColor.GRAY));
+                msg(Component.translatable("wnt.toolbox.commands.dqs.stats.entities",
+                        Component.text(module.getEntityDataSets().size(), NamedTextColor.WHITE))
+                        .color(NamedTextColor.GRAY));
             }
             default ->
             {
