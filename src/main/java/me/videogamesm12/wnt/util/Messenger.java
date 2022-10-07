@@ -21,4 +21,9 @@ public class Messenger
         if (entity != null)
             entity.sendMessage(Text.Serializer.fromJson(kyori.serialize(component)), false);
     }
+
+    public static Text convert(Component text)
+    {
+        return Text.Serializer.fromJson(kyori.serialize(text));
+    }
 }

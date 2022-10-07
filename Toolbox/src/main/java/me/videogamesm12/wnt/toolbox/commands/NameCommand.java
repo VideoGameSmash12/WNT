@@ -22,7 +22,6 @@
 
 package me.videogamesm12.wnt.toolbox.commands;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 import com.mojang.brigadier.context.CommandContext;
 import me.videogamesm12.wnt.WNT;
