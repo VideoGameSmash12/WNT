@@ -90,7 +90,7 @@ public class WNTMMCommand extends WCommand
                 TranslatableComponent.Builder builder = Component.translatable("wnt.toolbox.commands.wntmm.list", NamedTextColor.GRAY).toBuilder();
 
                 // This is a stupid way of doing this, but I don't have any other choice.
-                AtomicInteger number = new AtomicInteger(0);
+                AtomicInteger number = new AtomicInteger(1);
                 mm.getModuleNames().stream().sorted().forEach(moduleName -> {
                     if (number.getAndIncrement() <= mm.getModuleNames().size())
                         builder.append(Component.text(", ").color(NamedTextColor.GRAY));
@@ -118,7 +118,8 @@ public class WNTMMCommand extends WCommand
 
                 msg(Component.translatable("wnt.toolbox.commands.wntmm.status",
                         Component.text(module.getMeta().name())
-                                .color(NamedTextColor.WHITE))
+                                .color(NamedTextColor.WHITE),
+                                status)
                         .color(NamedTextColor.GRAY));
             }
             case "toggle" ->

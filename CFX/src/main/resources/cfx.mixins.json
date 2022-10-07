@@ -10,7 +10,8 @@
     "ExcessivelyLongText$EntityRendering",
     "HoverableText$Entities",
     "HoverableText$Items",
-    "NBTLimit"
+    "NBTLimit",
+    "OutrageousTranslation"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -26,10 +26,7 @@ import com.google.common.eventbus.EventBus;
 import lombok.Getter;
 import me.videogamesm12.wnt.WNT;
 import me.videogamesm12.wnt.command.CommandSystem;
-import me.videogamesm12.wnt.toolbox.commands.DQSCommand;
-import me.videogamesm12.wnt.toolbox.commands.NameCommand;
-import me.videogamesm12.wnt.toolbox.commands.UuidCommand;
-import me.videogamesm12.wnt.toolbox.commands.WNTMMCommand;
+import me.videogamesm12.wnt.toolbox.commands.*;
 import me.videogamesm12.wnt.toolbox.modules.DataQueryStorage;
 import me.videogamesm12.wnt.toolbox.modules.LockupProtection;
 import net.fabricmc.api.ModInitializer;
@@ -46,6 +43,7 @@ public class Toolbox implements ModInitializer
         CommandSystem.registerCommand(UuidCommand.class);
         CommandSystem.registerCommand(WNTMMCommand.class);
         CommandSystem.registerCommand(DQSCommand.class);
+        CommandSystem.registerCommand(QECommand.class);
         //--
         WNT.getModuleManager().register(LockupProtection.class);
         WNT.getModuleManager().register(DataQueryStorage.class);

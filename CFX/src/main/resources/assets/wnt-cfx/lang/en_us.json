@@ -1,6 +1,8 @@
 {
   "wnt.messages.cfx.rcprompt.title": "Are you sure you want to run this command?",
 
+  "wnt.replacements.cfx.text.too_many_placeholders": "*** Component has too many placeholders ***",
+
   "text.autoconfig.wnt-cfx.title": "CFX Settings",
 
   "text.autoconfig.wnt-cfx.category.nbt": "NBT",
@@ -34,5 +36,7 @@
   "text.autoconfig.wnt-cfx.option.compPatches.clickPatches.suggestLimit.@Tooltip": "This has no effect if the above setting is set to \"No\".",
   "text.autoconfig.wnt-cfx.option.compPatches.translatePatches": "Translatable Text",
   "text.autoconfig.wnt-cfx.option.compPatches.translatePatches.boundaryPatchEnabled": "Enforce boundaries on selective translation arguments",
-  "text.autoconfig.wnt-cfx.option.compPatches.translatePatches.boundaryPatchEnabled.@Tooltip": "An exploit is present in 1.17+ clients where it is possible to\ncrash them by causing them to try to process out-of-bounds\ntranslation string arguments.\n\nThis setting decides whether to patch said exploit."
+  "text.autoconfig.wnt-cfx.option.compPatches.translatePatches.boundaryPatchEnabled.@Tooltip": "An exploit is present in 1.17+ clients where it is possible to\ncrash them by causing them to try to process out-of-bounds\ntranslation string arguments.\n\nThis setting decides whether to patch said exploit.",
+  "text.autoconfig.wnt-cfx.option.compPatches.translatePatches.placeholderLimitEnabled": "Enforce a limit on how many placeholders can be processed at a time",
+  "text.autoconfig.wnt-cfx.option.compPatches.translatePatches.placeholderLimitEnabled.@Tooltip": "A critical exploit is present in 1.7+ where it is possible to\ncrash both servers and clients by utilizing a specially-crafted\ntranslation component.\n\nThis setting decides whether or not to patch said exploit."
 }

@@ -16,5 +16,6 @@
 
   "wnt.messages.general.command_error": "Command error: %s",
   "wnt.messages.general.invalid_number": "Invalid number.",
-  "wnt.messages.general.module_not_enabled": "This command requires the %s module to be enabled in order to work properly."
+  "wnt.messages.general.module_not_enabled": "This command requires the %s module to be enabled in order to work properly.",
+  "wnt.messages.general.not_connected": "You are not connected to any server."
 }

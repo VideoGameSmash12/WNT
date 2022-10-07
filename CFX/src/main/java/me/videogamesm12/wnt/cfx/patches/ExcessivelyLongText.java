@@ -41,7 +41,7 @@ public class ExcessivelyLongText
         private Text limitLabelSize(Text text)
         {
             if (CFX.getConfig().getRendererPatches().getEntities().isEntityNameSizeLimitEnabled()
-                    && text.toString().length() > CFX.getConfig().getRendererPatches().getEntities().getEntityNameSizeLimit())
+                    && text.asString().length() > CFX.getConfig().getRendererPatches().getEntities().getEntityNameSizeLimit())
             {
                 return new LiteralText(text.asTruncatedString(CFX.getConfig().getRendererPatches().getEntities().getEntityNameSizeLimit()));
             }

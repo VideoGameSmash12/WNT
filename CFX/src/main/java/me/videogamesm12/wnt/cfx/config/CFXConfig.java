@@ -147,6 +147,9 @@ public class CFXConfig implements ConfigData
         {
             @ConfigEntry.Gui.Tooltip
             private boolean boundaryPatchEnabled = true;
+
+            @ConfigEntry.Gui.Tooltip
+            private boolean placeholderLimitEnabled = true;
         }
     }
 }
