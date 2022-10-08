@@ -1,0 +1,3 @@
+dependencies {
+    implementation "net.kyori:adventure-text-serializer-gson:4.9.3"
+}

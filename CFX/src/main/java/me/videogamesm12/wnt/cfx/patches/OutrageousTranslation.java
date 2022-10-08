@@ -68,6 +68,13 @@ public class OutrageousTranslation
 	private long getNumberOfPlaceholders(JsonElement element)
 	{
 		long amount = 0;
+
+		// God dammit!
+		if (!element.isJsonObject())
+		{
+			return amount;
+		}
+
 		JsonObject from = element.getAsJsonObject();
 
 		// Figure out how many placeholders are in a single translatable component
