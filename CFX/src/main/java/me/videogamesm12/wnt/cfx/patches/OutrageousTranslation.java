@@ -100,7 +100,7 @@ public class OutrageousTranslation
 		// Also applies to keybind components, but to a lesser extent
 		else if (from.has("keybind"))
 		{
-			String key = JsonHelper.getString(from, "translate");
+			String key = JsonHelper.getString(from, "keybind");
 			Matcher matcher = PLACEHOLDER_PATTERN.matcher(key);
 			amount += matcher.results().count();
 		}
