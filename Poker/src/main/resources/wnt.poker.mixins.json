@@ -9,6 +9,7 @@
     "bleachhack.BleachHackModuleMixin",
     "deviousmod.DeviousModClientMixin",
     "deviousmod.DeviousModModuleManagerMixin",
+    "meteor_client.MeteorModuleMixin",
     "wurst.WurstClientMixin",
     "wurst.WurstHackMixin"
   ],

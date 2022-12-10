@@ -64,7 +64,8 @@ public class PokerMixinPlugin implements IMixinConfigPlugin
 
         if (split.length == 2)
         {
-            return loader.isModLoaded(split[0].toLowerCase());
+            return loader.isModLoaded(split[0].toLowerCase())
+                    || loader.isModLoaded(split[0].toLowerCase().replace("_", "-"));
         }
         else
         {
