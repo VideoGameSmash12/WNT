@@ -23,8 +23,9 @@
 package me.videogamesm12.wnt.blackbox.tools;
 
 import me.videogamesm12.wnt.supervisor.event.HUDMessageAdded;
+import me.videogamesm12.wnt.util.Messenger;
+import net.kyori.adventure.text.Component;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.network.MessageType;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 
@@ -32,7 +33,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.util.UUID;
 
 public class ChatWindow extends JFrame implements HUDMessageAdded
 {
@@ -69,12 +69,12 @@ public class ChatWindow extends JFrame implements HUDMessageAdded
                 if (event.getKeyCode() == KeyEvent.VK_ENTER
                         && MinecraftClient.getInstance().getNetworkHandler() != null
                         && MinecraftClient.getInstance().player != null)
-                    MinecraftClient.getInstance().player.sendChatMessage(messageField.getText());
+                    MinecraftClient.getInstance().player.sendChatMessage(messageField.getText(), Messenger.convert(Component.text(messageField.getText())));
             }
         });
         sendButton.addActionListener((event) -> {
             if (MinecraftClient.getInstance().getNetworkHandler() != null && MinecraftClient.getInstance().player != null)
-                MinecraftClient.getInstance().player.sendChatMessage(messageField.getText());
+                MinecraftClient.getInstance().player.sendChatMessage(messageField.getText(), Messenger.convert(Component.text(messageField.getText())));
         });
         //--
         GroupLayout pLayout = new GroupLayout(getContentPane());
@@ -114,7 +114,7 @@ public class ChatWindow extends JFrame implements HUDMessageAdded
     }
 
     @Override
-    public ActionResult onMessageAdded(MessageType type, Text message, UUID sender)
+    public ActionResult onMessageAdded(Text message)
     {
         chatArea.append(message.getString() + "\n");
         if (chatArea.getSelectedText() == null)

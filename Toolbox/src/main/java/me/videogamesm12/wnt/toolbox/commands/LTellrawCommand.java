@@ -26,7 +26,7 @@ import com.google.gson.JsonParseException;
 import com.mojang.brigadier.context.CommandContext;
 import me.videogamesm12.wnt.command.WCommand;
 import me.videogamesm12.wnt.module.ModuleNotEnabledException;
-import net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource;
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;

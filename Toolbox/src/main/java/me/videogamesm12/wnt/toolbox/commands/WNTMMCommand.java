@@ -27,7 +27,7 @@ import me.videogamesm12.wnt.WNT;
 import me.videogamesm12.wnt.command.WCommand;
 import me.videogamesm12.wnt.module.Module;
 import me.videogamesm12.wnt.module.ModuleManager;
-import net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource;
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TranslatableComponent;
 import net.kyori.adventure.text.format.NamedTextColor;

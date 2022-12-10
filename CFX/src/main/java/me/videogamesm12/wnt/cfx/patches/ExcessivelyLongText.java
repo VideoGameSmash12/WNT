@@ -25,7 +25,8 @@ package me.videogamesm12.wnt.cfx.patches;
 import me.videogamesm12.wnt.cfx.CFX;
 import me.videogamesm12.wnt.cfx.base.CPatch;
 import net.minecraft.client.render.entity.EntityRenderer;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.LiteralTextContent;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -41,9 +42,9 @@ public class ExcessivelyLongText
         private Text limitLabelSize(Text text)
         {
             if (CFX.getConfig().getRendererPatches().getEntities().isEntityNameSizeLimitEnabled()
-                    && text.asString().length() > CFX.getConfig().getRendererPatches().getEntities().getEntityNameSizeLimit())
+                    && text.getString().length() > CFX.getConfig().getRendererPatches().getEntities().getEntityNameSizeLimit())
             {
-                return new LiteralText(text.asTruncatedString(CFX.getConfig().getRendererPatches().getEntities().getEntityNameSizeLimit()));
+                return MutableText.of(new LiteralTextContent(text.asTruncatedString(CFX.getConfig().getRendererPatches().getEntities().getEntityNameSizeLimit())));
             }
 
             return text;

@@ -25,7 +25,7 @@ package me.videogamesm12.wnt.cfx.patches;
 import me.videogamesm12.wnt.cfx.CFX;
 import me.videogamesm12.wnt.cfx.base.CPatch;
 import net.minecraft.text.StringVisitable;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.TranslatableTextContent;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -38,7 +38,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  * Patches an exploit caused by insufficient boundary checks in the translation system
  */
 @CPatch(name = "BoundlessTranslation", description = "No description")
-@Mixin(TranslatableText.class)
+@Mixin(TranslatableTextContent.class)
 public class BoundlessTranslation
 {
     @Shadow @Final private static StringVisitable NULL_ARGUMENT;

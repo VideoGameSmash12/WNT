@@ -27,7 +27,6 @@ import com.google.gson.JsonObject;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import me.videogamesm12.wnt.cfx.CFX;
 import me.videogamesm12.wnt.cfx.base.CPatch;
-import me.videogamesm12.wnt.cfx.config.CFXConfig;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.StringNbtReader;
 import net.minecraft.text.HoverEvent;
@@ -39,8 +38,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import java.util.UUID;
 
 /**
  * <h1>HoverableText</h1>
@@ -90,102 +87,6 @@ public class HoverableText
                     }
                 }
                 catch (CommandSyntaxException ignored)
-                {
-                    cir.setReturnValue(null);
-                }
-            }
-        }
-
-        /**
-         * Replaces invalid UUIDs passed to fromString with a valid UUID if the method selected is set to VISIBLE.
-         * @param uuid  String
-         */
-        @ModifyArg(method = "parse(Lnet/minecraft/text/Text;)Lnet/minecraft/text/HoverEvent$EntityContent;",
-                at = @At(value = "INVOKE", target = "Ljava/util/UUID;fromString(Ljava/lang/String;)Ljava/util/UUID;"))
-        private static String visiblyPatchInvalidUuidText(String uuid)
-        {
-            if (CFX.getConfig().getCompPatches().getHoverPatches().getUuidPatchMode() == CFXConfig.TextComponents.HText.UPMode.VISIBLE)
-            {
-                try
-                {
-                    return UUID.fromString(uuid).toString();
-                }
-                catch (Exception ex)
-                {
-                    return "DEADDEAD-DEAD-DEAD-DEAD-DEADDEADDEAD";
-                }
-            }
-
-            return uuid;
-        }
-
-        /**
-         * Replaces invalid UUIDs passed to fromString with a valid UUID if the method selected is set to VISIBLE.
-         * @param uuid  String
-         */
-        @ModifyArg(method = "parse(Lcom/google/gson/JsonElement;)Lnet/minecraft/text/HoverEvent$EntityContent;",
-                at = @At(value = "INVOKE", target = "Ljava/util/UUID;fromString(Ljava/lang/String;)Ljava/util/UUID;"))
-        private static String visiblyPatchInvalidUuid(String uuid)
-        {
-            if (CFX.getConfig().getCompPatches().getHoverPatches().getUuidPatchMode() == CFXConfig.TextComponents.HText.UPMode.VISIBLE)
-            {
-                try
-                {
-                    return UUID.fromString(uuid).toString();
-                }
-                catch (Exception ex)
-                {
-                    return "DEADDEAD-DEAD-DEAD-DEAD-DEADDEADDEAD";
-                }
-            }
-
-            return uuid;
-        }
-
-        /**
-         * Silently patches the invalid UUID text exploit if the method selected is set to SILENT.
-         * @param json  JsonElement
-         * @param cir   CallbackInfoReturnable<HoverEvent.EntityContent> cir
-         */
-        @Inject(method = "parse(Lcom/google/gson/JsonElement;)Lnet/minecraft/text/HoverEvent$EntityContent;",
-                at = @At(value = "INVOKE",
-                        target = "Lnet/minecraft/util/registry/DefaultedRegistry;get(Lnet/minecraft/util/Identifier;)Ljava/lang/Object;",
-                        shift = At.Shift.AFTER),
-                cancellable = true)
-        private static void silentlyPatchInvalidUuid(JsonElement json, CallbackInfoReturnable<HoverEvent.EntityContent> cir)
-        {
-            if (CFX.getConfig().getCompPatches().getHoverPatches().getUuidPatchMode() == CFXConfig.TextComponents.HText.UPMode.SILENT)
-            {
-                try
-                {
-                    UUID.fromString(JsonHelper.getString(json.getAsJsonObject(), "id"));
-                }
-                catch (Exception ex)
-                {
-                    cir.setReturnValue(null);
-                }
-            }
-        }
-
-        /**
-         * Silently patches the invalid UUID text exploit if the method selected is set to SILENT.
-         * @param text  Text
-         * @param cir   CallbackInfoReturnable<HoverEvent.EntityContent> cir
-         */
-        @Inject(method = "parse(Lnet/minecraft/text/Text;)Lnet/minecraft/text/HoverEvent$EntityContent;",
-                at = @At(value = "INVOKE",
-                        target = "Lnet/minecraft/util/registry/DefaultedRegistry;get(Lnet/minecraft/util/Identifier;)Ljava/lang/Object;",
-                        shift = At.Shift.AFTER),
-                cancellable = true)
-        private static void silentlyPatchInvalidUuid(Text text, CallbackInfoReturnable<HoverEvent.EntityContent> cir)
-        {
-            if (CFX.getConfig().getCompPatches().getHoverPatches().getUuidPatchMode() == CFXConfig.TextComponents.HText.UPMode.SILENT)
-            {
-                try
-                {
-                    UUID.fromString(StringNbtReader.parse(text.getString()).getString("id"));
-                }
-                catch (Exception ex)
                 {
                     cir.setReturnValue(null);
                 }

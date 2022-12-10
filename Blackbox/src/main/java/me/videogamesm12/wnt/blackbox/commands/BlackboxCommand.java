@@ -25,7 +25,7 @@ package me.videogamesm12.wnt.blackbox.commands;
 import com.mojang.brigadier.context.CommandContext;
 import me.videogamesm12.wnt.blackbox.Blackbox;
 import me.videogamesm12.wnt.command.WCommand;
-import net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource;
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 
 import javax.swing.*;
 import java.util.ArrayList;

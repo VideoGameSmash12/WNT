@@ -28,7 +28,7 @@ import me.videogamesm12.wnt.dumper.Dumper;
 import me.videogamesm12.wnt.dumper.events.RequestEntityDumpEvent;
 import me.videogamesm12.wnt.dumper.events.RequestMapDumpEvent;
 import me.videogamesm12.wnt.dumper.mixin.ClientWorldMixin;
-import net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource;
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.minecraft.client.MinecraftClient;

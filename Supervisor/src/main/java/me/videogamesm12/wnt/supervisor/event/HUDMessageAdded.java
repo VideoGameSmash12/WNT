@@ -24,7 +24,6 @@ package me.videogamesm12.wnt.supervisor.event;
 
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
-import net.minecraft.network.MessageType;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 
@@ -32,11 +31,11 @@ import java.util.UUID;
 
 public interface HUDMessageAdded
 {
-    Event<HUDMessageAdded> EVENT = EventFactory.createArrayBacked(HUDMessageAdded.class, (listeners) -> (type, message, sender) ->
+    Event<HUDMessageAdded> EVENT = EventFactory.createArrayBacked(HUDMessageAdded.class, (listeners) -> (message) ->
     {
         for (HUDMessageAdded listener : listeners)
         {
-            ActionResult result = listener.onMessageAdded(type, message, sender);
+            ActionResult result = listener.onMessageAdded(message);
 
             if (result != ActionResult.PASS)
             {
@@ -47,5 +46,5 @@ public interface HUDMessageAdded
         return ActionResult.SUCCESS;
     });
 
-    ActionResult onMessageAdded(MessageType type, Text message, UUID sender);
+    ActionResult onMessageAdded(Text message);
 }

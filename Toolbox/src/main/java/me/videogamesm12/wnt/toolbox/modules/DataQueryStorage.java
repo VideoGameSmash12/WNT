@@ -31,8 +31,8 @@ import me.videogamesm12.wnt.toolbox.data.QueriedBlockDataSet;
 import me.videogamesm12.wnt.toolbox.data.QueriedEntityDataSet;
 import me.videogamesm12.wnt.toolbox.event.client.CopyBlockToClipboard;
 import me.videogamesm12.wnt.toolbox.event.client.CopyEntityToClipboard;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 

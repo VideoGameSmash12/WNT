@@ -25,12 +25,12 @@ package me.videogamesm12.wnt.cfx.latepatches;
 import me.videogamesm12.wnt.cfx.CFX;
 import me.videogamesm12.wnt.cfx.base.CPatch;
 import me.videogamesm12.wnt.cfx.config.CFXConfig;
+import me.videogamesm12.wnt.util.Messenger;
+import net.kyori.adventure.text.Component;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
-import net.minecraft.text.TranslatableText;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -53,7 +53,7 @@ public class ClickableText
      * @param style Style
      * @param cir   CallbackInfoReturnable<Boolean>
      */
-    @Inject(method = "handleTextClick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;sendMessage(Ljava/lang/String;Z)V", shift = At.Shift.BEFORE), cancellable = true)
+    @Inject(method = "handleTextClick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;sendCommand(Ljava/lang/String;)Z", shift = At.Shift.BEFORE), cancellable = true)
     public void disableRunCommand(Style style, CallbackInfoReturnable<Boolean> cir)
     {
         CFXConfig.TextComponents.CText.RCMode patchMethod = CFX.getConfig().getCompPatches().getClickPatches().getRcMode();
@@ -71,16 +71,16 @@ public class ClickableText
                 cir.setReturnValue(true);
 
                 MinecraftClient.getInstance().setScreen(new ConfirmScreen((result) -> {
-                        if (result)
+                        if (result && MinecraftClient.getInstance().player != null)
                         {
-                            MinecraftClient.getInstance().player.sendChatMessage(style.getClickEvent().getValue());
+                            MinecraftClient.getInstance().player.sendChatMessage(style.getClickEvent().getValue(), Messenger.convert(Component.text(style.getClickEvent().getValue())));
                         }
 
                         MinecraftClient.getInstance().setScreen(null);
                     },
-                    new TranslatableText("wnt.messages.cfx.rcprompt.title"),
-                    new LiteralText(style.getClickEvent().getValue())
-                ));
+                    Messenger.convert(Component.translatable("wnt.messages.cfx.rcprompt.title")),
+                    Messenger.convert(Component.text(style.getClickEvent().getValue())
+                )));
             }
             default -> {}
         }

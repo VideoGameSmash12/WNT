@@ -79,7 +79,7 @@ public class PlayersTab extends JPanel implements SupervisorTab
     {
         Text display = entry.getDisplayName();
 
-        return Arrays.asList(display != null ? display.asString() : null, entry.getProfile().getName(), entry.getProfile().getId().toString(), entry.getLatency());
+        return Arrays.asList(display != null ? display.getString() : null, entry.getProfile().getName(), entry.getProfile().getId().toString(), entry.getLatency());
     }
 
     /**

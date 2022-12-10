@@ -23,6 +23,7 @@
 package me.videogamesm12.wnt.command;
 
 import com.mojang.brigadier.Command;
+import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -32,10 +33,12 @@ import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import me.videogamesm12.wnt.WNT;
 import me.videogamesm12.wnt.module.ModuleNotEnabledException;
 import me.videogamesm12.wnt.util.Messenger;
-import net.fabricmc.fabric.api.client.command.v1.ClientCommandManager;
-import net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.command.CommandSource;
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -43,9 +46,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-public abstract class WCommand implements Command<FabricClientCommandSource>, SuggestionProvider<FabricClientCommandSource>
+public abstract class WCommand implements Command<FabricClientCommandSource>, SuggestionProvider<FabricClientCommandSource>, ClientCommandRegistrationCallback
 {
     private final String name;
+
     private final String description;
     private final String usage;
 
@@ -98,11 +102,15 @@ public abstract class WCommand implements Command<FabricClientCommandSource>, Su
 
     public final WCommand register()
     {
-        ClientCommandManager.DISPATCHER.register(
-                ClientCommandManager.literal(name).then(ClientCommandManager.argument("args",
-                        StringArgumentType.greedyString()).suggests(this).executes(this)).executes(this));
-
+        ClientCommandRegistrationCallback.EVENT.register(this);
         return this;
+    }
+
+    @Override
+    public void register(CommandDispatcher<FabricClientCommandSource> dispatcher, CommandRegistryAccess registryAccess)
+    {
+        dispatcher.register(ClientCommandManager.literal(name).then(ClientCommandManager.argument("args",
+                StringArgumentType.greedyString()).suggests(this).executes(this)).executes(this));
     }
 
     public final String getName()

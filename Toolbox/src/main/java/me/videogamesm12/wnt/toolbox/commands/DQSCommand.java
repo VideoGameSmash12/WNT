@@ -30,7 +30,7 @@ import me.videogamesm12.wnt.toolbox.data.QueriedBlockDataSet;
 import me.videogamesm12.wnt.toolbox.data.QueriedEntityDataSet;
 import me.videogamesm12.wnt.toolbox.mixin.KeyboardMixin;
 import me.videogamesm12.wnt.toolbox.modules.DataQueryStorage;
-import net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource;
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.minecraft.client.MinecraftClient;
