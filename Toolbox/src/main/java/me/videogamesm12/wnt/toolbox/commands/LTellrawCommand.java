@@ -25,7 +25,6 @@ package me.videogamesm12.wnt.toolbox.commands;
 import com.google.gson.JsonParseException;
 import com.mojang.brigadier.context.CommandContext;
 import me.videogamesm12.wnt.command.WCommand;
-import me.videogamesm12.wnt.module.ModuleNotEnabledException;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -44,7 +43,7 @@ public class LTellrawCommand extends WCommand
 	}
 
 	@Override
-	public boolean run(CommandContext<FabricClientCommandSource> context, String[] args) throws ModuleNotEnabledException
+	public boolean run(CommandContext<FabricClientCommandSource> context, String[] args)
 	{
 		if (args.length == 0)
 		{

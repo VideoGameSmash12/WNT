@@ -135,7 +135,7 @@ public class ModuleManager
 
         modules.forEach((aClass, module) -> names.add(module.getMeta().name()));
 
-        return names;
+        return modules.entrySet().stream().map((fuck) -> fuck.getValue().getMeta().name()).toList();
     }
 
     public static File getModulesFolder()

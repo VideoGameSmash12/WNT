@@ -30,7 +30,9 @@ import me.videogamesm12.wnt.module.ModuleManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TranslatableComponent;
+import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 
 import java.util.Arrays;
 import java.util.List;
@@ -89,13 +91,23 @@ public class WNTMMCommand extends WCommand
 
                 TranslatableComponent.Builder builder = Component.translatable("wnt.toolbox.commands.wntmm.list", NamedTextColor.GRAY).toBuilder();
 
-                // This is a stupid way of doing this, but I don't have any other choice.
+                // This is a stupid way of doing this, but I don't really have a choice. I tried replacing this with a
+                // Component.join call, but for whatever reason, I couldn't get it to actually work properly.
+                // It would just show a blank component instead of the list.
                 AtomicInteger number = new AtomicInteger(1);
-                mm.getModuleNames().stream().sorted().forEach(moduleName -> {
-                    if (number.getAndIncrement() <= mm.getModuleNames().size())
-                        builder.append(Component.text(", ").color(NamedTextColor.GRAY));
+                mm.getModules().values().forEach(module -> {
+                    builder.append(Component.text(module.getMeta().name())
+                            .color(module.isEnabled() ? NamedTextColor.GREEN : NamedTextColor.RED)
+                            .hoverEvent(HoverEvent.showText(Component.text(module.getMeta().name())
+                                    .decorate(TextDecoration.BOLD)
+                                    .append(Component.text("\n"))
+                                    .append(Component.text(module.getMeta().description())
+                                            .color(NamedTextColor.GRAY)
+                                            .decoration(TextDecoration.BOLD, false)))));
 
-                    builder.append(Component.text(moduleName).color(NamedTextColor.WHITE));
+                    // If there is more to come, then append ", " at the end
+                    if (number.getAndIncrement() < mm.getModuleNames().size())
+                        builder.append(Component.text(", ").color(NamedTextColor.GRAY));
                 });
 
                 msg(builder.build());

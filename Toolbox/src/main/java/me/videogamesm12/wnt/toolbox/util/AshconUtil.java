@@ -14,7 +14,7 @@ import java.util.UUID;
 
 public class AshconUtil
 {
-    private static Gson gson = new Gson();
+    private static final Gson gson = new Gson();
 
     public static AshconResponse getAshconData(String nameOrUuid) throws IOException
     {

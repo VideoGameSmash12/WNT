@@ -36,7 +36,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-@ModuleMeta(name = "DataQueryStorage", description = "Stores data collected by F3 + I")
+@ModuleMeta(name = "DataQueryStorage", description = "Stores data collected by F3 + I.")
 public class DataQueryStorage extends Module
 {
     @Getter

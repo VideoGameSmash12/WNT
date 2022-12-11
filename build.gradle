@@ -12,8 +12,8 @@ repositories {
 dependencies {
     // Text components
     implementation include("net.kyori:adventure-text-serializer-gson:4.9.3")
-    include("net.kyori:adventure-api:4.9.3")
-    include("net.kyori:adventure-key:4.9.3")
+    include("net.kyori:adventure-api:4.12.0")
+    include("net.kyori:adventure-key:4.12.0")
     include("net.kyori:examination-api:1.3.0")
 
     subprojects.each {

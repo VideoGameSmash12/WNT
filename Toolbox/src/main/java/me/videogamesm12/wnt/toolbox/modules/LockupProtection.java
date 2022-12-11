@@ -30,7 +30,7 @@ import me.videogamesm12.wnt.toolbox.event.network.S2COpenScreen;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.screen.ScreenHandlerType;
 
-@ModuleMeta(name = "LockupProtection", description = "Resists the effect of TotalFreedomMod's /lockup command")
+@ModuleMeta(name = "LockupProtection", description = "Resists the effect of TotalFreedomMod's /lockup command.")
 public class LockupProtection extends Module
 {
     @Override

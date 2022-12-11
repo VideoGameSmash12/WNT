@@ -30,6 +30,7 @@ import me.videogamesm12.wnt.toolbox.util.AshconUtil;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 
@@ -88,7 +89,8 @@ public class NameCommand extends WCommand
                     Component.text(result.getUsername())
                             .color(NamedTextColor.WHITE)
                             .decorate(TextDecoration.UNDERLINED)
-                            .clickEvent(ClickEvent.copyToClipboard(result.getUsername())))
+                            .clickEvent(ClickEvent.copyToClipboard(result.getUsername()))
+                            .hoverEvent(HoverEvent.showText(Component.translatable("chat.copy.click"))))
                     .colorIfAbsent(NamedTextColor.GRAY));
         });
 

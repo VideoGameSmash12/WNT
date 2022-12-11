@@ -30,6 +30,7 @@ import me.videogamesm12.wnt.toolbox.util.AshconUtil;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 
@@ -41,7 +42,7 @@ import java.util.regex.Pattern;
 
 public class UuidCommand extends WCommand
 {
-    private Pattern usernamePattern = Pattern.compile("[A-z0-9_]{3,20}");
+    private final Pattern usernamePattern = Pattern.compile("[A-z0-9_]{3,20}");
 
     public UuidCommand()
     {
@@ -78,7 +79,8 @@ public class UuidCommand extends WCommand
             }
             catch (Throwable ex)
             {
-                msg(Component.translatable("wnt.toolbox.ashcon.error.unknown", NamedTextColor.RED));
+                msg(Component.translatable("wnt.toolbox.ashcon.error.unknown", NamedTextColor.RED).hoverEvent(
+                        HoverEvent.showText(Component.text(ex.getMessage()))));
                 WNT.getLogger().error("Details of the error: ", ex);
             }
 
@@ -92,7 +94,8 @@ public class UuidCommand extends WCommand
                     Component.text(result.getUuid())
                             .color(NamedTextColor.WHITE)
                             .decorate(TextDecoration.UNDERLINED)
-                            .clickEvent(ClickEvent.copyToClipboard(result.getUuid())))
+                            .clickEvent(ClickEvent.copyToClipboard(result.getUuid()))
+                            .hoverEvent(HoverEvent.showText(Component.translatable("chat.copy.click"))))
                     .colorIfAbsent(NamedTextColor.GRAY));
         });
 
