@@ -131,11 +131,7 @@ public class ModuleManager
 
     public List<String> getModuleNames()
     {
-        List<String> names = new ArrayList<>();
-
-        modules.forEach((aClass, module) -> names.add(module.getMeta().name()));
-
-        return modules.entrySet().stream().map((fuck) -> fuck.getValue().getMeta().name()).toList();
+        return modules.values().stream().map(module -> module.getMeta().name()).toList();
     }
 
     public static File getModulesFolder()

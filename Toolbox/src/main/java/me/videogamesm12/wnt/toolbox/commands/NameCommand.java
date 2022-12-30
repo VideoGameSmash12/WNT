@@ -24,6 +24,7 @@ package me.videogamesm12.wnt.toolbox.commands;
 
 import com.google.gson.JsonParseException;
 import com.mojang.brigadier.context.CommandContext;
+import com.mojang.datafixers.util.Either;
 import me.videogamesm12.wnt.WNT;
 import me.videogamesm12.wnt.command.WCommand;
 import me.videogamesm12.wnt.toolbox.util.AshconUtil;
@@ -44,7 +45,7 @@ public class NameCommand extends WCommand
 {
     public NameCommand()
     {
-        super("name", "", "/name <uuid>");
+        super("name", "Returns the username belonging to a given UUID", "/name <uuid>");
     }
 
     @Override

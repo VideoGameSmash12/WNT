@@ -27,8 +27,6 @@ import lombok.Data;
 
 /**
  * <h1>MinecraftVersion</h1>
- * <p>For whatever reason, Mojang fucked with SharedConstants in a way where trying to get the game version in 1.17.1
- * would work, but that same code would throw a NoSuchMethodError in 1.18.x.</p>
  * <p>This serves as a class to store version information in a way that works across multiple versions of the game
  * that can be serialized using GSON without relying on SharedConstants.</p>
  */

@@ -43,72 +43,75 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.ThreadPoolExecutor;
 
-public class EventHandler extends Thread
+public class EventHandler
 {
+    private final ThreadPoolExecutor pool = new ScheduledThreadPoolExecutor(8);
+
     @Getter
-    private EventBus eventBus = new EventBus();
+    private final EventBus eventBus = new EventBus();
 
     public EventHandler()
-    {
-        super("EventHandler");
-        start();
-    }
-
-    @Override
-    public void run()
     {
         eventBus.register(this);
     }
 
     @Subscribe
-    public synchronized void onEntityDumpRequest(RequestEntityDumpEvent event)
+    public void onEntityDumpRequest(RequestEntityDumpEvent event)
     {
-        World world = MinecraftClient.getInstance().world;
-
-        if (world == null)
+        pool.execute(() ->
         {
-            Messenger.sendChatMessage(Component.translatable("wnt.dumper.error.not_in_world", NamedTextColor.RED));
-            return;
-        }
+            World world = MinecraftClient.getInstance().world;
 
-        switch (event.getRequestType())
-        {
-            case MASS -> ((ClientWorldMixin) world).getEntityLookup().iterate().forEach(this::tryDump);
-            case MULTIPLE, SINGULAR -> event.getEntities().forEach(this::tryDump);
-        }
+            if (world == null)
+            {
+                Messenger.sendChatMessage(Component.translatable("wnt.dumper.error.not_in_world", NamedTextColor.RED));
+                return;
+            }
 
-        Messenger.sendChatMessage(Component.translatable("wnt.dumper.success", NamedTextColor.GREEN));
+            switch (event.getRequestType())
+            {
+                case MASS -> ((ClientWorldMixin) world).getEntityLookup().iterate().forEach(this::tryDump);
+                case MULTIPLE, SINGULAR -> event.getEntities().forEach(this::tryDump);
+            }
+
+            Messenger.sendChatMessage(Component.translatable("wnt.dumper.success", NamedTextColor.GREEN));
+        });
     }
 
     @Subscribe
-    public synchronized void onMapDumpRequest(RequestMapDumpEvent event)
+    public void onMapDumpRequest(RequestMapDumpEvent event)
     {
-        World world = MinecraftClient.getInstance().world;
-
-        if (world == null)
+        pool.execute(() ->
         {
-            Messenger.sendChatMessage(Component.translatable("wnt.dumper.error.not_in_world", NamedTextColor.RED));
-            return;
-        }
+            World world = MinecraftClient.getInstance().world;
 
-        try
-        {
-            switch (event.getRequestType())
+            if (world == null)
             {
-                case MASS -> ((ClientWorldMixin) world).getMapStates().forEach((key, value) -> tryDump(value, Integer.parseInt(key.replace("map_", ""))));
-                case MULTIPLE, SINGULAR -> event.getMaps().forEach(id -> tryDump(((ClientWorldMixin) world).getMapStates().get("map_" + id), id));
+                Messenger.sendChatMessage(Component.translatable("wnt.dumper.error.not_in_world", NamedTextColor.RED));
+                return;
             }
-        }
-        catch (Exception ex)
-        {
-            Messenger.sendChatMessage(Component.translatable("wnt.dumper.failed", Component.text(ex.getMessage()))
-                    .color(NamedTextColor.RED));
-            WNT.getLogger().error("Failed to dump entities", ex);
-            return;
-        }
 
-        Messenger.sendChatMessage(Component.translatable("wnt.dumper.success", NamedTextColor.GREEN));
+            try
+            {
+                switch (event.getRequestType())
+                {
+                    case MASS -> ((ClientWorldMixin) world).getMapStates().forEach((key, value) -> tryDump(value, Integer.parseInt(key.replace("map_", ""))));
+                    case MULTIPLE, SINGULAR -> event.getMaps().forEach(id -> tryDump(((ClientWorldMixin) world).getMapStates().get("map_" + id), id));
+                }
+            }
+            catch (Exception ex)
+            {
+                Messenger.sendChatMessage(Component.translatable("wnt.dumper.failed", Component.text(ex.getMessage()))
+                        .color(NamedTextColor.RED));
+                WNT.getLogger().error("Failed to dump entities", ex);
+                return;
+            }
+
+            Messenger.sendChatMessage(Component.translatable("wnt.dumper.success", NamedTextColor.GREEN));
+        });
     }
 
     /**
@@ -149,7 +152,7 @@ public class EventHandler extends Thread
      * @param entity        Entity
      * @throws IOException  If the attempt to write to disk fails
      */
-    private synchronized void dumpEntity(@NotNull Entity entity) throws IOException
+    private void dumpEntity(@NotNull Entity entity) throws IOException
     {
         NbtCompound root = entity.writeNbt(new NbtCompound());
         NbtIo.write(root, new File(getDumpsFolder(),
@@ -164,7 +167,7 @@ public class EventHandler extends Thread
      * @param id            int
      * @throws IOException  If the attempt to write to disk fails
      */
-    private synchronized void dumpMap(@NotNull MapState map, int id) throws IOException
+    private void dumpMap(@NotNull MapState map, int id) throws IOException
     {
         NbtCompound root = map.writeNbt(new NbtCompound());
         NbtIo.write(root, new File(getDumpsFolder(),

@@ -12,7 +12,7 @@ import net.minecraft.text.Text;
  */
 public class Messenger
 {
-    private static GsonComponentSerializer kyori = GsonComponentSerializer.builder().build();
+    private static final GsonComponentSerializer kyori = GsonComponentSerializer.builder().build();
 
     public static void sendChatMessage(Component component)
     {

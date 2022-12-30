@@ -29,7 +29,7 @@ import me.videogamesm12.wnt.events.ModuleToggledEvent;
 public abstract class Module
 {
     @Getter
-    private ModuleMeta meta;
+    private final ModuleMeta meta;
 
     public Module()
     {

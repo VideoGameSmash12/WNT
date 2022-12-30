@@ -94,7 +94,7 @@ public abstract class WCommand implements Command<FabricClientCommandSource>, Su
     }
 
     @Override
-    public CompletableFuture<Suggestions> getSuggestions(CommandContext<FabricClientCommandSource> context, SuggestionsBuilder builder) throws CommandSyntaxException
+    public CompletableFuture<Suggestions> getSuggestions(CommandContext<FabricClientCommandSource> context, SuggestionsBuilder builder)
     {
         List<String> suggestions = suggest(context, ArrayUtils.remove(context.getInput().split(" "), 0));
         return CommandSource.suggestMatching(suggestions != null ? suggestions : new ArrayList<>(), builder);

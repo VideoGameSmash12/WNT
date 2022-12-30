@@ -30,4 +30,10 @@ public class ModuleNotEnabledException extends Exception
 {
     @Getter
     private Module module;
+
+    @Override
+    public String getMessage()
+    {
+        return "The module " + module.getMeta().name() + " is not enabled.";
+    }
 }

@@ -42,11 +42,11 @@ import java.util.regex.Pattern;
 
 public class UuidCommand extends WCommand
 {
-    private final Pattern usernamePattern = Pattern.compile("[A-z0-9_]{3,20}");
+    private final Pattern usernamePattern = Pattern.compile("^\\w{3,20}$");
 
     public UuidCommand()
     {
-        super("uuid", "", "/uuid <player>");
+        super("uuid", "Returns the UUID of a given player", "/uuid <player>");
     }
 
     @Override
