@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'me.videogamesm12'
-version '2.0-indev'
+version '2.0-alpha.1'
 
 repositories {
 }

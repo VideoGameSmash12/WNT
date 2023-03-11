@@ -9,6 +9,12 @@
   "text.autoconfig.wnt-cfx.option.nbtPatches.sizeLimitEnabled": "Enforce NBT size limitations",
   "text.autoconfig.wnt-cfx.option.nbtPatches.sizeLimitEnabled.@Tooltip": "Patches a client-side exploit where encountering an item with\ntoo much NBT kicks the client from the server.\n\nThis does not have any effect for users running DeviousMod.",
 
+  "text.autoconfig.wnt-cfx.category.packet": "Packets",
+  "text.autoconfig.wnt-cfx.option.packetPatches.particleLimit": "Maximum amount of particles that can be summoned at once",
+  "text.autoconfig.wnt-cfx.option.packetPatches.particleLimit.@Tooltip": "This has no effect if the above setting is set to \"No\".",
+  "text.autoconfig.wnt-cfx.option.packetPatches.particleLimitEnabled": "Limit how many particles can be summoned at once",
+  "text.autoconfig.wnt-cfx.option.packetPatches.particleLimitEnabled.@Tooltip": "An exploit is present that causes clients to freeze if they\ntry to handle too many particles at once.\n\nThis mitigates the exploit by adding a cut-off for how many\nparticles can be handled at once.",
+
   "text.autoconfig.wnt-cfx.category.render": "Rendering",
   "text.autoconfig.wnt-cfx.option.rendererPatches.entities": "Entities",
   "text.autoconfig.wnt-cfx.option.rendererPatches.entities.entityNameSizeLimitEnabled": "Limit how large entity names can be when rendered",

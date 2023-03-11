@@ -36,6 +36,10 @@ public class CFXConfig implements ConfigData
     @ConfigEntry.Gui.TransitiveObject
     private NBT nbtPatches = new NBT();
 
+    @ConfigEntry.Category("packet")
+    @ConfigEntry.Gui.TransitiveObject
+    private Packet packetPatches = new Packet();
+
     @ConfigEntry.Category("render")
     @ConfigEntry.Gui.TransitiveObject
     private Render rendererPatches = new Render();
@@ -85,6 +89,19 @@ public class CFXConfig implements ConfigData
         @ConfigEntry.Category("nbt")
         @ConfigEntry.Gui.Tooltip
         private boolean sizeLimitEnabled = false;
+    }
+
+    @Getter
+    @Setter
+    public static class Packet
+    {
+        @ConfigEntry.Category("packet")
+        @ConfigEntry.Gui.Tooltip
+        private boolean particleLimitEnabled = true;
+
+        @ConfigEntry.Category("packet")
+        @ConfigEntry.Gui.Tooltip
+        private int particleLimit = 500;
     }
 
     @Getter

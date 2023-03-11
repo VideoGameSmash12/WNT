@@ -49,6 +49,9 @@ public class MinecraftClientMixin
     @Inject(method = "render", at = @At("RETURN"))
     public void onPostRender(boolean bool, CallbackInfo ci)
     {
-        Supervisor.SupervisorThread.LAST_RENDERED = Instant.now().toEpochMilli();
+        if (Supervisor.CONFIG.detectFreezes())
+        {
+            Supervisor.SupervisorThread.LAST_RENDERED = Instant.now().toEpochMilli();
+        }
     }
 }
