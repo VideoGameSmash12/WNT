@@ -59,7 +59,7 @@ import java.time.Instant;
 import java.util.*;
 import java.util.Timer;
 
-public class Blackbox extends Thread implements ModInitializer, ClientLifecycleEvents.ClientStopping, ClientFreezeDetected
+public class Blackbox extends Thread implements ModInitializer, ClientLifecycleEvents.ClientStarted, ClientLifecycleEvents.ClientStopping, ClientFreezeDetected
 {
     public static GUIConfig CONFIG = null;
     public static GUIFrame GUI = null;
@@ -96,6 +96,7 @@ public class Blackbox extends Thread implements ModInitializer, ClientLifecycleE
     @Override
     public void run()
     {
+        ClientLifecycleEvents.CLIENT_STARTED.register(this);
         ClientLifecycleEvents.CLIENT_STOPPING.register(this);
         ClientFreezeDetected.EVENT.register(this);
 
@@ -103,12 +104,6 @@ public class Blackbox extends Thread implements ModInitializer, ClientLifecycleE
         CONFIG = AutoConfig.getConfigHolder(GUIConfig.class).getConfig();
 
         CONFIG.theme.apply();
-
-        if (CONFIG.showOnStartup())
-        {
-            GUI = new GUIFrame();
-            GUI.setVisible(true);
-        }
 
         try
         {
@@ -136,6 +131,15 @@ public class Blackbox extends Thread implements ModInitializer, ClientLifecycleE
         catch (Exception ex)
         {
             ex.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onClientStarted(MinecraftClient client) {
+        if (CONFIG.showOnStartup())
+        {
+            GUI = new GUIFrame();
+            GUI.setVisible(true);
         }
     }
 
