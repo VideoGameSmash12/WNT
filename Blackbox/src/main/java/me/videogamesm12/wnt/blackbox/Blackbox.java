@@ -52,6 +52,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicLookAndFeel;
 import javax.swing.plaf.metal.MetalLookAndFeel;
+import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.InputStream;
@@ -426,6 +427,7 @@ public class Blackbox extends Thread implements ModInitializer, ClientLifecycleE
         LIGHT("Material Lighter", FlatMaterialLighterIJTheme.class),
         LIGHT_HC("Material Lighter (High Contrast)", FlatMaterialLighterContrastIJTheme.class),
         METAL("Metal", MetalLookAndFeel.class),
+        NIMBUS("Nimbus", NimbusLookAndFeel.class),
         NORD("Nord", FlatNordIJTheme.class),
         ONE_DARK("One Dark", FlatOneDarkIJTheme.class),
         PURPLE("Dark Purple", FlatDarkPurpleIJTheme.class);
