@@ -34,6 +34,7 @@ public class SettingsMenu extends JMenu
 {
     private final JCheckBoxMenuItem autoRefresh = new JCheckBoxMenuItem("Auto-refresh", Blackbox.CONFIG.autoUpdate());
     private final JCheckBoxMenuItem showOnStartup = new JCheckBoxMenuItem("Show on startup", Blackbox.CONFIG.showOnStartup());
+    private final JCheckBoxMenuItem ignoreFreezesDuringStartup = new JCheckBoxMenuItem("Ignore client freezes during startup", Blackbox.CONFIG.ignoreFreezesDuringStartup());
 
     public SettingsMenu()
     {
@@ -48,11 +49,13 @@ public class SettingsMenu extends JMenu
                 Blackbox.GUI.cancelRefresh();
         });
         showOnStartup.addActionListener((event) -> Blackbox.CONFIG.setShowOnStartup(showOnStartup.isSelected()));
+        ignoreFreezesDuringStartup.addActionListener((event) -> Blackbox.CONFIG.setIgnoreFreezesDuringStartup(ignoreFreezesDuringStartup.isSelected()));
 
         ThemeMenu themes = new ThemeMenu();
         add(themes);
         addSeparator();
         add(showOnStartup);
+        add(ignoreFreezesDuringStartup);
         add(autoRefresh);
     }
 

@@ -60,7 +60,8 @@ import java.time.Instant;
 import java.util.*;
 import java.util.Timer;
 
-public class Blackbox extends Thread implements ModInitializer, ClientLifecycleEvents.ClientStarted, ClientLifecycleEvents.ClientStopping, ClientFreezeDetected
+public class Blackbox extends Thread implements ModInitializer, ClientLifecycleEvents.ClientStarted,
+        ClientLifecycleEvents.ClientStopping, ClientFreezeDetected
 {
     public static GUIConfig CONFIG = null;
     public static GUIFrame GUI = null;
@@ -68,6 +69,7 @@ public class Blackbox extends Thread implements ModInitializer, ClientLifecycleE
     //--
     public static TrayIcon trayIcon = null;
     //--
+    private boolean started = false;
     private boolean ignore;
 
     @Override
@@ -106,6 +108,14 @@ public class Blackbox extends Thread implements ModInitializer, ClientLifecycleE
 
         CONFIG.theme.apply();
 
+        // Non-Linux operating systems open the window earlier than Linux operating systems do.
+        // If it wasn't like this, this issue would happen: https://github.com/VideoGameSmash12/WNT/issues/11
+        if (CONFIG.showOnStartup() && GUI == null && Util.getOperatingSystem() != Util.OperatingSystem.LINUX)
+        {
+            GUI = new GUIFrame();
+            GUI.setVisible(true);
+        }
+
         try
         {
             MENU = new GUIMenu();
@@ -135,9 +145,14 @@ public class Blackbox extends Thread implements ModInitializer, ClientLifecycleE
         }
     }
 
+    // Linux operating systems open the window later than non-Linux operating systems do.
+    // If it wasn't like this, this issue would happen: https://github.com/VideoGameSmash12/WNT/issues/11
     @Override
-    public void onClientStarted(MinecraftClient client) {
-        if (CONFIG.showOnStartup())
+    public void onClientStarted(MinecraftClient client)
+    {
+        started = true;
+
+        if (CONFIG.showOnStartup() && GUI == null && Util.getOperatingSystem() == Util.OperatingSystem.LINUX)
         {
             GUI = new GUIFrame();
             GUI.setVisible(true);
@@ -153,7 +168,7 @@ public class Blackbox extends Thread implements ModInitializer, ClientLifecycleE
     @Override
     public ActionResult onClientFreeze(long lastRender)
     {
-        if (ignore || (GUI != null && GUI.isVisible()))
+        if (ignore || (CONFIG.ignoreFreezesDuringStartup() && !started) || (GUI != null && GUI.isVisible()))
         {
             return ActionResult.PASS;
         }
@@ -377,6 +392,7 @@ public class Blackbox extends Thread implements ModInitializer, ClientLifecycleE
     public static class GUIConfig implements ConfigData
     {
         private boolean showOnStartup;
+        private boolean ignoreFreezesDuringStartup = true;
 
         private boolean autoUpdate = true;
 
@@ -391,6 +407,16 @@ public class Blackbox extends Thread implements ModInitializer, ClientLifecycleE
         public void setTheme(GUITheme theme)
         {
             this.theme = theme;
+        }
+
+        public boolean ignoreFreezesDuringStartup()
+        {
+            return ignoreFreezesDuringStartup;
+        }
+
+        public void setIgnoreFreezesDuringStartup(boolean bool)
+        {
+            this.ignoreFreezesDuringStartup = bool;
         }
 
         public boolean autoUpdate()
@@ -429,15 +455,23 @@ public class Blackbox extends Thread implements ModInitializer, ClientLifecycleE
         METAL("Metal", MetalLookAndFeel.class),
         NORD("Nord", FlatNordIJTheme.class),
         ONE_DARK("One Dark", FlatOneDarkIJTheme.class),
-        PURPLE("Dark Purple", FlatDarkPurpleIJTheme.class);
+        PURPLE("Dark Purple", FlatDarkPurpleIJTheme.class),
+        SYSTEM("System", UIManager.getSystemLookAndFeelClassName());
 
         private Class<? extends BasicLookAndFeel> themeClass = null;
+        private String internalPackage = null;
         private String themeName = null;
 
         GUITheme(String themeName, Class<? extends BasicLookAndFeel> themeClass)
         {
             this.themeName = themeName;
             this.themeClass = themeClass;
+        }
+
+        GUITheme(String themeName, String internalPackage)
+        {
+            this.themeName = themeName;
+            this.internalPackage = internalPackage;
         }
 
         public String getName()
@@ -447,9 +481,9 @@ public class Blackbox extends Thread implements ModInitializer, ClientLifecycleE
 
         public void apply()
         {
-            if (themeClass != null)
+            try
             {
-                try
+                if (themeClass != null)
                 {
                     if (IntelliJTheme.ThemeLaf.class.isAssignableFrom(themeClass))
                     {
@@ -460,10 +494,14 @@ public class Blackbox extends Thread implements ModInitializer, ClientLifecycleE
                         UIManager.setLookAndFeel(themeClass.getDeclaredConstructor().newInstance());
                     }
                 }
-                catch (Exception ex)
+                else if (internalPackage != null)
                 {
-                    WNT.getLogger().error("Failed to apply currently active theme", ex);
+                    UIManager.setLookAndFeel(internalPackage);
                 }
+            }
+            catch (Exception ex)
+            {
+                WNT.getLogger().error("Failed to apply currently active theme", ex);
             }
         }
     }

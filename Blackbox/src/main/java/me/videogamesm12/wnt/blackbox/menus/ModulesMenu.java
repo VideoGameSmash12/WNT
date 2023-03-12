@@ -62,6 +62,17 @@ public class ModulesMenu extends JMenu
             this.moduleClass = (Class<T>) module.getClass();
             this.module = module;
             this.enabledItem = new JCheckBoxMenuItem("Enabled", module.isEnabled());
+            this.enabledItem.addActionListener(action ->
+            {
+                if (module.isEnabled())
+                {
+                    module.disable();
+                }
+                else
+                {
+                    module.enable();
+                }
+            });
             //--
             add(enabledItem);
             //--

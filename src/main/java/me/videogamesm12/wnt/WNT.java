@@ -118,7 +118,15 @@ public class WNT implements ModInitializer, ClientLifecycleEvents.ClientStopping
 
         public void setEnabledModules()
         {
-            moduleManager.getModules().keySet().forEach(moduleClass -> enabledModules.add(moduleClass.getName()));
+            enabledModules.clear();
+
+            moduleManager.getModules().forEach((key, value) ->
+            {
+                if (value.isEnabled() && !enabledModules.contains(key.getName()))
+                {
+                    enabledModules.add(key.getName());
+                }
+            });
         }
 
         public <T extends Module> boolean isEnabled(Class<T> moduleClass)
