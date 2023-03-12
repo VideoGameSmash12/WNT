@@ -109,33 +109,11 @@ public class CFXConfig implements ConfigData
     {
         @ConfigEntry.Category("text")
         @ConfigEntry.Gui.CollapsibleObject(startExpanded = true)
-        private HText hoverPatches = new HText();
-
-        @ConfigEntry.Category("text")
-        @ConfigEntry.Gui.CollapsibleObject(startExpanded = true)
         private TText translatePatches = new TText();
 
         @ConfigEntry.Category("text")
         @ConfigEntry.Gui.CollapsibleObject(startExpanded = true)
         private CText clickPatches = new CText();
-
-        @Getter
-        @Setter
-        public static class HText
-        {
-            @ConfigEntry.Gui.Tooltip
-            private boolean idPatchEnabled = true;
-
-            @ConfigEntry.Gui.Tooltip
-            private UPMode uuidPatchMode = UPMode.VISIBLE;
-
-            public enum UPMode
-            {
-                OFF,
-                SILENT,
-                VISIBLE
-            }
-        }
 
         @Getter
         @Setter
