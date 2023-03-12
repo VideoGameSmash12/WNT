@@ -66,15 +66,12 @@ public class ChatWindow extends JFrame implements HUDMessageAdded
             @Override
             public void keyPressed(KeyEvent event)
             {
-                if (event.getKeyCode() == KeyEvent.VK_ENTER
-                        && MinecraftClient.getInstance().getNetworkHandler() != null
-                        && MinecraftClient.getInstance().player != null)
-                    MinecraftClient.getInstance().player.sendMessage(Messenger.convert(Component.text(messageField.getText())));
+                if (event.getKeyCode() == KeyEvent.VK_ENTER)
+                    sendMessage(messageField.getText());
             }
         });
         sendButton.addActionListener((event) -> {
-            if (MinecraftClient.getInstance().getNetworkHandler() != null && MinecraftClient.getInstance().player != null)
-                MinecraftClient.getInstance().player.sendMessage(Messenger.convert(Component.text(messageField.getText())));
+            sendMessage(messageField.getText());
         });
         //--
         GroupLayout pLayout = new GroupLayout(getContentPane());
@@ -111,6 +108,18 @@ public class ChatWindow extends JFrame implements HUDMessageAdded
         HUDMessageAdded.EVENT.register(this);
 
         INSTANCE = this;
+    }
+
+    public static void sendMessage(String text) {
+        if (MinecraftClient.getInstance().getNetworkHandler() == null) {
+            return;
+        }
+
+        if (text.startsWith("/")) {
+            MinecraftClient.getInstance().getNetworkHandler().sendChatCommand(text.substring(1));
+        } else {
+            MinecraftClient.getInstance().getNetworkHandler().sendChatMessage(text);
+        }
     }
 
     @Override

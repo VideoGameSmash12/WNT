@@ -71,9 +71,10 @@ public class ClickableText
                 cir.setReturnValue(true);
 
                 MinecraftClient.getInstance().setScreen(new ConfirmScreen((result) -> {
-                        if (result && MinecraftClient.getInstance().player != null)
+                        String command = style.getClickEvent().getValue();
+                        if (result && MinecraftClient.getInstance().getNetworkHandler() != null && command.length() >= 1)
                         {
-                            MinecraftClient.getInstance().player.sendMessage(Messenger.convert(Component.text(style.getClickEvent().getValue())));
+                            MinecraftClient.getInstance().getNetworkHandler().sendChatCommand(command.substring(1));
                         }
 
                         MinecraftClient.getInstance().setScreen(null);
