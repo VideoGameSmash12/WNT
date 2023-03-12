@@ -53,7 +53,7 @@ public class ClickableText
      * @param style Style
      * @param cir   CallbackInfoReturnable<Boolean>
      */
-    @Inject(method = "handleTextClick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;sendCommand(Ljava/lang/String;)Z", shift = At.Shift.BEFORE), cancellable = true)
+    @Inject(method = "handleTextClick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayNetworkHandler;sendCommand(Ljava/lang/String;)Z", shift = At.Shift.BEFORE), cancellable = true)
     public void disableRunCommand(Style style, CallbackInfoReturnable<Boolean> cir)
     {
         CFXConfig.TextComponents.CText.RCMode patchMethod = CFX.getConfig().getCompPatches().getClickPatches().getRcMode();
@@ -73,7 +73,7 @@ public class ClickableText
                 MinecraftClient.getInstance().setScreen(new ConfirmScreen((result) -> {
                         if (result && MinecraftClient.getInstance().player != null)
                         {
-                            MinecraftClient.getInstance().player.sendChatMessage(style.getClickEvent().getValue(), Messenger.convert(Component.text(style.getClickEvent().getValue())));
+                            MinecraftClient.getInstance().player.sendMessage(Messenger.convert(Component.text(style.getClickEvent().getValue())));
                         }
 
                         MinecraftClient.getInstance().setScreen(null);

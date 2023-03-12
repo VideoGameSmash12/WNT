@@ -69,12 +69,12 @@ public class ChatWindow extends JFrame implements HUDMessageAdded
                 if (event.getKeyCode() == KeyEvent.VK_ENTER
                         && MinecraftClient.getInstance().getNetworkHandler() != null
                         && MinecraftClient.getInstance().player != null)
-                    MinecraftClient.getInstance().player.sendChatMessage(messageField.getText(), Messenger.convert(Component.text(messageField.getText())));
+                    MinecraftClient.getInstance().player.sendMessage(Messenger.convert(Component.text(messageField.getText())));
             }
         });
         sendButton.addActionListener((event) -> {
             if (MinecraftClient.getInstance().getNetworkHandler() != null && MinecraftClient.getInstance().player != null)
-                MinecraftClient.getInstance().player.sendChatMessage(messageField.getText(), Messenger.convert(Component.text(messageField.getText())));
+                MinecraftClient.getInstance().player.sendMessage(Messenger.convert(Component.text(messageField.getText())));
         });
         //--
         GroupLayout pLayout = new GroupLayout(getContentPane());

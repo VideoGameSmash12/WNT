@@ -82,10 +82,8 @@ public class Blackbox extends Thread implements ModInitializer, ClientLifecycleE
             }
             case LINUX, OSX ->
             {
-                WNT.getLogger().warn("The Blackbox is known to cause crashes with clients running on this operating "
-                        + "system due to a strange issue with how Java behaves with it. As such, it has been disabled "
-                        + "in the interest of maintaining client stability.");
-                return;
+                // https://bugs.openjdk.org/browse/JDK-8056151
+                System.setProperty("sun.java2d.xrender", "f");
             }
         }
 
