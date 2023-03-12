@@ -427,7 +427,6 @@ public class Blackbox extends Thread implements ModInitializer, ClientLifecycleE
         LIGHT("Material Lighter", FlatMaterialLighterIJTheme.class),
         LIGHT_HC("Material Lighter (High Contrast)", FlatMaterialLighterContrastIJTheme.class),
         METAL("Metal", MetalLookAndFeel.class),
-        NIMBUS("Nimbus", NimbusLookAndFeel.class),
         NORD("Nord", FlatNordIJTheme.class),
         ONE_DARK("One Dark", FlatOneDarkIJTheme.class),
         PURPLE("Dark Purple", FlatDarkPurpleIJTheme.class);
