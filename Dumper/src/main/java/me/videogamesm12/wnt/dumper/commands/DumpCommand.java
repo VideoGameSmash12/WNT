@@ -23,8 +23,9 @@
 package me.videogamesm12.wnt.dumper.commands;
 
 import com.mojang.brigadier.context.CommandContext;
+import me.videogamesm12.wnt.WNT;
 import me.videogamesm12.wnt.command.WCommand;
-import me.videogamesm12.wnt.dumper.Dumper;
+import me.videogamesm12.wnt.dumper.EventHandler;
 import me.videogamesm12.wnt.dumper.events.RequestEntityDumpEvent;
 import me.videogamesm12.wnt.dumper.events.RequestMapDumpEvent;
 import me.videogamesm12.wnt.dumper.mixin.ClientWorldMixin;
@@ -59,7 +60,7 @@ public class DumpCommand extends WCommand
 
         switch (args[0].toLowerCase())
         {
-            case "entities" -> CompletableFuture.runAsync(() -> Dumper.getHandler().getEventBus().post(new RequestEntityDumpEvent()));
+            case "entities" -> CompletableFuture.runAsync(() -> WNT.getEventBus().post(new RequestEntityDumpEvent(EventHandler.INGAME_IDENTIFIER)));
             case "entity" -> {
                 if (args.length < 2)
                     return false;
@@ -75,10 +76,10 @@ public class DumpCommand extends WCommand
                         return;
                     }
 
-                    Dumper.getHandler().getEventBus().post(new RequestEntityDumpEvent(entity));
+                    WNT.getEventBus().post(new RequestEntityDumpEvent(EventHandler.INGAME_IDENTIFIER, entity));
                 });
             }
-            case "maps" -> CompletableFuture.runAsync(() -> Dumper.getHandler().getEventBus().post(new RequestMapDumpEvent()));
+            case "maps" -> CompletableFuture.runAsync(() -> WNT.getEventBus().post(new RequestMapDumpEvent(EventHandler.INGAME_IDENTIFIER)));
             case "map" -> {
                 if (args.length < 2)
                     return false;
@@ -92,10 +93,11 @@ public class DumpCommand extends WCommand
                         return;
                     }
 
-                    Dumper.getHandler().getEventBus().post(new RequestMapDumpEvent(id));
+                    WNT.getEventBus().post(new RequestMapDumpEvent(EventHandler.INGAME_IDENTIFIER, id));
                 });
             }
-            default -> {
+            default ->
+            {
                 return false;
             }
         }

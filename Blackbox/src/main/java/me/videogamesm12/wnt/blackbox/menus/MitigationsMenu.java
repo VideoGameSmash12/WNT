@@ -31,20 +31,17 @@ import javax.swing.*;
 
 public class MitigationsMenu extends JMenu
 {
-    private final JMenu renderingMenu = new JMenu("Render");
     private final JCheckBoxMenuItem gameRendering = new JCheckBoxMenuItem("Disable rendering completely", Supervisor.CONFIG.rendering().disableGameRendering());
     private final JCheckBoxMenuItem worldRendering = new JCheckBoxMenuItem("Disable world rendering", Supervisor.CONFIG.rendering().disableWorldRendering());
     private final JCheckBoxMenuItem weatherRendering = new JCheckBoxMenuItem("Disable weather rendering", Supervisor.CONFIG.rendering().disableWeatherRendering());
     private final JCheckBoxMenuItem entityRendering = new JCheckBoxMenuItem("Disable entity rendering", Supervisor.CONFIG.rendering().disableEntityRendering());
     private final JCheckBoxMenuItem tileEntityRendering = new JCheckBoxMenuItem("Disable tile entity rendering", Supervisor.CONFIG.rendering().disableTileEntityRendering());
     //--
-    private final JMenu networkMenu = new JMenu("Network");
     private final JCheckBoxMenuItem entitySpawning = new JCheckBoxMenuItem("Ignore entity spawning", Supervisor.CONFIG.network().ignoreEntitySpawns());
     private final JCheckBoxMenuItem explosionSpawning = new JCheckBoxMenuItem("Ignore explosions", Supervisor.CONFIG.network().ignoreExplosions());
     private final JCheckBoxMenuItem particleSpawning = new JCheckBoxMenuItem("Ignore particle spawns", Supervisor.CONFIG.network().ignoreParticleSpawns());
     private final JCheckBoxMenuItem lightUpdates = new JCheckBoxMenuItem("Ignore light updates", Supervisor.CONFIG.network().ignoreLightUpdates());
     //--
-    private final JMenu drasticMenu = new JMenu("Drastic");
     private final JMenuItem disconnect = new JMenuItem("Disconnect");
     private final JMenuItem exit = new JMenuItem("Exit");
     private final JMenuItem exitForcibly = new JMenuItem("Exit (Forcibly)");
@@ -54,6 +51,7 @@ public class MitigationsMenu extends JMenu
         super("Mitigations");
 
         //==-- RENDER --==//
+        final JMenu renderingMenu = new JMenu("Render");
         gameRendering.addActionListener((exd) -> Supervisor.CONFIG.rendering().setDisableGameRendering(gameRendering.isSelected()));
         worldRendering.addActionListener((exd) -> Supervisor.CONFIG.rendering().setDisableWorldRendering(worldRendering.isSelected()));
         weatherRendering.addActionListener((exd) -> Supervisor.CONFIG.rendering().setDisableWeatherRendering(weatherRendering.isSelected()));
@@ -67,6 +65,7 @@ public class MitigationsMenu extends JMenu
         renderingMenu.add(tileEntityRendering);
 
         //==-- NETWORK --==//
+        final JMenu networkMenu = new JMenu("Network");
         entitySpawning.addActionListener((exd) -> Supervisor.CONFIG.network().setIgnoreEntitySpawns(entitySpawning.isSelected()));
         explosionSpawning.addActionListener((exd) -> Supervisor.CONFIG.network().setIgnoreExplosionSpawns(explosionSpawning.isSelected()));
         lightUpdates.addActionListener((exd) -> Supervisor.CONFIG.network().setIgnoreLightUpdates(lightUpdates.isSelected()));
@@ -78,6 +77,7 @@ public class MitigationsMenu extends JMenu
         networkMenu.add((particleSpawning));
 
         //==-- DRASTIC --==//
+        final JMenu drasticMenu = new JMenu("Drastic");
         disconnect.addActionListener((exd) -> {
             ClientPlayNetworkHandler handler = MinecraftClient.getInstance().getNetworkHandler();
 

@@ -26,6 +26,7 @@ import com.formdev.flatlaf.IntelliJTheme;
 import com.formdev.flatlaf.intellijthemes.*;
 import com.formdev.flatlaf.intellijthemes.materialthemeuilite.*;
 import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatArcDarkIJTheme;
+//import com.google.common.eventbus.Subscribe;
 import lombok.Getter;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigData;
@@ -36,12 +37,14 @@ import me.videogamesm12.wnt.WNT;
 import me.videogamesm12.wnt.blackbox.commands.BlackboxCommand;
 import me.videogamesm12.wnt.blackbox.menus.*;
 import me.videogamesm12.wnt.command.CommandSystem;
+//import me.videogamesm12.wnt.dumper.events.DumpResultEvent;
 import me.videogamesm12.wnt.supervisor.event.ClientFreezeDetected;
 import me.videogamesm12.wnt.blackbox.tabs.*;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 
 import javax.imageio.ImageIO;
@@ -58,6 +61,8 @@ import java.util.Timer;
 public class Blackbox extends Thread implements ModInitializer, ClientLifecycleEvents.ClientStarted,
         ClientLifecycleEvents.ClientStopping, ClientFreezeDetected
 {
+    public static final Identifier IDENTIFIER = Identifier.of("wnt", "blackbox");
+    //--
     public static GUIConfig CONFIG = null;
     public static GUIFrame GUI = null;
     public static GUIMenu MENU = null;
@@ -290,6 +295,8 @@ public class Blackbox extends Thread implements ModInitializer, ClientLifecycleE
             Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
             setLocation(dim.width/2 - getSize().width/2, dim.height/2 - getSize().height/2);
             pack();
+            //--
+            //WNT.getEventBus().register(this);
         }
 
         private void initComps()
@@ -381,6 +388,17 @@ public class Blackbox extends Thread implements ModInitializer, ClientLifecycleE
         {
         }
 
+        /*@Subscribe
+        public void onDumpResult(DumpResultEvent event)
+        {
+            if (event.getRequester().equals(IDENTIFIER))
+            {
+                String title = event.getResult() == ActionResult.SUCCESS ? "Success" : "Error";
+                int messageType = event.getResult() == ActionResult.SUCCESS ? JOptionPane.INFORMATION_MESSAGE : JOptionPane.ERROR_MESSAGE;
+
+                JOptionPane.showMessageDialog(null, event.getMessage().toString(), title, messageType);
+            }
+        }*/
     }
 
     @Config(name = "wnt-blackbox")

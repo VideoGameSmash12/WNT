@@ -22,10 +22,9 @@
 
 package me.videogamesm12.wnt.dumper;
 
-import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
-import lombok.Getter;
 import me.videogamesm12.wnt.WNT;
+import me.videogamesm12.wnt.dumper.events.DumpResultEvent;
 import me.videogamesm12.wnt.dumper.events.RequestEntityDumpEvent;
 import me.videogamesm12.wnt.dumper.events.RequestMapDumpEvent;
 import me.videogamesm12.wnt.dumper.mixin.ClientWorldMixin;
@@ -37,6 +36,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.item.map.MapState;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtIo;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
@@ -48,14 +49,22 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 public class EventHandler
 {
-    private final ThreadPoolExecutor pool = new ScheduledThreadPoolExecutor(8);
+    public static final Identifier INGAME_IDENTIFIER = Identifier.of("minecraft", "ingame");
 
-    @Getter
-    private final EventBus eventBus = new EventBus();
+    private final ThreadPoolExecutor pool = new ScheduledThreadPoolExecutor(8);
 
     public EventHandler()
     {
-        eventBus.register(this);
+        WNT.getEventBus().register(this);
+    }
+
+    @Subscribe
+    public void onDumpResult(DumpResultEvent event)
+    {
+        if (event.getRequester().equals(INGAME_IDENTIFIER))
+        {
+            Messenger.sendChatMessage(event.getMessage());
+        }
     }
 
     @Subscribe
@@ -67,7 +76,8 @@ public class EventHandler
 
             if (world == null)
             {
-                Messenger.sendChatMessage(Component.translatable("wnt.dumper.error.not_in_world", NamedTextColor.RED));
+                WNT.getEventBus().post(new DumpResultEvent(event.getRequester(), ActionResult.FAIL,
+                        Component.translatable("wnt.dumper.error.not_in_world", NamedTextColor.RED)));
                 return;
             }
 
@@ -77,7 +87,8 @@ public class EventHandler
                 case MULTIPLE, SINGULAR -> event.getEntities().forEach(this::tryDump);
             }
 
-            Messenger.sendChatMessage(Component.translatable("wnt.dumper.success", NamedTextColor.GREEN));
+            WNT.getEventBus().post(new DumpResultEvent(event.getRequester(), ActionResult.SUCCESS,
+                    Component.translatable("wnt.dumper.success", NamedTextColor.GREEN)));
         });
     }
 
@@ -90,7 +101,8 @@ public class EventHandler
 
             if (world == null)
             {
-                Messenger.sendChatMessage(Component.translatable("wnt.dumper.error.not_in_world", NamedTextColor.RED));
+                WNT.getEventBus().post(new DumpResultEvent(event.getRequester(), ActionResult.FAIL,
+                        Component.translatable("wnt.dumper.error.not_in_world", NamedTextColor.RED)));
                 return;
             }
 
@@ -104,13 +116,14 @@ public class EventHandler
             }
             catch (Exception ex)
             {
-                Messenger.sendChatMessage(Component.translatable("wnt.dumper.failed", Component.text(ex.getMessage()))
-                        .color(NamedTextColor.RED));
+                WNT.getEventBus().post(new DumpResultEvent(event.getRequester(), ActionResult.FAIL,
+                        Component.translatable("wnt.dumper.failed", Component.text(ex.getMessage())).color(NamedTextColor.RED)));
                 WNT.getLogger().error("Failed to dump entities", ex);
                 return;
             }
 
-            Messenger.sendChatMessage(Component.translatable("wnt.dumper.success", NamedTextColor.GREEN));
+            WNT.getEventBus().post(new DumpResultEvent(event.getRequester(), ActionResult.SUCCESS,
+                    Component.translatable("wnt.dumper.success", NamedTextColor.GREEN)));
         });
     }
 
