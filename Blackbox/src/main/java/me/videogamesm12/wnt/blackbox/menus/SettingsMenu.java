@@ -59,26 +59,14 @@ public class SettingsMenu extends JMenu
         add(ignoreFreezesDuringStartup);
         add(autoRefresh);
     }
-
-    /**
-     * <h2>ThemeMenu</h2>
-     * A menu for the theme selection in the Blackbox.
-     */
-    public static class ThemeTypeMenu extends JMenu
-    {
-        public ThemeTypeMenu(Blackbox.GUIThemeType type, ButtonGroup group)
-        {
-
-        }
-    }
-
+    
     /**
      * <h2>ThemeMenu</h2>
      * A menu for the theme selection in the Blackbox.
      */
     public static class ThemeMenu extends JMenu
     {
-        private ButtonGroup group = new ButtonGroup();
+        private final ButtonGroup group = new ButtonGroup();
 
         public ThemeMenu()
         {
