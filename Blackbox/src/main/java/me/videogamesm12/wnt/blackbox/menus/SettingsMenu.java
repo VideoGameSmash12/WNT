@@ -25,6 +25,7 @@ package me.videogamesm12.wnt.blackbox.menus;
 import me.videogamesm12.wnt.blackbox.Blackbox;
 
 import javax.swing.*;
+import java.util.Arrays;
 
 /**
  * <h1>SettingsMenu</h1>
@@ -61,7 +62,19 @@ public class SettingsMenu extends JMenu
 
     /**
      * <h2>ThemeMenu</h2>
-     * A menu for the theme selection in the Supervisor GUI.
+     * A menu for the theme selection in the Blackbox.
+     */
+    public static class ThemeTypeMenu extends JMenu
+    {
+        public ThemeTypeMenu(Blackbox.GUIThemeType type, ButtonGroup group)
+        {
+
+        }
+    }
+
+    /**
+     * <h2>ThemeMenu</h2>
+     * A menu for the theme selection in the Blackbox.
      */
     public static class ThemeMenu extends JMenu
     {
@@ -71,25 +84,34 @@ public class SettingsMenu extends JMenu
         {
             super("Theme");
 
-            // For every theme, build a radio button for it.
-            for (Blackbox.GUITheme guiTheme : Blackbox.GUITheme.values())
+            Arrays.stream(Blackbox.GUIThemeType.values()).forEach(type ->
             {
-                JRadioButtonMenuItem themeItem = new JRadioButtonMenuItem();
-                //--
-                if (guiTheme == Blackbox.CONFIG.getTheme())
+                JMenu typeMenu = new JMenu();
+                typeMenu.setText(type.getLabel());
+
+                // For every theme, build a radio button for it.
+                Arrays.stream(Blackbox.GUITheme.values()).filter(theme -> theme.getThemeType().equals(type)).forEach(theme ->
                 {
-                    themeItem.setSelected(true);
-                }
-                //--
-                themeItem.addActionListener((event) -> {
-                    Blackbox.CONFIG.setTheme(guiTheme);
-                    JOptionPane.showMessageDialog(this, "The changes will take effect when you restart Minecraft.", "Notice", JOptionPane.INFORMATION_MESSAGE);
+                    JRadioButtonMenuItem themeItem = new JRadioButtonMenuItem();
+                    //--
+                    if (theme == Blackbox.CONFIG.getTheme())
+                    {
+                        themeItem.setSelected(true);
+                    }
+                    //--
+                    themeItem.addActionListener((event) -> {
+                        Blackbox.CONFIG.setTheme(theme);
+                        theme.showOptionalChangeMessage();
+                        JOptionPane.showMessageDialog(this, "The changes will take effect when you restart Minecraft.", "Notice", JOptionPane.INFORMATION_MESSAGE);
+                    });
+                    themeItem.setText(theme.getName());
+                    //--
+                    group.add(themeItem);
+                    typeMenu.add(themeItem);
                 });
-                themeItem.setText(guiTheme.getName());
-                //--
-                group.add(themeItem);
-                add(themeItem);
-            }
+
+                add(typeMenu);
+            });
         }
     }
 }

@@ -23,13 +23,9 @@
 package me.videogamesm12.wnt.blackbox;
 
 import com.formdev.flatlaf.IntelliJTheme;
-import com.formdev.flatlaf.intellijthemes.FlatDarkPurpleIJTheme;
-import com.formdev.flatlaf.intellijthemes.FlatNordIJTheme;
-import com.formdev.flatlaf.intellijthemes.FlatOneDarkIJTheme;
-import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatMaterialDarkerContrastIJTheme;
-import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatMaterialDarkerIJTheme;
-import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatMaterialLighterContrastIJTheme;
-import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatMaterialLighterIJTheme;
+import com.formdev.flatlaf.intellijthemes.*;
+import com.formdev.flatlaf.intellijthemes.materialthemeuilite.*;
+import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatArcDarkIJTheme;
 import lombok.Getter;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigData;
@@ -52,10 +48,9 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicLookAndFeel;
 import javax.swing.plaf.metal.MetalLookAndFeel;
-import javax.swing.plaf.nimbus.NimbusLookAndFeel;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.InputStream;
+import java.io.*;
 import java.time.Instant;
 import java.util.*;
 import java.util.Timer;
@@ -440,6 +435,32 @@ public class Blackbox extends Thread implements ModInitializer, ClientLifecycleE
         }
     }
 
+    public static File getBlackboxFolder()
+    {
+        File folder = new File(WNT.getWNTFolder(), "blackbox");
+
+        if (!folder.exists())
+        {
+            folder.mkdirs();
+        }
+
+        return folder;
+    }
+
+    public enum GUIThemeType
+    {
+        BUILT_IN("Built into Java"),
+        FLATLAF("Built into FlatLAF");
+
+        @Getter
+        private String label;
+
+        GUIThemeType(String label)
+        {
+            this.label = label;
+        }
+    }
+
     /**
      * <h1>GUITheme</h1>
      * The method the GUI uses to get the selected theme.
@@ -448,29 +469,40 @@ public class Blackbox extends Thread implements ModInitializer, ClientLifecycleE
      */
     public enum GUITheme
     {
-        DARK("Material Darker", FlatMaterialDarkerIJTheme.class),
-        DARK_HC("Material Darker (High Contrast)", FlatMaterialDarkerContrastIJTheme.class),
-        LIGHT("Material Lighter", FlatMaterialLighterIJTheme.class),
-        LIGHT_HC("Material Lighter (High Contrast)", FlatMaterialLighterContrastIJTheme.class),
-        METAL("Metal", MetalLookAndFeel.class),
-        NORD("Nord", FlatNordIJTheme.class),
-        ONE_DARK("One Dark", FlatOneDarkIJTheme.class),
-        PURPLE("Dark Purple", FlatDarkPurpleIJTheme.class),
-        SYSTEM("System", UIManager.getSystemLookAndFeelClassName());
+        ARC_DARK("Arc Dark", GUIThemeType.FLATLAF, FlatArcDarkIJTheme.class),
+        ARC_DARK_HC("Arc Dark Contrast", GUIThemeType.FLATLAF, FlatArcDarkContrastIJTheme.class),
+        CARBON("Carbon", GUIThemeType.FLATLAF, FlatCarbonIJTheme.class),
+        COBALT_2("Cobalt 2", GUIThemeType.FLATLAF, FlatCobalt2IJTheme.class),
+        CUSTOM("Custom", GUIThemeType.FLATLAF, FlatMaterialDarkerIJTheme.class),
+        DARK("Material Darker", GUIThemeType.FLATLAF, FlatMaterialDarkerIJTheme.class),
+        DARK_HC("Material Darker Contrast", GUIThemeType.FLATLAF, FlatMaterialDarkerContrastIJTheme.class),
+        LIGHT("Material Lighter", GUIThemeType.FLATLAF, FlatMaterialLighterIJTheme.class),
+        LIGHT_HC("Material Lighter Contrast", GUIThemeType.FLATLAF, FlatMaterialLighterContrastIJTheme.class),
+        DEEP_OCEAN("Material Deep Ocean", GUIThemeType.FLATLAF, FlatMaterialDeepOceanIJTheme.class),
+        DEEP_OCEAN_HC("Material Deep Ocean Contrast", GUIThemeType.FLATLAF, FlatMaterialDeepOceanContrastIJTheme.class),
+        NORD("Nord", GUIThemeType.FLATLAF, FlatNordIJTheme.class),
+        ONE_DARK("One Dark", GUIThemeType.FLATLAF, FlatOneDarkIJTheme.class),
+        PURPLE("Dark Purple", GUIThemeType.FLATLAF, FlatDarkPurpleIJTheme.class),
+        //--
+        METAL("Metal",  GUIThemeType.BUILT_IN, MetalLookAndFeel.class),
+        SYSTEM("System", GUIThemeType.BUILT_IN, UIManager.getSystemLookAndFeelClassName());
 
         private Class<? extends BasicLookAndFeel> themeClass = null;
+        private GUIThemeType type = null;
         private String internalPackage = null;
         private String themeName = null;
 
-        GUITheme(String themeName, Class<? extends BasicLookAndFeel> themeClass)
+        GUITheme(String themeName, GUIThemeType type, Class<? extends BasicLookAndFeel> themeClass)
         {
             this.themeName = themeName;
+            this.type = type;
             this.themeClass = themeClass;
         }
 
-        GUITheme(String themeName, String internalPackage)
+        GUITheme(String themeName, GUIThemeType type, String internalPackage)
         {
             this.themeName = themeName;
+            this.type = type;
             this.internalPackage = internalPackage;
         }
 
@@ -479,11 +511,41 @@ public class Blackbox extends Thread implements ModInitializer, ClientLifecycleE
             return themeName;
         }
 
+        public GUIThemeType getThemeType()
+        {
+            return type;
+        }
+
+
+        public void showOptionalChangeMessage()
+        {
+            if (this == CUSTOM)
+            {
+                JOptionPane.showMessageDialog(null, "Just so you know, the custom theme will need to be located at .minecraft/wnt/blackbox/theme.json with this theme enabled.", "Notice", JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
+
         public void apply()
         {
             try
             {
-                if (themeClass != null)
+                // We are using a custom theme for FlatLAF.
+                if (this == CUSTOM)
+                {
+                    File file = new File(getBlackboxFolder(), "theme.json");
+                    if (!file.exists())
+                    {
+                        // Fallback
+                        FlatMaterialDarkerIJTheme.setup();
+                        WNT.getLogger().warn("You set your theme for the Blackbox to Custom, but no theme was found at .minecraft/wnt/blackbox/theme.json. Please put a theme JSON file there.");
+                    }
+                    else
+                    {
+                        IntelliJTheme.setup(new FileInputStream(file));
+                    }
+                }
+                // We are using something that belongs to FlatLAF.
+                else if (themeClass != null)
                 {
                     if (IntelliJTheme.ThemeLaf.class.isAssignableFrom(themeClass))
                     {
@@ -494,6 +556,7 @@ public class Blackbox extends Thread implements ModInitializer, ClientLifecycleE
                         UIManager.setLookAndFeel(themeClass.getDeclaredConstructor().newInstance());
                     }
                 }
+                // We are using something that isn't FlatLAF.
                 else if (internalPackage != null)
                 {
                     UIManager.setLookAndFeel(internalPackage);
