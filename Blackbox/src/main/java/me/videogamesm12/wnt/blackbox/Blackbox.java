@@ -27,6 +27,7 @@ import com.formdev.flatlaf.intellijthemes.*;
 import com.formdev.flatlaf.intellijthemes.materialthemeuilite.*;
 import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatArcDarkIJTheme;
 //import com.google.common.eventbus.Subscribe;
+import com.formdev.flatlaf.util.SystemInfo;
 import lombok.Getter;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigData;
@@ -487,41 +488,66 @@ public class Blackbox extends Thread implements ModInitializer, ClientLifecycleE
      */
     public enum GUITheme
     {
-        ARC_DARK("Arc Dark", GUIThemeType.FLATLAF, FlatArcDarkIJTheme.class),
-        ARC_DARK_HC("Arc Dark Contrast", GUIThemeType.FLATLAF, FlatArcDarkContrastIJTheme.class),
-        CARBON("Carbon", GUIThemeType.FLATLAF, FlatCarbonIJTheme.class),
-        COBALT_2("Cobalt 2", GUIThemeType.FLATLAF, FlatCobalt2IJTheme.class),
-        CUSTOM("Custom", GUIThemeType.FLATLAF, FlatMaterialDarkerIJTheme.class),
-        DARK("Material Darker", GUIThemeType.FLATLAF, FlatMaterialDarkerIJTheme.class),
-        DARK_HC("Material Darker Contrast", GUIThemeType.FLATLAF, FlatMaterialDarkerContrastIJTheme.class),
-        LIGHT("Material Lighter", GUIThemeType.FLATLAF, FlatMaterialLighterIJTheme.class),
-        LIGHT_HC("Material Lighter Contrast", GUIThemeType.FLATLAF, FlatMaterialLighterContrastIJTheme.class),
-        DEEP_OCEAN("Material Deep Ocean", GUIThemeType.FLATLAF, FlatMaterialDeepOceanIJTheme.class),
-        DEEP_OCEAN_HC("Material Deep Ocean Contrast", GUIThemeType.FLATLAF, FlatMaterialDeepOceanContrastIJTheme.class),
-        NORD("Nord", GUIThemeType.FLATLAF, FlatNordIJTheme.class),
-        ONE_DARK("One Dark", GUIThemeType.FLATLAF, FlatOneDarkIJTheme.class),
-        PURPLE("Dark Purple", GUIThemeType.FLATLAF, FlatDarkPurpleIJTheme.class),
+        ARC_DARK("Arc Dark", GUIThemeType.FLATLAF, FlatArcDarkIJTheme.class, true),
+        ARC_DARK_HC("Arc Dark Contrast", "A variant of Arc Dark with better text box contrast.", GUIThemeType.FLATLAF, FlatArcDarkContrastIJTheme.class, true),
+        CARBON("Carbon", GUIThemeType.FLATLAF, FlatCarbonIJTheme.class, true),
+        COBALT_2("Cobalt 2", GUIThemeType.FLATLAF, FlatCobalt2IJTheme.class, true),
+        CUSTOM("Custom", "Loads a theme from .minecraft/wnt/blackbox/theme.json.", GUIThemeType.FLATLAF, FlatMaterialDarkerIJTheme.class, true),
+        DARK("Material Darker", GUIThemeType.FLATLAF, FlatMaterialDarkerIJTheme.class, true),
+        DARK_HC("Material Darker Contrast", "A variant of Material Darker with better text box contrast.", GUIThemeType.FLATLAF, FlatMaterialDarkerContrastIJTheme.class, true),
+        LIGHT("Material Lighter", GUIThemeType.FLATLAF, FlatMaterialLighterIJTheme.class, true),
+        LIGHT_HC("Material Lighter Contrast", "A variant of Material Lighter with better text box contrast.", GUIThemeType.FLATLAF, FlatMaterialLighterContrastIJTheme.class, true),
+        DEEP_OCEAN("Material Deep Ocean", GUIThemeType.FLATLAF, FlatMaterialDeepOceanIJTheme.class, true),
+        DEEP_OCEAN_HC("Material Deep Ocean Contrast", "A variant of Material Deep Ocean with better text box contrast.", GUIThemeType.FLATLAF, FlatMaterialDeepOceanContrastIJTheme.class, true),
+        NORD("Nord", GUIThemeType.FLATLAF, FlatNordIJTheme.class, true),
+        ONE_DARK("One Dark", GUIThemeType.FLATLAF, FlatOneDarkIJTheme.class, true),
+        PURPLE("Dark Purple", GUIThemeType.FLATLAF, FlatDarkPurpleIJTheme.class, true),
         //--
-        METAL("Metal",  GUIThemeType.BUILT_IN, MetalLookAndFeel.class),
-        SYSTEM("System", GUIThemeType.BUILT_IN, UIManager.getSystemLookAndFeelClassName());
+        METAL("Metal", GUIThemeType.BUILT_IN, MetalLookAndFeel.class, true),
+        MOTIF("Motif", "A hilariously outdated theme that hasn't changed at all since the 1990s.", GUIThemeType.BUILT_IN, "com.sun.java.swing.plaf.motif.MotifLookAndFeel", true),
+        SYSTEM("System", "A theme that automatically adapts to whatever operating system you are currently using.", GUIThemeType.BUILT_IN, UIManager.getSystemLookAndFeelClassName(), true),
+        WINDOWS("Windows", "Ah yes, good ol' Win32.", GUIThemeType.BUILT_IN, "com.sun.java.swing.plaf.windows.WindowsLookAndFeel", SystemInfo.isWindows),
+        WINDOWS_CLASSIC("Windows Classic", "Perfect for those who prefer function over form.", GUIThemeType.BUILT_IN, "com.sun.java.swing.plaf.windows.WindowsClassicLookAndFeel", SystemInfo.isWindows);
 
+        private String themeName = null;
+        private String themeDescription = null;
         private Class<? extends BasicLookAndFeel> themeClass = null;
         private GUIThemeType type = null;
         private String internalPackage = null;
-        private String themeName = null;
+        private boolean shouldShow = false;
 
-        GUITheme(String themeName, GUIThemeType type, Class<? extends BasicLookAndFeel> themeClass)
+        GUITheme(String themeName, String themeDescription, GUIThemeType type, Class<? extends BasicLookAndFeel> themeClass, boolean shouldShow)
+        {
+            this.themeName = themeName;
+            this.themeDescription = themeDescription;
+            this.type = type;
+            this.themeClass = themeClass;
+            this.shouldShow = shouldShow;
+        }
+
+        GUITheme(String themeName, String themeDescription, GUIThemeType type, String internalPackage, boolean shouldShow)
+        {
+            this.themeName = themeName;
+            this.themeDescription = themeDescription;
+            this.type = type;
+            this.internalPackage = internalPackage;
+            this.shouldShow = shouldShow;
+        }
+
+        GUITheme(String themeName, GUIThemeType type, Class<? extends BasicLookAndFeel> themeClass, boolean shouldShow)
         {
             this.themeName = themeName;
             this.type = type;
             this.themeClass = themeClass;
+            this.shouldShow = shouldShow;
         }
 
-        GUITheme(String themeName, GUIThemeType type, String internalPackage)
+        GUITheme(String themeName, GUIThemeType type, String internalPackage, boolean shouldShow)
         {
             this.themeName = themeName;
             this.type = type;
             this.internalPackage = internalPackage;
+            this.shouldShow = shouldShow;
         }
 
         public String getName()
@@ -529,9 +555,19 @@ public class Blackbox extends Thread implements ModInitializer, ClientLifecycleE
             return themeName;
         }
 
+        public String getDescription()
+        {
+            return themeDescription;
+        }
+
         public GUIThemeType getThemeType()
         {
             return type;
+        }
+
+        public boolean shouldShow()
+        {
+            return shouldShow;
         }
 
 

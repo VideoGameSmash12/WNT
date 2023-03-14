@@ -74,11 +74,12 @@ public class SettingsMenu extends JMenu
 
             Arrays.stream(Blackbox.GUIThemeType.values()).forEach(type ->
             {
-                JMenu typeMenu = new JMenu();
-                typeMenu.setText(type.getLabel());
+                JMenuItem label = new JMenuItem("--== " + type.getLabel() + " ==--");
+                label.setEnabled(false);
+                add(label);
 
                 // For every theme, build a radio button for it.
-                Arrays.stream(Blackbox.GUITheme.values()).filter(theme -> theme.getThemeType().equals(type)).forEach(theme ->
+                Arrays.stream(Blackbox.GUITheme.values()).filter(theme -> theme.getThemeType().equals(type) && theme.shouldShow()).forEach(theme ->
                 {
                     JRadioButtonMenuItem themeItem = new JRadioButtonMenuItem();
                     //--
@@ -93,12 +94,11 @@ public class SettingsMenu extends JMenu
                         JOptionPane.showMessageDialog(this, "The changes will take effect when you restart Minecraft.", "Notice", JOptionPane.INFORMATION_MESSAGE);
                     });
                     themeItem.setText(theme.getName());
+                    themeItem.setToolTipText(theme.getDescription());
                     //--
                     group.add(themeItem);
-                    typeMenu.add(themeItem);
+                    add(themeItem);
                 });
-
-                add(typeMenu);
             });
         }
     }
