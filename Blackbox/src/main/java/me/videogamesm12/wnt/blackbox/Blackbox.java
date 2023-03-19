@@ -22,12 +22,7 @@
 
 package me.videogamesm12.wnt.blackbox;
 
-import com.formdev.flatlaf.IntelliJTheme;
-import com.formdev.flatlaf.intellijthemes.*;
-import com.formdev.flatlaf.intellijthemes.materialthemeuilite.*;
-import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatArcDarkIJTheme;
 //import com.google.common.eventbus.Subscribe;
-import com.formdev.flatlaf.util.SystemInfo;
 import lombok.Getter;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigData;
@@ -37,6 +32,7 @@ import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import me.videogamesm12.wnt.WNT;
 import me.videogamesm12.wnt.blackbox.commands.BlackboxCommand;
 import me.videogamesm12.wnt.blackbox.menus.*;
+import me.videogamesm12.wnt.blackbox.theming.Theme;
 import me.videogamesm12.wnt.command.CommandSystem;
 //import me.videogamesm12.wnt.dumper.events.DumpResultEvent;
 import me.videogamesm12.wnt.supervisor.event.ClientFreezeDetected;
@@ -47,11 +43,8 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.plaf.basic.BasicLookAndFeel;
-import javax.swing.plaf.metal.MetalLookAndFeel;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
@@ -66,7 +59,6 @@ public class Blackbox extends Thread implements ModInitializer, ClientLifecycleE
     //--
     public static GUIConfig CONFIG = null;
     public static GUIFrame GUI = null;
-    public static GUIMenu MENU = null;
     //--
     public static TrayIcon trayIcon = null;
     //--
@@ -119,22 +111,22 @@ public class Blackbox extends Thread implements ModInitializer, ClientLifecycleE
 
         try
         {
-            MENU = new GUIMenu();
-
             if (SystemTray.isSupported())
             {
                 SystemTray tray = SystemTray.getSystemTray();
                 trayIcon = new TrayIcon(Toolkit.getDefaultToolkit().createImage(
                         Blackbox.class.getClassLoader().getResource("assets/wnt-blackbox/supervisor_icon.png")), "WNT");
+                trayIcon.setToolTip("Blackbox - Click to Open");
                 trayIcon.setImageAutoSize(true);
                 trayIcon.addMouseListener(new MouseAdapter()
                 {
                     @Override
                     public void mouseClicked(MouseEvent e)
                     {
-                        MENU.setLocation(e.getLocationOnScreen());
-                        MENU.setInvoker(MENU);
-                        MENU.setVisible(true);
+                        if (GUI == null)
+                            GUI = new GUIFrame();
+
+                        GUI.setVisible(true);
                     }
                 });
                 tray.add(trayIcon);
@@ -181,7 +173,7 @@ public class Blackbox extends Thread implements ModInitializer, ClientLifecycleE
         switch (reaction)
         {
             // The user clicked the Yes button
-            case JOptionPane.YES_OPTION:
+            case JOptionPane.YES_OPTION ->
             {
                 if (GUI == null)
                 {
@@ -189,75 +181,20 @@ public class Blackbox extends Thread implements ModInitializer, ClientLifecycleE
                 }
 
                 GUI.setVisible(true);
-                break;
             }
 
             /*  The user clicked the Cancel button. This does the same thing as the No button, but also ignores any
                 future detections. */
-            case JOptionPane.CANCEL_OPTION:
-            {
-                ignore = true;
-            }
+            case JOptionPane.CANCEL_OPTION -> ignore = true;
 
             // The user clicked the No button.
-            case JOptionPane.NO_OPTION:
+            case JOptionPane.NO_OPTION ->
             {
                 return ActionResult.FAIL;
-            }
-
-            // The user somehow clicked another button.
-            default:
-            {
-                break;
             }
         }
 
         return ActionResult.PASS;
-    }
-
-    public static class GUIMenu extends JPopupMenu
-    {
-        private JMenuItem watermark = new JMenuItem("Blackbox");
-        //--
-        private JMenuItem openGui = new JMenuItem("Open Main Window");
-        //--
-        private MitigationsMenu mitigationsMenu;
-        private SettingsMenu settingsMenu;
-        private ToolsMenu toolsMenu;
-
-        public GUIMenu()
-        {
-            watermark.setEnabled(false);
-            //--
-            openGui.addActionListener((event) -> {
-                if (GUI == null)
-                    GUI = new GUIFrame();
-
-                GUI.setVisible(true);
-            });
-            //--
-            mitigationsMenu = new MitigationsMenu();
-            toolsMenu = new ToolsMenu();
-            settingsMenu = new SettingsMenu();
-
-            add(watermark);
-            addSeparator();
-            add(openGui);
-            addSeparator();
-            add(mitigationsMenu);
-            add(toolsMenu);
-            add(settingsMenu);
-
-            // WHY DO I HAVE TO DO THIS
-            addMouseListener(new MouseAdapter()
-            {
-                @Override
-                public void mouseExited(MouseEvent e)
-                {
-                    setVisible(false);
-                }
-            });
-        }
     }
 
     public static class GUIFrame extends JFrame implements KeyListener
@@ -407,18 +344,16 @@ public class Blackbox extends Thread implements ModInitializer, ClientLifecycleE
     {
         private boolean showOnStartup;
         private boolean ignoreFreezesDuringStartup = true;
-
         private boolean autoUpdate = true;
-
         @ConfigEntry.Gui.RequiresRestart
-        private GUITheme theme = GUITheme.DARK;
+        private Theme theme = Theme.DARK;
 
-        public GUITheme getTheme()
+        public Theme getTheme()
         {
             return theme;
         }
 
-        public void setTheme(GUITheme theme)
+        public void setTheme(Theme theme)
         {
             this.theme = theme;
         }
@@ -464,162 +399,5 @@ public class Blackbox extends Thread implements ModInitializer, ClientLifecycleE
         }
 
         return folder;
-    }
-
-    public enum GUIThemeType
-    {
-        BUILT_IN("Built into Java"),
-        FLATLAF("Built into FlatLAF");
-
-        @Getter
-        private String label;
-
-        GUIThemeType(String label)
-        {
-            this.label = label;
-        }
-    }
-
-    /**
-     * <h1>GUITheme</h1>
-     * The method the GUI uses to get the selected theme.
-     * --
-     * TODO: Replace this with something more... modular.
-     */
-    public enum GUITheme
-    {
-        ARC_DARK("Arc Dark", GUIThemeType.FLATLAF, FlatArcDarkIJTheme.class, true),
-        ARC_DARK_HC("Arc Dark Contrast", "A variant of Arc Dark with better text box contrast.", GUIThemeType.FLATLAF, FlatArcDarkContrastIJTheme.class, true),
-        CARBON("Carbon", GUIThemeType.FLATLAF, FlatCarbonIJTheme.class, true),
-        COBALT_2("Cobalt 2", GUIThemeType.FLATLAF, FlatCobalt2IJTheme.class, true),
-        CUSTOM("Custom", "Loads a theme from .minecraft/wnt/blackbox/theme.json.", GUIThemeType.FLATLAF, FlatMaterialDarkerIJTheme.class, true),
-        DARK("Material Darker", GUIThemeType.FLATLAF, FlatMaterialDarkerIJTheme.class, true),
-        DARK_HC("Material Darker Contrast", "A variant of Material Darker with better text box contrast.", GUIThemeType.FLATLAF, FlatMaterialDarkerContrastIJTheme.class, true),
-        LIGHT("Material Lighter", GUIThemeType.FLATLAF, FlatMaterialLighterIJTheme.class, true),
-        LIGHT_HC("Material Lighter Contrast", "A variant of Material Lighter with better text box contrast.", GUIThemeType.FLATLAF, FlatMaterialLighterContrastIJTheme.class, true),
-        DEEP_OCEAN("Material Deep Ocean", GUIThemeType.FLATLAF, FlatMaterialDeepOceanIJTheme.class, true),
-        DEEP_OCEAN_HC("Material Deep Ocean Contrast", "A variant of Material Deep Ocean with better text box contrast.", GUIThemeType.FLATLAF, FlatMaterialDeepOceanContrastIJTheme.class, true),
-        NORD("Nord", GUIThemeType.FLATLAF, FlatNordIJTheme.class, true),
-        ONE_DARK("One Dark", GUIThemeType.FLATLAF, FlatOneDarkIJTheme.class, true),
-        PURPLE("Dark Purple", GUIThemeType.FLATLAF, FlatDarkPurpleIJTheme.class, true),
-        //--
-        METAL("Metal", GUIThemeType.BUILT_IN, MetalLookAndFeel.class, true),
-        MOTIF("Motif", "A hilariously outdated theme that hasn't changed at all since the 1990s.", GUIThemeType.BUILT_IN, "com.sun.java.swing.plaf.motif.MotifLookAndFeel", true),
-        SYSTEM("System", "A theme that automatically adapts to whatever operating system you are currently using.", GUIThemeType.BUILT_IN, UIManager.getSystemLookAndFeelClassName(), true),
-        WINDOWS("Windows", "Ah yes, good ol' Win32.", GUIThemeType.BUILT_IN, "com.sun.java.swing.plaf.windows.WindowsLookAndFeel", SystemInfo.isWindows),
-        WINDOWS_CLASSIC("Windows Classic", "Perfect for those who prefer function over form.", GUIThemeType.BUILT_IN, "com.sun.java.swing.plaf.windows.WindowsClassicLookAndFeel", SystemInfo.isWindows);
-
-        private String themeName = null;
-        private String themeDescription = null;
-        private Class<? extends BasicLookAndFeel> themeClass = null;
-        private GUIThemeType type = null;
-        private String internalPackage = null;
-        private boolean shouldShow = false;
-
-        GUITheme(String themeName, String themeDescription, GUIThemeType type, Class<? extends BasicLookAndFeel> themeClass, boolean shouldShow)
-        {
-            this.themeName = themeName;
-            this.themeDescription = themeDescription;
-            this.type = type;
-            this.themeClass = themeClass;
-            this.shouldShow = shouldShow;
-        }
-
-        GUITheme(String themeName, String themeDescription, GUIThemeType type, String internalPackage, boolean shouldShow)
-        {
-            this.themeName = themeName;
-            this.themeDescription = themeDescription;
-            this.type = type;
-            this.internalPackage = internalPackage;
-            this.shouldShow = shouldShow;
-        }
-
-        GUITheme(String themeName, GUIThemeType type, Class<? extends BasicLookAndFeel> themeClass, boolean shouldShow)
-        {
-            this.themeName = themeName;
-            this.type = type;
-            this.themeClass = themeClass;
-            this.shouldShow = shouldShow;
-        }
-
-        GUITheme(String themeName, GUIThemeType type, String internalPackage, boolean shouldShow)
-        {
-            this.themeName = themeName;
-            this.type = type;
-            this.internalPackage = internalPackage;
-            this.shouldShow = shouldShow;
-        }
-
-        public String getName()
-        {
-            return themeName;
-        }
-
-        public String getDescription()
-        {
-            return themeDescription;
-        }
-
-        public GUIThemeType getThemeType()
-        {
-            return type;
-        }
-
-        public boolean shouldShow()
-        {
-            return shouldShow;
-        }
-
-
-        public void showOptionalChangeMessage()
-        {
-            if (this == CUSTOM)
-            {
-                JOptionPane.showMessageDialog(null, "Just so you know, the custom theme will need to be located at .minecraft/wnt/blackbox/theme.json with this theme enabled.", "Notice", JOptionPane.INFORMATION_MESSAGE);
-            }
-        }
-
-        public void apply()
-        {
-            try
-            {
-                // We are using a custom theme for FlatLAF.
-                if (this == CUSTOM)
-                {
-                    File file = new File(getBlackboxFolder(), "theme.json");
-                    if (!file.exists())
-                    {
-                        // Fallback
-                        FlatMaterialDarkerIJTheme.setup();
-                        WNT.getLogger().warn("You set your theme for the Blackbox to Custom, but no theme was found at .minecraft/wnt/blackbox/theme.json. Please put a theme JSON file there.");
-                    }
-                    else
-                    {
-                        IntelliJTheme.setup(new FileInputStream(file));
-                    }
-                }
-                // We are using something that belongs to FlatLAF.
-                else if (themeClass != null)
-                {
-                    if (IntelliJTheme.ThemeLaf.class.isAssignableFrom(themeClass))
-                    {
-                        themeClass.getMethod("setup").invoke(this);
-                    }
-                    else
-                    {
-                        UIManager.setLookAndFeel(themeClass.getDeclaredConstructor().newInstance());
-                    }
-                }
-                // We are using something that isn't FlatLAF.
-                else if (internalPackage != null)
-                {
-                    UIManager.setLookAndFeel(internalPackage);
-                }
-            }
-            catch (Exception ex)
-            {
-                WNT.getLogger().error("Failed to apply currently active theme", ex);
-            }
-        }
     }
 }

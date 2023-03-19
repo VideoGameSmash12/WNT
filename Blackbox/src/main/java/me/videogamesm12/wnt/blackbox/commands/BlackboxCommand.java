@@ -26,16 +26,17 @@ import com.mojang.brigadier.context.CommandContext;
 import me.videogamesm12.wnt.blackbox.Blackbox;
 import me.videogamesm12.wnt.command.WCommand;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 
 import javax.swing.*;
-import java.util.ArrayList;
 import java.util.List;
 
 public class BlackboxCommand extends WCommand
 {
     public BlackboxCommand()
     {
-        super("blackbox", "", "/blackbox <open | status>");
+        super("blackbox", "Allows you to open or query the status of the Blackbox.", "/blackbox <open | status>");
     }
 
     @Override
@@ -48,8 +49,10 @@ public class BlackboxCommand extends WCommand
 
         switch (args[0].toLowerCase())
         {
-            case "open":
+            case "open" ->
             {
+                msg(Component.translatable("wnt.blackbox.command.show", NamedTextColor.GREEN));
+
                 SwingUtilities.invokeLater(() -> {
                     if (Blackbox.GUI == null)
                     {
@@ -58,7 +61,15 @@ public class BlackboxCommand extends WCommand
 
                     Blackbox.GUI.setVisible(true);
                 });
-                break;
+            }
+            case "status" ->
+            {
+                Component status = (Blackbox.GUI != null ? (Blackbox.GUI.isVisible() ?
+                        Component.translatable("wnt.blackbox.command.status.inMemoryAndVisible")
+                        : Component.translatable("wnt.blackbox.command.status.inMemoryButNotVisible"))
+                        : Component.translatable("wnt.blackbox.command.status.notInMemory")).color(NamedTextColor.WHITE);
+
+                msg(Component.translatable("wnt.blackbox.command.status", status).colorIfAbsent(NamedTextColor.GRAY));
             }
         }
 
@@ -68,6 +79,6 @@ public class BlackboxCommand extends WCommand
     @Override
     public List<String> suggest(CommandContext<FabricClientCommandSource> context, String[] args)
     {
-        return new ArrayList<>();
+        return List.of("open", "status");
     }
 }

@@ -1,0 +1,7 @@
+{
+  "wnt.blackbox.command.show": "Opening the Blackbox window...",
+  "wnt.blackbox.command.status": "Blackbox is currently %s.",
+  "wnt.blackbox.command.status.inMemoryAndVisible": "in memory and visible",
+  "wnt.blackbox.command.status.inMemoryButNotVisible": "in memory, but not visible",
+  "wnt.blackbox.command.status.notInMemory": "not in memory"
+}

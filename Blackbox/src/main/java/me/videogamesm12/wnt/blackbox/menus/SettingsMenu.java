@@ -23,6 +23,8 @@
 package me.videogamesm12.wnt.blackbox.menus;
 
 import me.videogamesm12.wnt.blackbox.Blackbox;
+import me.videogamesm12.wnt.blackbox.theming.Theme;
+import me.videogamesm12.wnt.blackbox.theming.ThemeType;
 
 import javax.swing.*;
 import java.util.Arrays;
@@ -72,14 +74,14 @@ public class SettingsMenu extends JMenu
         {
             super("Theme");
 
-            Arrays.stream(Blackbox.GUIThemeType.values()).forEach(type ->
+            Arrays.stream(ThemeType.values()).forEach(type ->
             {
                 JMenuItem label = new JMenuItem("--== " + type.getLabel() + " ==--");
                 label.setEnabled(false);
                 add(label);
 
                 // For every theme, build a radio button for it.
-                Arrays.stream(Blackbox.GUITheme.values()).filter(theme -> theme.getThemeType().equals(type) && theme.shouldShow()).forEach(theme ->
+                Arrays.stream(Theme.values()).filter(theme -> theme.getThemeType().equals(type) && theme.shouldShow()).forEach(theme ->
                 {
                     JRadioButtonMenuItem themeItem = new JRadioButtonMenuItem();
                     //--
