@@ -22,9 +22,12 @@
 
 package me.videogamesm12.wnt.blackbox.menus;
 
+import com.formdev.flatlaf.FlatLaf;
+import me.videogamesm12.wnt.WNT;
 import me.videogamesm12.wnt.blackbox.Blackbox;
 import me.videogamesm12.wnt.blackbox.theming.Theme;
 import me.videogamesm12.wnt.blackbox.theming.ThemeType;
+import me.videogamesm12.wnt.blackbox.tools.ChatWindow;
 
 import javax.swing.*;
 import java.util.Arrays;
@@ -90,10 +93,30 @@ public class SettingsMenu extends JMenu
                         themeItem.setSelected(true);
                     }
                     //--
+                    // TODO: Move this to a dedicated method in Blackbox.GUI
                     themeItem.addActionListener((event) -> {
+                        WNT.getLogger().info("Switching theme to " + theme.getName() + "...");
+                        Theme oldTheme = Blackbox.CONFIG.getTheme();
                         Blackbox.CONFIG.setTheme(theme);
                         theme.showOptionalChangeMessage();
-                        JOptionPane.showMessageDialog(this, "The changes will take effect when you restart Minecraft.", "Notice", JOptionPane.INFORMATION_MESSAGE);
+                        theme.apply();
+
+                        if (theme.getThemeType() == ThemeType.FLATLAF)
+                        {
+                            FlatLaf.updateUI();
+                        }
+                        else
+                        {
+                            SwingUtilities.updateComponentTreeUI(Blackbox.GUI);
+
+                            if (ChatWindow.INSTANCE != null)
+                                SwingUtilities.updateComponentTreeUI(ChatWindow.INSTANCE);
+                        }
+
+                        if (oldTheme.getThemeType() != theme.getThemeType())
+                        {
+                            JOptionPane.showMessageDialog(this, "If things end up looking broken, try rebooting your Minecraft client.", "Notice", JOptionPane.INFORMATION_MESSAGE);
+                        }
                     });
                     themeItem.setText(theme.getName());
                     themeItem.setToolTipText(theme.getDescription());
