@@ -13,11 +13,3 @@ The Blackbox currently has 4 tabs in it, with each one providing a unique set of
 | Players  | A table of players that the client knows is currently online. |
 | Entities | A table of entities currently loaded by the client.           |
 | Maps     | A table of map art data currently loaded in by the client.    |
-
-## Notice for Linux and MacOS users
-Due to an unusual bug in how Linux and MacOS render things in JSwing (one which causes the entire JVM to crash when
-using the Blackbox), I've made the decision to disable the component for users running those operating systems for the
-sake of stability.
-
-The way to mitigate the issue in question will likely be to run the Blackbox as a separate process from Minecraft's,
-however this has yet to be implemented.
