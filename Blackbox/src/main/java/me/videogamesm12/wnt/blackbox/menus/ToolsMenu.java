@@ -53,11 +53,10 @@ public class ToolsMenu extends JMenu
      */
     private void dumpThread(ThreadInfo thread)
     {
-        WNT.getLogger().info("--== THREAD DUMP - " + thread.getThreadName() + " (" + thread.getThreadState() + ") ==--");
+        WNT.getLogger().info("---===[[ THREAD DUMP - " + thread.getThreadName() + " (" + thread.getThreadState() + ") ]]===---");
         WNT.getLogger().info("DETAILS: " + threadToFormat(thread));
         WNT.getLogger().info("STACKTRACE: ");
         Arrays.stream(thread.getStackTrace()).forEach(stack -> WNT.getLogger().info(stack));
-        WNT.getLogger().info("--== END DUMP ==--");
     }
 
     /**

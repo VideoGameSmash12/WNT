@@ -1,4 +1,10 @@
 {
+  "text.autoconfig.wnt-blackbox.option.autoUpdate": "Automatically refresh the current tab",
+  "text.autoconfig.wnt-blackbox.option.ignoreFreezesDuringStartup": "Ignore client freezes during start-up",
+  "text.autoconfig.wnt-blackbox.option.showOnStartup": "Show on start-up",
+  "text.autoconfig.wnt-blackbox.option.theme": "Current theme",
+  "text.autoconfig.wnt-blackbox.title": "Configure the Blackbox",
+
   "wnt.blackbox.command.show": "Opening the Blackbox window...",
   "wnt.blackbox.command.status": "Blackbox is currently %s.",
   "wnt.blackbox.command.status.inMemoryAndVisible": "in memory and visible",
