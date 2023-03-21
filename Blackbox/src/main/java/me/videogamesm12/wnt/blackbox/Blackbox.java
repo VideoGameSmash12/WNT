@@ -32,7 +32,9 @@ import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import me.videogamesm12.wnt.WNT;
 import me.videogamesm12.wnt.blackbox.commands.BlackboxCommand;
 import me.videogamesm12.wnt.blackbox.menus.*;
-import me.videogamesm12.wnt.blackbox.theming.Theme;
+//import me.videogamesm12.wnt.blackbox.theming.Theme;
+import me.videogamesm12.wnt.blackbox.theming.ThemeRegistry;
+import me.videogamesm12.wnt.blackbox.theming.inbuilt.IBThemes;
 import me.videogamesm12.wnt.command.CommandSystem;
 //import me.videogamesm12.wnt.dumper.events.DumpResultEvent;
 import me.videogamesm12.wnt.supervisor.event.ClientFreezeDetected;
@@ -99,7 +101,16 @@ public class Blackbox extends Thread implements ModInitializer, ClientLifecycleE
         AutoConfig.register(GUIConfig.class, GsonConfigSerializer::new);
         CONFIG = AutoConfig.getConfigHolder(GUIConfig.class).getConfig();
 
-        CONFIG.theme.apply();
+        ThemeRegistry.setupThemes();
+        try
+        {
+            ThemeRegistry.getTheme(CONFIG.getTheme()).apply();
+        }
+        catch (Exception ex)
+        {
+            WNT.getLogger().error("Failed to apply selected theme", ex);
+            ThemeRegistry.getTheme(IBThemes.METAL.getInternalName()).apply();
+        }
 
         // Non-Linux operating systems open the window earlier than Linux operating systems do.
         // If it wasn't like this, this issue would happen: https://github.com/VideoGameSmash12/WNT/issues/11
@@ -345,15 +356,16 @@ public class Blackbox extends Thread implements ModInitializer, ClientLifecycleE
         private boolean showOnStartup;
         private boolean ignoreFreezesDuringStartup = true;
         private boolean autoUpdate = true;
-        @ConfigEntry.Gui.RequiresRestart
-        private Theme theme = Theme.DARK;
 
-        public Theme getTheme()
+        @ConfigEntry.Gui.Excluded
+        private String theme = "DARK";
+
+        public String getTheme()
         {
             return theme;
         }
 
-        public void setTheme(Theme theme)
+        public void setTheme(String theme)
         {
             this.theme = theme;
         }

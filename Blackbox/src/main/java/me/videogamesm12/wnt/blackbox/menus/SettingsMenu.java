@@ -25,12 +25,14 @@ package me.videogamesm12.wnt.blackbox.menus;
 import com.formdev.flatlaf.FlatLaf;
 import me.videogamesm12.wnt.WNT;
 import me.videogamesm12.wnt.blackbox.Blackbox;
-import me.videogamesm12.wnt.blackbox.theming.Theme;
-import me.videogamesm12.wnt.blackbox.theming.ThemeType;
+import me.videogamesm12.wnt.blackbox.theming.*;
 import me.videogamesm12.wnt.blackbox.tools.ChatWindow;
 
 import javax.swing.*;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * <h1>SettingsMenu</h1>
@@ -77,50 +79,44 @@ public class SettingsMenu extends JMenu
         {
             super("Theme");
 
-            Arrays.stream(ThemeType.values()).forEach(type ->
+            ThemeRegistry.getThemeTypes().forEach(type ->
             {
                 JMenuItem label = new JMenuItem("--== " + type.getLabel() + " ==--");
                 label.setEnabled(false);
                 add(label);
 
-                // For every theme, build a radio button for it.
-                Arrays.stream(Theme.values()).filter(theme -> theme.getThemeType().equals(type) && theme.shouldShow()).forEach(theme ->
+                if (ThemeRegistry.getThemes().entrySet().stream().noneMatch(theme -> theme.getValue().getType().getId() == type.getId()))
                 {
+                    JMenuItem emptyItem = new JMenuItem("(none)");
+                    emptyItem.setEnabled(false);
+                    add(emptyItem);
+                    return;
+                }
+
+                ThemeRegistry.getThemes().entrySet().stream().filter(theme -> theme.getValue().getType().getId() == type.getId()).sorted(Comparator.comparing(set -> set.getValue().getThemeName())).forEach(set ->
+                {
+                    String themeId = set.getKey();
+                    ITheme theme = set.getValue();
+                    //--
                     JRadioButtonMenuItem themeItem = new JRadioButtonMenuItem();
-                    //--
-                    if (theme == Blackbox.CONFIG.getTheme())
+                    themeItem.setText(theme.getThemeName());
+                    themeItem.setToolTipText(theme.getThemeDescription());
+                    themeItem.setSelected(Blackbox.CONFIG.getTheme().equalsIgnoreCase(themeId));
+                    themeItem.addActionListener((e) ->
                     {
-                        themeItem.setSelected(true);
-                    }
-                    //--
-                    // TODO: Move this to a dedicated method in Blackbox.GUI
-                    themeItem.addActionListener((event) -> {
-                        WNT.getLogger().info("Switching theme to " + theme.getName() + "...");
-                        Theme oldTheme = Blackbox.CONFIG.getTheme();
-                        Blackbox.CONFIG.setTheme(theme);
-                        theme.showOptionalChangeMessage();
+                        WNT.getLogger().info("Switching theme to " + theme.getThemeName() + "...");
+                        //--
+                        ITheme originalTheme = ThemeRegistry.getTheme(Blackbox.CONFIG.getTheme());
+                        Blackbox.CONFIG.setTheme(themeId);
+                        //--
                         theme.apply();
-
-                        if (theme.getThemeType() == ThemeType.FLATLAF)
-                        {
-                            FlatLaf.updateUI();
-                        }
-                        else
-                        {
-                            SwingUtilities.updateComponentTreeUI(Blackbox.GUI);
-
-                            if (ChatWindow.INSTANCE != null)
-                                SwingUtilities.updateComponentTreeUI(ChatWindow.INSTANCE);
-                        }
-
-                        if (oldTheme.getThemeType() != theme.getThemeType())
+                        theme.getType().update();
+                        //--
+                        if (originalTheme.getType().getId() != theme.getType().getId())
                         {
                             JOptionPane.showMessageDialog(this, "If things end up looking broken, try rebooting your Minecraft client.", "Notice", JOptionPane.INFORMATION_MESSAGE);
                         }
                     });
-                    themeItem.setText(theme.getName());
-                    themeItem.setToolTipText(theme.getDescription());
-                    //--
                     group.add(themeItem);
                     add(themeItem);
                 });

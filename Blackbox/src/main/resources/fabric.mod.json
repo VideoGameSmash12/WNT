@@ -18,6 +18,12 @@
     ],
     "modmenu": [
       "me.videogamesm12.wnt.blackbox.integration.ModMenuIntegration"
+    ],
+    "wnt-blackbox": [
+      "me.videogamesm12.wnt.blackbox.theming.inbuilt.IBThemeProvider",
+      "me.videogamesm12.wnt.blackbox.theming.flatlaf.FThemeProvider",
+      "me.videogamesm12.wnt.blackbox.theming.custom.flatlaf.CFThemeProvider",
+      "me.videogamesm12.wnt.blackbox.theming.custom.intellij.CIThemeProvider"
     ]
   },
   "mixins": [
