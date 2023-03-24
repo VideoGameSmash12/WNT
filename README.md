@@ -1,3 +1,4 @@
+# WNT
 WNT is a client mod containing multiple utilities for the technically-inclined and administrative-inclined. It is the successor to W95, a mod I wrote ages ago with the same goal in mind.
 
 ## Features
