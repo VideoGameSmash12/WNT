@@ -22,17 +22,12 @@
 
 package me.videogamesm12.wnt.blackbox.menus;
 
-import com.formdev.flatlaf.FlatLaf;
 import me.videogamesm12.wnt.WNT;
 import me.videogamesm12.wnt.blackbox.Blackbox;
 import me.videogamesm12.wnt.blackbox.theming.*;
-import me.videogamesm12.wnt.blackbox.tools.ChatWindow;
 
 import javax.swing.*;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
-import java.util.List;
 
 /**
  * <h1>SettingsMenu</h1>

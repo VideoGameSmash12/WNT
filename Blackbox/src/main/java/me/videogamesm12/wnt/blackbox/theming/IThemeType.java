@@ -22,7 +22,6 @@
 
 package me.videogamesm12.wnt.blackbox.theming;
 
-import me.videogamesm12.wnt.WNT;
 import me.videogamesm12.wnt.blackbox.Blackbox;
 import me.videogamesm12.wnt.blackbox.tools.ChatWindow;
 
