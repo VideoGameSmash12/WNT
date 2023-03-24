@@ -85,7 +85,7 @@ public class SettingsMenu extends JMenu
                 label.setEnabled(false);
                 add(label);
 
-                if (ThemeRegistry.getThemes().entrySet().stream().noneMatch(theme -> theme.getValue().getType().getId() == type.getId()))
+                if (ThemeRegistry.getThemes().entrySet().stream().noneMatch(theme -> theme.getValue().getType().getId() == type.getId() && theme.getValue().isSupposedToShow()))
                 {
                     JMenuItem emptyItem = new JMenuItem("(none)");
                     emptyItem.setEnabled(false);
@@ -93,7 +93,7 @@ public class SettingsMenu extends JMenu
                     return;
                 }
 
-                ThemeRegistry.getThemes().entrySet().stream().filter(theme -> theme.getValue().getType().getId() == type.getId()).sorted(Comparator.comparing(set -> set.getValue().getThemeName())).forEach(set ->
+                ThemeRegistry.getThemes().entrySet().stream().filter(theme -> theme.getValue().getType().getId() == type.getId() && theme.getValue().isSupposedToShow()).sorted(Comparator.comparing(set -> set.getValue().getThemeName())).forEach(set ->
                 {
                     String themeId = set.getKey();
                     ITheme theme = set.getValue();
