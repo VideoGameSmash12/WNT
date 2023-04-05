@@ -55,6 +55,8 @@ public class WNT implements ModInitializer, ClientLifecycleEvents.ClientStopping
         loadConfig();
         //--
         moduleManager = new ModuleManager();
+        moduleManager.loadModules();
+        //--
         ClientLifecycleEvents.CLIENT_STOPPING.register(this);
     }
 

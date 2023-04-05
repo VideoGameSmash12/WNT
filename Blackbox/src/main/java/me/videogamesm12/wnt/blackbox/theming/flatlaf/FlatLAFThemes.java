@@ -53,12 +53,6 @@ public enum FlatLAFThemes implements ITheme
     }
 
     @Override
-    public boolean isSupposedToShow()
-    {
-        return false;
-    }
-
-    @Override
     public void apply()
     {
         try

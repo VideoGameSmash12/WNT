@@ -26,9 +26,11 @@ import lombok.Getter;
 import me.videogamesm12.wnt.WNT;
 import me.videogamesm12.wnt.events.ModuleRegisteredEvent;
 import me.videogamesm12.wnt.events.ModuleUnregisteredEvent;
+import net.fabricmc.loader.api.FabricLoader;
 
 import java.io.File;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * <h1>ModuleManager</h1>
@@ -132,6 +134,19 @@ public class ModuleManager
     public List<String> getModuleNames()
     {
         return modules.values().stream().map(module -> module.getMeta().name()).toList();
+    }
+
+    public void loadModules()
+    {
+        WNT.getLogger().info("Registering modules...");
+        AtomicInteger count = new AtomicInteger();
+        FabricLoader.getInstance().getEntrypointContainers("wnt-modules", IModuleProvider.class).forEach(container ->
+        {
+            List<Class<? extends Module>> modules = container.getEntrypoint().getModuleClasses();
+            modules.forEach(this::register);
+            count.addAndGet(modules.size());
+        });
+        WNT.getLogger().info(modules.size() + " modules were registered.");
     }
 
     public static File getModulesFolder()

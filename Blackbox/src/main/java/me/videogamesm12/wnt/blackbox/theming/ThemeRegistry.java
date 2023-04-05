@@ -51,12 +51,12 @@ public class ThemeRegistry
             List<IThemeType> types = themeProvider.getTypes();
             themeTypes.addAll(types);
             themeTypeCount.addAndGet(types.size());
-            WNT.getLogger().info("Loaded " + types.size() + " theme types from mod " + container.getProvider().getOrigin().getParentModId());
+            WNT.getLogger().info("Loaded " + types.size() + " theme types from mod " + container.getProvider().getMetadata().getName());
             //--
             Map<String, ITheme> modThemes = themeProvider.getThemes();
             themes.putAll(modThemes);
             themeCount.addAndGet(modThemes.size());
-            WNT.getLogger().info("Loaded " + modThemes.size() + " themes from mod " + container.getProvider().getOrigin().getParentModId());
+            WNT.getLogger().info("Loaded " + modThemes.size() + " themes from mod " + container.getProvider().getMetadata().getName());
             //--
 
         });

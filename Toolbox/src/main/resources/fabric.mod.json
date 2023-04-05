@@ -14,6 +14,9 @@
   "entrypoints": {
     "main": [
       "me.videogamesm12.wnt.toolbox.Toolbox"
+    ],
+    "wnt-modules": [
+      "me.videogamesm12.wnt.toolbox.providers.ModuleProvider"
     ]
   },
   "mixins": [
