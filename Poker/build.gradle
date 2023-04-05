@@ -16,4 +16,6 @@ dependencies {
     modApi "com.github.VideoGameSmash12:BleachHack:d17c38bbf784c47616cc4668853daaea0d31ff73"
     // Meteor
     modApi "meteordevelopment:meteor-client:0.5.0"
+    // AdvancedChat
+    //modImplementation "com.github.DarkKronicle:AdvancedChatCore:"
 }
