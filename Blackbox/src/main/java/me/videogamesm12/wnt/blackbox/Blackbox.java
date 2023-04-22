@@ -85,7 +85,6 @@ public class Blackbox extends Thread implements ModInitializer, ClientLifecycleE
             }
         }
 
-        System.setProperty("java.awt.headless", "false");
         CommandSystem.registerCommand(BlackboxCommand.class);
 
         start();
