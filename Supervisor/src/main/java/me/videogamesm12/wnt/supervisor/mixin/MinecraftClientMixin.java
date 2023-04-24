@@ -23,6 +23,7 @@
 package me.videogamesm12.wnt.supervisor.mixin;
 
 import me.videogamesm12.wnt.supervisor.Supervisor;
+import me.videogamesm12.wnt.supervisor.components.watchdog.Watchdog;
 import net.minecraft.client.MinecraftClient;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -51,7 +52,7 @@ public class MinecraftClientMixin
     {
         if (Supervisor.CONFIG.detectFreezes())
         {
-            Supervisor.SupervisorThread.LAST_RENDERED = Instant.now().toEpochMilli();
+            Watchdog.setLastRenderedTime(Instant.now().toEpochMilli());
         }
     }
 }

@@ -121,7 +121,8 @@ public class Blackbox extends Thread implements ModInitializer, ClientLifecycleE
 
         try
         {
-            if (SystemTray.isSupported())
+            WNT.getLogger().info("Setting up system tray support...");
+            /*if (SystemTray.isSupported())
             {
                 SystemTray tray = SystemTray.getSystemTray();
                 trayIcon = new TrayIcon(Toolkit.getDefaultToolkit().createImage(
@@ -140,7 +141,7 @@ public class Blackbox extends Thread implements ModInitializer, ClientLifecycleE
                     }
                 });
                 tray.add(trayIcon);
-            }
+            }*/
         }
         catch (Exception ex)
         {
