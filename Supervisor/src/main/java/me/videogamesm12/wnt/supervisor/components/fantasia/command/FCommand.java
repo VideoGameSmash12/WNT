@@ -45,7 +45,7 @@ public abstract class FCommand implements Command<CommandSender>
         }
         catch (IllegalStateException ex)
         {
-            context.getSource().sendMessage("Error: ");
+            context.getSource().sendMessage("Error: " + ex.getMessage());
         }
         catch (Throwable ex)
         {

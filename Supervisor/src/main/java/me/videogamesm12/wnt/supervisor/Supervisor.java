@@ -76,7 +76,6 @@ public class Supervisor implements ClientLifecycleEvents.ClientStopping, ModInit
 
     public static class SupervisorThread extends Thread
     {
-        private final ScheduledExecutorService freezeDetector = new ScheduledThreadPoolExecutor(1);
 
         public SupervisorThread()
         {
@@ -87,14 +86,12 @@ public class Supervisor implements ClientLifecycleEvents.ClientStopping, ModInit
         @Override
         public void run()
         {
-            //--
             WNT.getLogger().info("Supervisor started");
         }
 
         @Override
         public void interrupt()
         {
-            freezeDetector.shutdown();
             super.interrupt();
         }
 

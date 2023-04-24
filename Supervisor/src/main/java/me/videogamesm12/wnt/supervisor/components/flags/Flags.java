@@ -8,4 +8,8 @@ public class Flags
     @Getter
     @Setter
     private boolean gameStartedYet;
+
+    @Getter
+    @Setter
+    private boolean supposedToCrash;
 }

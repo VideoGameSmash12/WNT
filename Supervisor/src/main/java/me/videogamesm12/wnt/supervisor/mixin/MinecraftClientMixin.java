@@ -22,15 +22,19 @@
 
 package me.videogamesm12.wnt.supervisor.mixin;
 
+import me.videogamesm12.wnt.supervisor.FantasiaSupervisor;
 import me.videogamesm12.wnt.supervisor.Supervisor;
+import me.videogamesm12.wnt.supervisor.components.fantasia.Fantasia;
 import me.videogamesm12.wnt.supervisor.components.watchdog.Watchdog;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.util.math.Divider;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.time.Instant;
+import java.util.PrimitiveIterator;
 
 /**
  * <h1>MinecraftClientMixin</h1>
@@ -53,6 +57,19 @@ public class MinecraftClientMixin
         if (Supervisor.CONFIG.detectFreezes())
         {
             Watchdog.setLastRenderedTime(Instant.now().toEpochMilli());
+        }
+    }
+
+    /**
+     * <p>This will intentionally crash or freeze the client if the relevant flags are set.</p>
+     */
+    @Inject(method = "run", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;endMonitor(ZLnet/minecraft/util/TickDurationMonitor;)V", shift = At.Shift.AFTER))
+    public void onPostRender(CallbackInfo ci)
+    {
+        if (FantasiaSupervisor.getInstance().getFlags().isSupposedToCrash())
+        {
+            Fantasia.getServerLogger().info("Hey, want to see a magic trick?");
+            int lol = 0 / 0;
         }
     }
 }

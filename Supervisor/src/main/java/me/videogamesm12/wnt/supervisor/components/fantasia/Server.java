@@ -1,8 +1,11 @@
 package me.videogamesm12.wnt.supervisor.components.fantasia;
 
+import com.google.common.eventbus.Subscribe;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import lombok.Getter;
+import me.videogamesm12.wnt.supervisor.FantasiaSupervisor;
+import me.videogamesm12.wnt.supervisor.api.event.ClientFreezeEvent;
 import me.videogamesm12.wnt.supervisor.components.fantasia.command.*;
 import me.videogamesm12.wnt.supervisor.components.fantasia.session.CommandSender;
 import me.videogamesm12.wnt.supervisor.components.fantasia.session.Session;
@@ -10,7 +13,9 @@ import me.videogamesm12.wnt.supervisor.components.fantasia.session.Session;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 public class Server extends Thread
@@ -22,11 +27,14 @@ public class Server extends Thread
     //--
     @Getter
     private final CommandDispatcher<CommandSender> dispatcher = new CommandDispatcher<>();
+    @Getter
+    private final Map<String, FCommand> commands = new HashMap<>();
 
     @Override
     public void run()
     {
-        Fantasia.getServerLogger().info("Starting up listener...");
+        Fantasia.getServerLogger().info("Starting up listeners...");
+        FantasiaSupervisor.getEventBus().register(this);
         try
         {
             socketListener = new SocketListener(this, new ServerSocket(6969, 999));
@@ -38,12 +46,23 @@ public class Server extends Thread
             return;
         }
 
-        Fantasia.getServerLogger().info("Registering commands...");
-        registerCommand(new ExitCommand());
-        registerCommand(new RunCommand());
-        registerCommand(new ShutdownCommand());
-        registerCommand(new StacktraceDumpCommand());
+        Fantasia.getServerLogger().info("Registering commands...");;
+        registerCommand(CrashCommand.class);
+        registerCommand(ChatCommand.class);
+        registerCommand(DisconnectCommand.class);
+        registerCommand(ExitCommand.class);
+        registerCommand(HelpCommand.class);
+        registerCommand(RunCommand.class);
+        registerCommand(ShutdownCommand.class);
+        registerCommand(StacktraceDumpCommand.class);
         Fantasia.getServerLogger().info("Commands registered");
+    }
+
+    @Override
+    public void interrupt()
+    {
+        shutdown();
+        super.interrupt();
     }
 
     public void addSession(Session session)
@@ -75,10 +94,30 @@ public class Server extends Thread
         interrupt();
     }
 
-    private void registerCommand(FCommand command)
+    private void registerCommand(Class<? extends FCommand> cmd)
     {
-        dispatcher.register(CommandSender.literal(command.getName()).then(CommandSender.argument("args",
-                StringArgumentType.greedyString()).executes(command)).executes(command));
+        try
+        {
+            FCommand command = cmd.getDeclaredConstructor().newInstance();
+            commands.put(command.getName(), command);
+            dispatcher.register(CommandSender.literal(command.getName()).then(CommandSender.argument("args",
+                    StringArgumentType.greedyString()).executes(command)).executes(command));
+        }
+        catch (Exception ex)
+        {
+            Fantasia.getServerLogger().warn("Failed to register command " + cmd.getName(), ex);
+        }
+    }
+
+    public void broadcast(String message)
+    {
+        sessions.forEach(session -> CompletableFuture.runAsync(() -> session.sendMessage(message)));
+    }
+
+    @Subscribe
+    public void onClientFreeze(ClientFreezeEvent event)
+    {
+        broadcast(" ** CLIENT FREEZE DETECTED, LAST RENDERED " + event.getLastRendered() + " MS AGO ** ");
     }
 
     public static class SocketListener extends Thread

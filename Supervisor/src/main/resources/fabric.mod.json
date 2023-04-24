@@ -20,10 +20,6 @@
     ],
     "preLaunch": [
       "me.videogamesm12.wnt.supervisor.Entrypoints"
-    ],
-    "wnt-supervisor": [
-      "me.videogamesm12.wnt.supervisor.components.fantasia.Fantasia",
-      "me.videogamesm12.wnt.supervisor.components.watchdog.Watchdog"
     ]
   },
   "mixins": [

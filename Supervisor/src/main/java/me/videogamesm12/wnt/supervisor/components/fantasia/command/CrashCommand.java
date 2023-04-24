@@ -1,19 +1,20 @@
 package me.videogamesm12.wnt.supervisor.components.fantasia.command;
 
 import com.mojang.brigadier.context.CommandContext;
+import me.videogamesm12.wnt.supervisor.FantasiaSupervisor;
 import me.videogamesm12.wnt.supervisor.components.fantasia.session.CommandSender;
 
-public class ExitCommand extends FCommand
+public class CrashCommand extends FCommand
 {
-    public ExitCommand()
+    public CrashCommand()
     {
-        super("exit", "Disconnects you from this Telnet server.", "/exit");
+        super("crash", "Intentionally crashes the client.", "/crash");
     }
 
     @Override
     public boolean run(CommandSender sender, CommandContext<CommandSender> context, String[] args)
     {
-        context.getSource().getSession().disconnect(false);
+        FantasiaSupervisor.getInstance().getFlags().setSupposedToCrash(true);
         return true;
     }
 }

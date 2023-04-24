@@ -81,6 +81,7 @@ public class Session extends Thread
             }
             catch (CommandSyntaxException ignored)
             {
+                sendMessage("Unknown command: " + command.split(" ")[0]);
             }
             catch (Throwable ex)
             {
@@ -90,6 +91,13 @@ public class Session extends Thread
         }
 
         disconnect(false);
+    }
+
+    @Override
+    public void interrupt()
+    {
+        disconnect(true);
+        super.interrupt();
     }
 
     public boolean isConnected()

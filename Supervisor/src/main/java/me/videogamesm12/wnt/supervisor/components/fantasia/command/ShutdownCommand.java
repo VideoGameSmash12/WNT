@@ -8,7 +8,7 @@ public class ShutdownCommand extends FCommand
 {
     public ShutdownCommand()
     {
-        super("shutdown", "Shuts the client down either forcefully or safely.", "/shutdown [force | safe]");
+        super("shutdown", "Shuts the client down safely, forcefully, or (as a last resort) in a nuclear fashion.", "/shutdown [force | nuclear | safe]");
     }
 
     @Override
@@ -21,6 +21,7 @@ public class ShutdownCommand extends FCommand
 
         switch (args[0].toLowerCase())
         {
+            case "nuclear" -> Runtime.getRuntime().halt(1337);
             case "force", "forcefully" ->
             {
                 sender.sendMessage("Shutting down forcefully...");
