@@ -1,7 +1,7 @@
 package me.videogamesm12.wnt.supervisor.components.fantasia.command;
 
 import com.mojang.brigadier.context.CommandContext;
-import me.videogamesm12.wnt.supervisor.FantasiaSupervisor;
+import me.videogamesm12.wnt.supervisor.Supervisor;
 import me.videogamesm12.wnt.supervisor.components.fantasia.session.CommandSender;
 
 public class ChatCommand extends FCommand
@@ -21,7 +21,7 @@ public class ChatCommand extends FCommand
 
         String message = String.join(" ", args);
         sender.sendMessage("Sending message: " + message);
-        FantasiaSupervisor.getInstance().chatMessage(message);
+        Supervisor.getInstance().chatMessage(message);
         return true;
     }
 }

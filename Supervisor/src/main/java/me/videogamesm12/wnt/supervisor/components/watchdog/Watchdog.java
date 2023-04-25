@@ -1,12 +1,9 @@
 package me.videogamesm12.wnt.supervisor.components.watchdog;
 
-import lombok.Getter;
-import lombok.Setter;
 import me.videogamesm12.wnt.WNT;
-import me.videogamesm12.wnt.supervisor.FantasiaSupervisor;
+import me.videogamesm12.wnt.supervisor.Supervisor;
 import me.videogamesm12.wnt.supervisor.api.SVComponent;
 import me.videogamesm12.wnt.supervisor.api.event.ClientFreezeEvent;
-import me.videogamesm12.wnt.supervisor.event.ClientFreezeDetected;
 import net.kyori.adventure.key.Key;
 
 import java.time.Instant;
@@ -16,9 +13,7 @@ import java.util.concurrent.TimeUnit;
 
 public class Watchdog extends Thread implements SVComponent
 {
-    @Getter
-    @Setter
-    private static long lastRenderedTime = 9999999999L;
+    public static long LAST_RENDERED_TIME = 0L;
     //--
     private final Key identifier = Key.key("wnt", "watchdog");
     private final ScheduledExecutorService freezeDetector = new ScheduledThreadPoolExecutor(1);
@@ -40,11 +35,18 @@ public class Watchdog extends Thread implements SVComponent
     {
         freezeDetector.scheduleAtFixedRate(() ->
         {
+            // Has the game even started up yet? Is freeze detection even enabled?
+            if (!Supervisor.getInstance().getFlags().isGameStartedYet() ||
+                    !Supervisor.getConfig().getWatchdogSettings().isFreezeDetectionEnabled())
+            {
+                return;
+            }
+
             // The client hasn't rendered something in 5 seconds. This usually indicates that the game has frozen.
-            if (Instant.now().toEpochMilli() - getLastRenderedTime() >= 5000)
+            if (Instant.now().toEpochMilli() - LAST_RENDERED_TIME >= Supervisor.getConfig().getWatchdogSettings().getFreezeDetectionThreshold())
             {
                 WNT.getLogger().error("--== Supervisor has detected a client-side freeze! ==--");
-                FantasiaSupervisor.getEventBus().post(new ClientFreezeEvent(Instant.now().toEpochMilli() - getLastRenderedTime()));
+                Supervisor.getEventBus().post(new ClientFreezeEvent(Instant.now().toEpochMilli() - LAST_RENDERED_TIME));
             }
         }, 0, 5, TimeUnit.SECONDS);
     }

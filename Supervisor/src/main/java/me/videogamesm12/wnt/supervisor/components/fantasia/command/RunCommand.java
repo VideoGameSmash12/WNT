@@ -1,10 +1,8 @@
 package me.videogamesm12.wnt.supervisor.components.fantasia.command;
 
 import com.mojang.brigadier.context.CommandContext;
-import me.videogamesm12.wnt.supervisor.FantasiaSupervisor;
-import me.videogamesm12.wnt.supervisor.components.fantasia.Fantasia;
+import me.videogamesm12.wnt.supervisor.Supervisor;
 import me.videogamesm12.wnt.supervisor.components.fantasia.session.CommandSender;
-import net.minecraft.client.MinecraftClient;
 
 public class RunCommand extends FCommand
 {
@@ -23,7 +21,7 @@ public class RunCommand extends FCommand
 
         String command = String.join(" ", args);
         sender.sendMessage("Sending command: /" + command);
-        FantasiaSupervisor.getInstance().runCommand(command);
+        Supervisor.getInstance().runCommand(command);
         return true;
     }
 }

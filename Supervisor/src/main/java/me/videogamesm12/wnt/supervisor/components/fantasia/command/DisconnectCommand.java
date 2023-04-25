@@ -1,7 +1,7 @@
 package me.videogamesm12.wnt.supervisor.components.fantasia.command;
 
 import com.mojang.brigadier.context.CommandContext;
-import me.videogamesm12.wnt.supervisor.FantasiaSupervisor;
+import me.videogamesm12.wnt.supervisor.Supervisor;
 import me.videogamesm12.wnt.supervisor.components.fantasia.session.CommandSender;
 
 public class DisconnectCommand extends FCommand
@@ -15,7 +15,7 @@ public class DisconnectCommand extends FCommand
     public boolean run(CommandSender sender, CommandContext<CommandSender> context, String[] args)
     {
         sender.sendMessage("Disconnecting from the server...");
-        FantasiaSupervisor.getInstance().disconnect();
+        Supervisor.getInstance().disconnect();
         return true;
     }
 }

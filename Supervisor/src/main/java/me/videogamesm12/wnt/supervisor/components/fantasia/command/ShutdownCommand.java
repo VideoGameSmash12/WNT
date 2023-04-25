@@ -1,7 +1,7 @@
 package me.videogamesm12.wnt.supervisor.components.fantasia.command;
 
 import com.mojang.brigadier.context.CommandContext;
-import me.videogamesm12.wnt.supervisor.FantasiaSupervisor;
+import me.videogamesm12.wnt.supervisor.Supervisor;
 import me.videogamesm12.wnt.supervisor.components.fantasia.session.CommandSender;
 
 public class ShutdownCommand extends FCommand
@@ -25,12 +25,12 @@ public class ShutdownCommand extends FCommand
             case "force", "forcefully" ->
             {
                 sender.sendMessage("Shutting down forcefully...");
-                FantasiaSupervisor.getInstance().shutdownForcefully();
+                Supervisor.getInstance().shutdownForcefully();
             }
             case "safe", "safely" ->
             {
                 sender.sendMessage("Shutting down safely...");
-                FantasiaSupervisor.getInstance().shutdownSafely();
+                Supervisor.getInstance().shutdownSafely();
             }
             default ->
             {

@@ -1,257 +1,214 @@
-/*
- * Copyright (c) 2022 Video
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
- * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
- * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
- * OR OTHER DEALINGS IN THE SOFTWARE.
- */
-
 package me.videogamesm12.wnt.supervisor;
 
-import me.shedaniel.autoconfig.AutoConfig;
-import me.shedaniel.autoconfig.ConfigData;
-import me.shedaniel.autoconfig.annotation.Config;
-import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
+import com.google.common.eventbus.EventBus;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import lombok.Getter;
 import me.videogamesm12.wnt.WNT;
-import me.videogamesm12.wnt.supervisor.event.ClientFreezeDetected;
+import me.videogamesm12.wnt.supervisor.api.SVComponent;
+import me.videogamesm12.wnt.supervisor.components.fantasia.Fantasia;
+import me.videogamesm12.wnt.supervisor.components.flags.Flags;
+import me.videogamesm12.wnt.supervisor.components.watchdog.Watchdog;
 import me.videogamesm12.wnt.supervisor.mixin.gui.DebugHudMixin;
 import me.videogamesm12.wnt.supervisor.mixin.gui.InGameHudMixin;
 import me.videogamesm12.wnt.supervisor.util.Fallbacks;
-import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
+import me.videogamesm12.wnt.util.Messenger;
+import net.fabricmc.loader.api.FabricLoader;
+import net.kyori.adventure.text.Component;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
+import net.minecraft.network.ClientConnection;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.time.Instant;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 /**
  * <h1>Supervisor</h1>
  * A major component in WNT, offering better control over the client
  */
-public class Supervisor implements ClientLifecycleEvents.ClientStopping, ModInitializer
+public class Supervisor extends Thread
 {
-    public static SupervisorConfig CONFIG = null;
+    @Getter
+    private static final EventBus eventBus = new EventBus();
+    //
+    private static Logger logger = LoggerFactory.getLogger("Fantasia");
+    @Getter
+    private static Supervisor instance;
+    @Getter
+    private static Configuration config;
     //--
-    private static SupervisorThread THREAD = null;
+    private final List<SVComponent> components = new ArrayList<>();
+    //--
+    @Getter
+    private final Flags flags;
 
-    @Override
-    public void onInitialize()
+    public Supervisor()
     {
-        AutoConfig.register(SupervisorConfig.class, GsonConfigSerializer::new);
-        CONFIG = AutoConfig.getConfigHolder(SupervisorConfig.class).getConfig();
-        //--
-        ClientLifecycleEvents.CLIENT_STOPPING.register(this);
-        //--
-        THREAD = new SupervisorThread();
+        super("Supervisor");
+        this.flags = new Flags();
+    }
+
+    public static void setup()
+    {
+        instance = new Supervisor();
+        instance.start();
     }
 
     @Override
-    public void onClientStopping(MinecraftClient client)
+    public void run()
     {
-        AutoConfig.getConfigHolder(SupervisorConfig.class).save();
+        logger.info("Setting up the Supervisor...");
+        instance = this;
+        //--
+        logger.info("Loading configuration...");
+        config = loadConfiguration();
+        //--
+        logger.info("Setting up components...");
+        components.add(new Fantasia());
+        components.add(new Watchdog());
+        components.forEach(SVComponent::setup);
+        logger.info("Components successfully set up.");
     }
 
-    public static List<String> getF3Info()
+    public Configuration loadConfiguration()
     {
-        return THREAD != null ? THREAD.getF3Info() : new ArrayList<>();
-    }
+        File file = new File(FabricLoader.getInstance().getConfigDir().toFile(), "wnt-supervisor.json");
 
-    public static class SupervisorThread extends Thread
-    {
-
-        public SupervisorThread()
+        if (file.exists())
         {
-            super("Supervisor");
-            start();
-        }
-
-        @Override
-        public void run()
-        {
-            WNT.getLogger().info("Supervisor started");
-        }
-
-        @Override
-        public void interrupt()
-        {
-            super.interrupt();
-        }
-
-        public List<String> getF3Info()
-        {
-            synchronized (this)
+            try
             {
-                try
-                {
-                    return ((DebugHudMixin) ((InGameHudMixin) MinecraftClient.getInstance().inGameHud).getDebugHud()).getLeftText();
-                }
-                catch (Exception | Error ex)
-                {
-                    return Fallbacks.getLeftText();
-                }
+                return new Gson().fromJson(new FileReader(file), Configuration.class);
             }
+            catch (Exception ex)
+            {
+                logger.error("Failed to read Supervisor configuration", ex);
+                return new Configuration();
+            }
+        }
+        else
+        {
+            return new Configuration();
         }
     }
 
-    @Config(name = "wnt-supervisor")
-    public static class SupervisorConfig implements ConfigData
+    public void saveConfiguration()
     {
-        private boolean detectFreezes = true;
-
-        private Network network = new Network();
-
-        private Rendering rendering = new Rendering();
-
-        public static class Network
+        File file = new File(FabricLoader.getInstance().getConfigDir().toFile(), "wnt-supervisor.json");
+        try (FileWriter writer = new FileWriter(file))
         {
-            private boolean ignoreEntitySpawns;
+            writer.write(new GsonBuilder().setPrettyPrinting().create().toJson(config));
+        }
+        catch (Exception ex)
+        {
+            logger.error("Failed to write Supervisor configuration", ex);
+        }
+    }
 
-            private boolean ignoreExplosions;
+    public void chatMessage(String message)
+    {
+        if (!getFlags().isGameStartedYet())
+        {
+            throw new IllegalStateException("The Minecraft client hasn't finished starting up yet.");
+        }
 
-            private boolean ignoreLightUpdates;
+        if (MinecraftClient.getInstance().getNetworkHandler() == null)
+        {
+            throw new IllegalStateException("You are not connected to a server.");
+        }
 
-            private boolean ignoreParticleSpawns;
+        MinecraftClient.getInstance().getNetworkHandler().sendChatMessage(message);
+    }
 
-            public boolean ignoreEntitySpawns()
+    public void disconnect()
+    {
+        if (!getFlags().isGameStartedYet())
+        {
+            throw new IllegalStateException("The Minecraft client hasn't finished starting up yet.");
+        }
+
+        if (MinecraftClient.getInstance().getNetworkHandler() == null)
+        {
+            throw new IllegalStateException("You are not connected to a server.");
+        }
+
+        // TODO: This is utterly retarded, but 1.19.4 has forced my hand. Fix this when we eventually drop support for 1.19.3.
+        ClientConnection connection;
+        try
+        {
+            connection = MinecraftClient.getInstance().getNetworkHandler().getConnection();
+        }
+        catch (NoSuchMethodError ex)
+        {
+            try
             {
-                return ignoreEntitySpawns;
+                connection = (ClientConnection) ClientPlayNetworkHandler.class.getMethod("method_48296").invoke(MinecraftClient.getInstance().getNetworkHandler());
             }
-
-            public boolean ignoreExplosions()
+            catch (Exception exception)
             {
-                return ignoreExplosions;
-            }
-
-            public boolean ignoreLightUpdates()
-            {
-                return ignoreLightUpdates;
-            }
-
-            public boolean ignoreParticleSpawns()
-            {
-                return ignoreParticleSpawns;
-            }
-
-            public void setIgnoreEntitySpawns(boolean bool)
-            {
-                this.ignoreEntitySpawns = bool;
-            }
-
-            public void setIgnoreExplosionSpawns(boolean bool)
-            {
-                this.ignoreExplosions = bool;
-            }
-
-            public void setIgnoreLightUpdates(boolean bool)
-            {
-                this.ignoreLightUpdates = bool;
-            }
-
-            public void setIgnoreParticleSpawns(boolean bool)
-            {
-                this.ignoreParticleSpawns = bool;
+                return;
             }
         }
 
-        public static class Rendering
+        connection.disconnect(Messenger.convert(Component.text("Disconnected by Supervisor")));
+    }
+
+    public void runCommand(String command)
+    {
+        if (!getFlags().isGameStartedYet())
         {
-            private boolean disableEntityRendering = false;
-
-            private boolean disableGameRendering = false;
-
-            private boolean disableTileEntityRendering = false;
-
-            private boolean disableWeatherRendering = false;
-
-            private boolean disableWorldRendering = false;
-
-            public boolean disableEntityRendering()
-            {
-                return disableEntityRendering;
-            }
-
-            public boolean disableGameRendering()
-            {
-                return disableGameRendering;
-            }
-
-            public boolean disableTileEntityRendering()
-            {
-                return disableTileEntityRendering;
-            }
-
-            public boolean disableWeatherRendering()
-            {
-                return disableWeatherRendering;
-            }
-
-            public boolean disableWorldRendering()
-            {
-                return disableWorldRendering;
-            }
-
-            public void setDisableEntityRendering(boolean value)
-            {
-                this.disableEntityRendering = value;
-            }
-
-            public void setDisableGameRendering(boolean value)
-            {
-                this.disableGameRendering = value;
-            }
-
-            public void setDisableTileEntityRendering(boolean value)
-            {
-                this.disableTileEntityRendering = value;
-            }
-
-            public void setDisableWeatherRendering(boolean value)
-            {
-                this.disableWeatherRendering = value;
-            }
-
-            public void setDisableWorldRendering(boolean value)
-            {
-                this.disableWorldRendering = value;
-            }
+            throw new IllegalStateException("The Minecraft client hasn't finished starting up yet.");
         }
 
-        public boolean detectFreezes()
+        if (MinecraftClient.getInstance().getNetworkHandler() == null)
         {
-            return detectFreezes;
+            throw new IllegalStateException("You are not connected to a server.");
         }
 
-        public void setDetectFreezes(boolean value)
+        MinecraftClient.getInstance().getNetworkHandler().sendChatCommand(command);
+    }
+
+    public void shutdown()
+    {
+        saveConfiguration();
+        components.forEach(SVComponent::shutdown);
+    }
+
+    public void shutdownForcefully()
+    {
+        logger.info("Shutting down forcefully!");
+        System.exit(42069);
+    }
+
+    public void shutdownSafely()
+    {
+        logger.info("Shutting down safely!");
+
+        if (!getFlags().isGameStartedYet())
         {
-            this.detectFreezes = value;
+            throw new IllegalStateException("The Minecraft client hasn't even finished starting up yet.");
         }
 
-        public Rendering rendering()
-        {
-            return rendering;
-        }
+        MinecraftClient.getInstance().scheduleStop();
+    }
 
-        public Network network()
+    public List<String> getF3Info()
+    {
+        synchronized (this)
         {
-            return network;
+            try
+            {
+                return ((DebugHudMixin) ((InGameHudMixin) MinecraftClient.getInstance().inGameHud).getDebugHud()).getLeftText();
+            }
+            catch (Exception | Error ex)
+            {
+                return Fallbacks.getLeftText();
+            }
         }
     }
 }

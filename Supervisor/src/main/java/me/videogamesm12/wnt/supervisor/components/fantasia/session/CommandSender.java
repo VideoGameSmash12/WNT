@@ -19,16 +19,8 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 
-public class CommandSender implements CommandSource
+public record CommandSender(@Getter ISession session) implements CommandSource
 {
-    @Getter
-    private final Session session;
-
-    public CommandSender(Session session)
-    {
-        this.session = session;
-    }
-
     public void sendMessage(String message)
     {
         session.sendMessage(message);

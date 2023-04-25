@@ -1,13 +1,16 @@
 package me.videogamesm12.wnt.supervisor.components.fantasia.session;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import me.videogamesm12.wnt.supervisor.Supervisor;
 import me.videogamesm12.wnt.supervisor.components.fantasia.Fantasia;
 import me.videogamesm12.wnt.supervisor.components.fantasia.Server;
+import me.videogamesm12.wnt.supervisor.components.fantasia.event.SessionStartedEvent;
+import me.videogamesm12.wnt.supervisor.components.fantasia.event.SessionStartedPreSetupEvent;
 
 import java.io.*;
 import java.net.Socket;
 
-public class Session extends Thread
+public class TelnetSession extends Thread implements ISession
 {
     private Server server;
     private final Socket socket;
@@ -15,7 +18,7 @@ public class Session extends Thread
     private BufferedReader reader;
     private CommandSender sender;
 
-    public Session(Server server, Socket socket)
+    public TelnetSession(Server server, Socket socket)
     {
         this.socket = socket;
         this.server = server;
@@ -25,7 +28,7 @@ public class Session extends Thread
     @Override
     public void run()
     {
-        Fantasia.getServerLogger().info(socket.getInetAddress().getHostAddress() + ":" + socket.getPort() + " connected.");
+        Supervisor.getEventBus().post(new SessionStartedPreSetupEvent(this));
 
         try
         {
@@ -42,16 +45,7 @@ public class Session extends Thread
             return;
         }
 
-        sendMessage("  ___         _           _\n" +
-                " | __|_ _ _ _| |_ __ _ __(_)__ _\n" +
-                " | _/ _` | ' \\  _/ _` (_-< / _` |\n" +
-                " |_|\\__,_|_||_\\__\\__,_/__/_\\__,_|\n" +
-                " --============================--");
-        sendMessage(" Welcome to Fantasia, the Supervisor's Telnet console.\n" +
-                " This allows you control it even before the Blackbox &\n" +
-                " main game have even initialized.");
-        sendMessage(" --");
-        sendMessage(" Use 'help' for a list of commands.");
+        Supervisor.getEventBus().post(new SessionStartedEvent(this));
 
         while (isConnected())
         {
@@ -77,6 +71,7 @@ public class Session extends Thread
 
             try
             {
+                Fantasia.getServerLogger().info(sender.getSession().getConnectionIdentifier() + " issued client command '" + command + "'");
                 Fantasia.getInstance().getServer().getDispatcher().execute(command, sender);
             }
             catch (CommandSyntaxException ignored)
@@ -100,6 +95,13 @@ public class Session extends Thread
         super.interrupt();
     }
 
+    @Override
+    public String getConnectionIdentifier()
+    {
+        return socket.getInetAddress().getHostAddress() + ":" + socket.getPort();
+    }
+
+    @Override
     public boolean isConnected()
     {
         synchronized (socket)
@@ -108,6 +110,7 @@ public class Session extends Thread
         }
     }
 
+    @Override
     public void disconnect(boolean quiet)
     {
         synchronized (socket)
@@ -122,12 +125,13 @@ public class Session extends Thread
                 socket.close();
                 server.removeSession(this);
             }
-            catch (Exception ex)
+            catch (Exception ignored)
             {
             }
         }
     }
 
+    @Override
     public void sendMessage(String message)
     {
         try

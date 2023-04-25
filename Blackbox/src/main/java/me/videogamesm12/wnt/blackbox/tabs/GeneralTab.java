@@ -69,9 +69,9 @@ public class GeneralTab extends JPanel implements SupervisorTab
     @Override
     public void update()
     {
-        if (Supervisor.getF3Info() != null)
+        if (Supervisor.getInstance() != null)
         {
-            String f3info = StringUtils.join(Supervisor.getF3Info(), "\n");
+            String f3info = StringUtils.join(Supervisor.getInstance().getF3Info(), "\n");
             //--
             if (f3info != null)
                 area.setText(f3info);

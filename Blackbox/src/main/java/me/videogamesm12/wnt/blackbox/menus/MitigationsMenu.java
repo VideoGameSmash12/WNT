@@ -31,16 +31,25 @@ import javax.swing.*;
 
 public class MitigationsMenu extends JMenu
 {
-    private final JCheckBoxMenuItem gameRendering = new JCheckBoxMenuItem("Disable rendering completely", Supervisor.CONFIG.rendering().disableGameRendering());
-    private final JCheckBoxMenuItem worldRendering = new JCheckBoxMenuItem("Disable world rendering", Supervisor.CONFIG.rendering().disableWorldRendering());
-    private final JCheckBoxMenuItem weatherRendering = new JCheckBoxMenuItem("Disable weather rendering", Supervisor.CONFIG.rendering().disableWeatherRendering());
-    private final JCheckBoxMenuItem entityRendering = new JCheckBoxMenuItem("Disable entity rendering", Supervisor.CONFIG.rendering().disableEntityRendering());
-    private final JCheckBoxMenuItem tileEntityRendering = new JCheckBoxMenuItem("Disable tile entity rendering", Supervisor.CONFIG.rendering().disableTileEntityRendering());
+    private final JCheckBoxMenuItem gameRendering = new JCheckBoxMenuItem("Disable rendering completely",
+            Supervisor.getConfig().getRenderingSettings().isGameRenderingDisabled());
+    private final JCheckBoxMenuItem worldRendering = new JCheckBoxMenuItem("Disable world rendering",
+            Supervisor.getConfig().getRenderingSettings().isWorldRenderingDisabled());
+    private final JCheckBoxMenuItem weatherRendering = new JCheckBoxMenuItem("Disable weather rendering",
+            Supervisor.getConfig().getRenderingSettings().isWeatherRenderingDisabled());
+    private final JCheckBoxMenuItem entityRendering = new JCheckBoxMenuItem("Disable entity rendering",
+            Supervisor.getConfig().getRenderingSettings().isEntityRenderingDisabled());
+    private final JCheckBoxMenuItem tileEntityRendering = new JCheckBoxMenuItem("Disable tile entity rendering",
+            Supervisor.getConfig().getRenderingSettings().isTileEntityRenderingDisabled());
     //--
-    private final JCheckBoxMenuItem entitySpawning = new JCheckBoxMenuItem("Ignore entity spawning", Supervisor.CONFIG.network().ignoreEntitySpawns());
-    private final JCheckBoxMenuItem explosionSpawning = new JCheckBoxMenuItem("Ignore explosions", Supervisor.CONFIG.network().ignoreExplosions());
-    private final JCheckBoxMenuItem particleSpawning = new JCheckBoxMenuItem("Ignore particle spawns", Supervisor.CONFIG.network().ignoreParticleSpawns());
-    private final JCheckBoxMenuItem lightUpdates = new JCheckBoxMenuItem("Ignore light updates", Supervisor.CONFIG.network().ignoreLightUpdates());
+    private final JCheckBoxMenuItem entitySpawning = new JCheckBoxMenuItem("Ignore entity spawning",
+            Supervisor.getConfig().getNetworkSettings().isIgnoringEntitySpawns());
+    private final JCheckBoxMenuItem explosionSpawning = new JCheckBoxMenuItem("Ignore explosions",
+            Supervisor.getConfig().getNetworkSettings().isIgnoringExplosions());
+    private final JCheckBoxMenuItem particleSpawning = new JCheckBoxMenuItem("Ignore particle spawns",
+            Supervisor.getConfig().getNetworkSettings().isIgnoringParticleSpawns());
+    private final JCheckBoxMenuItem lightUpdates = new JCheckBoxMenuItem("Ignore light updates",
+            Supervisor.getConfig().getNetworkSettings().isIgnoringLightUpdates());
     //--
     private final JMenuItem disconnect = new JMenuItem("Disconnect");
     private final JMenuItem exit = new JMenuItem("Exit");
@@ -52,11 +61,11 @@ public class MitigationsMenu extends JMenu
 
         //==-- RENDER --==//
         final JMenu renderingMenu = new JMenu("Render");
-        gameRendering.addActionListener((exd) -> Supervisor.CONFIG.rendering().setDisableGameRendering(gameRendering.isSelected()));
-        worldRendering.addActionListener((exd) -> Supervisor.CONFIG.rendering().setDisableWorldRendering(worldRendering.isSelected()));
-        weatherRendering.addActionListener((exd) -> Supervisor.CONFIG.rendering().setDisableWeatherRendering(weatherRendering.isSelected()));
-        entityRendering.addActionListener((exd) -> Supervisor.CONFIG.rendering().setDisableEntityRendering(entityRendering.isSelected()));
-        tileEntityRendering.addActionListener((exd) -> Supervisor.CONFIG.rendering().setDisableTileEntityRendering(tileEntityRendering.isSelected()));
+        gameRendering.addActionListener((exd) -> Supervisor.getConfig().getRenderingSettings().setGameRenderingDisabled(gameRendering.isSelected()));
+        worldRendering.addActionListener((exd) -> Supervisor.getConfig().getRenderingSettings().setWorldRenderingDisabled(worldRendering.isSelected()));
+        weatherRendering.addActionListener((exd) -> Supervisor.getConfig().getRenderingSettings().setWeatherRenderingDisabled(weatherRendering.isSelected()));
+        entityRendering.addActionListener((exd) -> Supervisor.getConfig().getRenderingSettings().setEntityRenderingDisabled(entityRendering.isSelected()));
+        tileEntityRendering.addActionListener((exd) -> Supervisor.getConfig().getRenderingSettings().setTileEntityRenderingDisabled(tileEntityRendering.isSelected()));
 
         renderingMenu.add(gameRendering);
         renderingMenu.add(worldRendering);
@@ -66,10 +75,10 @@ public class MitigationsMenu extends JMenu
 
         //==-- NETWORK --==//
         final JMenu networkMenu = new JMenu("Network");
-        entitySpawning.addActionListener((exd) -> Supervisor.CONFIG.network().setIgnoreEntitySpawns(entitySpawning.isSelected()));
-        explosionSpawning.addActionListener((exd) -> Supervisor.CONFIG.network().setIgnoreExplosionSpawns(explosionSpawning.isSelected()));
-        lightUpdates.addActionListener((exd) -> Supervisor.CONFIG.network().setIgnoreLightUpdates(lightUpdates.isSelected()));
-        particleSpawning.addActionListener((exd) -> Supervisor.CONFIG.network().setIgnoreParticleSpawns(particleSpawning.isSelected()));
+        entitySpawning.addActionListener((exd) -> Supervisor.getConfig().getNetworkSettings().setIgnoringEntitySpawns(entitySpawning.isSelected()));
+        explosionSpawning.addActionListener((exd) -> Supervisor.getConfig().getNetworkSettings().setIgnoringExplosions(explosionSpawning.isSelected()));
+        lightUpdates.addActionListener((exd) -> Supervisor.getConfig().getNetworkSettings().setIgnoringLightUpdates(lightUpdates.isSelected()));
+        particleSpawning.addActionListener((exd) -> Supervisor.getConfig().getNetworkSettings().setIgnoringParticleSpawns(particleSpawning.isSelected()));
 
         networkMenu.add(entitySpawning);
         networkMenu.add(explosionSpawning);

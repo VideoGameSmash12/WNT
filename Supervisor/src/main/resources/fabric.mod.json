@@ -12,9 +12,6 @@
   "icon": "assets/wnt-supervisor/icon.png",
   "environment": "client",
   "entrypoints": {
-    "main": [
-      "me.videogamesm12.wnt.supervisor.Supervisor"
-    ],
     "client": [
       "me.videogamesm12.wnt.supervisor.Entrypoints"
     ],

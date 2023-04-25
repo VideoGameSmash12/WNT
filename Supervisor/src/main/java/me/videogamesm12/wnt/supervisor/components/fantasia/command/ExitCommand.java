@@ -13,7 +13,7 @@ public class ExitCommand extends FCommand
     @Override
     public boolean run(CommandSender sender, CommandContext<CommandSender> context, String[] args)
     {
-        context.getSource().getSession().disconnect(false);
+        context.getSource().session().disconnect(false);
         return true;
     }
 }

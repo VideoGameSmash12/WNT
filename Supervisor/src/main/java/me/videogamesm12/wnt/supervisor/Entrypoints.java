@@ -10,19 +10,19 @@ public class Entrypoints implements PreLaunchEntrypoint, ClientModInitializer, C
     @Override
     public void onPreLaunch()
     {
-        FantasiaSupervisor.setup();
+        Supervisor.setup();
     }
 
     @Override
     public void onInitializeClient()
     {
-        FantasiaSupervisor.getInstance().getFlags().setGameStartedYet(true);
+        Supervisor.getInstance().getFlags().setGameStartedYet(true);
         ClientLifecycleEvents.CLIENT_STOPPING.register(this);
     }
 
     @Override
     public void onClientStopping(MinecraftClient client)
     {
-        FantasiaSupervisor.getInstance().shutdown();
+        Supervisor.getInstance().shutdown();
     }
 }
