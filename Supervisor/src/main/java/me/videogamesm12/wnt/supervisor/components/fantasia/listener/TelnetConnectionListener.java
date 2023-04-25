@@ -37,7 +37,7 @@ public class TelnetConnectionListener extends Thread implements IConnectionListe
 
     public TelnetConnectionListener(Server server, ServerSocket socket)
     {
-        super("Fantasia-SocketListener");
+        super("Fantasia-TelnetConnectionListener");
         this.server = server;
         this.socket = socket;
     }

@@ -25,6 +25,7 @@ package me.videogamesm12.wnt.supervisor.mixin;
 import me.videogamesm12.wnt.supervisor.Supervisor;
 import me.videogamesm12.wnt.supervisor.components.fantasia.Fantasia;
 import me.videogamesm12.wnt.supervisor.components.watchdog.Watchdog;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -54,6 +55,19 @@ public class MinecraftClientMixin
         if (Supervisor.getConfig().getWatchdogSettings().isFreezeDetectionEnabled())
         {
             Watchdog.LAST_RENDERED_TIME = Instant.now().toEpochMilli();
+        }
+    }
+
+    /**
+     * <p>This forces the Supervisor to properly shut down after the client has crashed if a mod like Not Enough Crashes is not present.</p>
+     * @param ci    CallbackInfo
+     */
+    @Inject(method = "cleanUpAfterCrash", at = @At("RETURN"))
+    public void onCleanUpAfterCrash(CallbackInfo ci)
+    {
+        if (!FabricLoader.getInstance().isModLoaded("notenoughcrashes"))
+        {
+            Supervisor.getInstance().shutdown();
         }
     }
 

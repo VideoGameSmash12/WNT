@@ -33,6 +33,7 @@ import me.videogamesm12.wnt.supervisor.components.fantasia.event.SessionStartedE
 import me.videogamesm12.wnt.supervisor.components.fantasia.event.SessionStartedPreSetupEvent;
 import me.videogamesm12.wnt.supervisor.components.fantasia.listener.IConnectionListener;
 import me.videogamesm12.wnt.supervisor.components.fantasia.listener.TelnetConnectionListener;
+import me.videogamesm12.wnt.supervisor.components.fantasia.listener.UnixDomainConnectionListener;
 import me.videogamesm12.wnt.supervisor.components.fantasia.session.CommandSender;
 import me.videogamesm12.wnt.supervisor.components.fantasia.session.ISession;
 
@@ -67,12 +68,16 @@ public class Server extends Thread
         Supervisor.getEventBus().register(this);
         try
         {
-            connectionListener = new TelnetConnectionListener(this, new ServerSocket(6969, 999));
+            connectionListener = switch (Supervisor.getConfig().getFantasiaSettings().getConnectionType())
+            {
+                case TELNET -> new TelnetConnectionListener(this, new ServerSocket(Supervisor.getConfig().getFantasiaSettings().getPort(), 999));
+                case UNIX -> new UnixDomainConnectionListener(this);
+            };
             connectionListener.start();
         }
         catch (Throwable ex)
         {
-            Fantasia.getServerLogger().error("WTF?", ex);
+            Fantasia.getServerLogger().error("Failed to start Fantasia server", ex);
             return;
         }
 
@@ -121,7 +126,6 @@ public class Server extends Thread
         }
 
         sessions.clear();
-        interrupt();
     }
 
     private void registerCommand(Class<? extends FCommand> cmd)

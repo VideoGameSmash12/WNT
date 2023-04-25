@@ -24,6 +24,7 @@ package me.videogamesm12.wnt.supervisor;
 
 import lombok.Getter;
 import lombok.Setter;
+import me.videogamesm12.wnt.supervisor.components.fantasia.ConnectionType;
 
 @Getter
 public class Configuration
@@ -41,6 +42,8 @@ public class Configuration
     public static class Fantasia
     {
         private int port = 6969;
+
+        private ConnectionType connectionType = ConnectionType.TELNET;
     }
 
     @Getter
