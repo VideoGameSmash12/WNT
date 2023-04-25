@@ -86,6 +86,7 @@ public class Server extends Thread
         registerCommand(ChatCommand.class);
         registerCommand(DisconnectCommand.class);
         registerCommand(ExitCommand.class);
+        registerCommand(FPSCommand.class);
         registerCommand(HelpCommand.class);
         registerCommand(RunCommand.class);
         registerCommand(ShutdownCommand.class);

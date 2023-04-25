@@ -30,7 +30,7 @@ public class DisconnectCommand extends FCommand
 {
     public DisconnectCommand()
     {
-        super("disconnect", "Disconnects you from the server you are currently connected to. Requires you to be connected to a server for this to work.", "/disconnect");
+        super("disconnect", "Disconnects you from the server you are currently connected to. Requires you to be connected to a server for this to work.", "disconnect");
     }
 
     @Override

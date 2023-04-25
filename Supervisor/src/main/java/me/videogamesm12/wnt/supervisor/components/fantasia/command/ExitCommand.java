@@ -29,7 +29,7 @@ public class ExitCommand extends FCommand
 {
     public ExitCommand()
     {
-        super("exit", "Disconnects you from this Telnet server.", "/exit");
+        super("exit", "Disconnects you from this Telnet server.", "exit");
     }
 
     @Override

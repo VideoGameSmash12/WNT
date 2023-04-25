@@ -218,6 +218,16 @@ public class Supervisor extends Thread
         MinecraftClient.getInstance().scheduleStop();
     }
 
+    public String getFPSText()
+    {
+        if (!getFlags().isGameStartedYet())
+        {
+            throw new IllegalStateException("The Minecraft client hasn't finished starting up yet.");
+        }
+
+        return MinecraftClient.getInstance().fpsDebugString;
+    }
+
     public List<String> getF3Info()
     {
         synchronized (this)

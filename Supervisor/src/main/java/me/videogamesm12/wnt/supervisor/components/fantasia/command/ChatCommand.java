@@ -30,7 +30,7 @@ public class ChatCommand extends FCommand
 {
     public ChatCommand()
     {
-        super("chat", "Sends a chat message to the server.", "/chat <message>");
+        super("chat", "Sends a chat message to the server.", "chat <message>");
     }
 
     @Override

@@ -30,7 +30,7 @@ public class ShutdownCommand extends FCommand
 {
     public ShutdownCommand()
     {
-        super("shutdown", "Shuts the client down safely, forcefully, or (as a last resort) in a nuclear fashion.", "/shutdown [force | nuclear | safe]");
+        super("shutdown", "Shuts the client down safely, forcefully, or (as a last resort) in a nuclear fashion.", "shutdown [force | nuclear | safe]");
     }
 
     @Override

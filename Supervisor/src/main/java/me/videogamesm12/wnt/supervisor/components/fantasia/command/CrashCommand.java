@@ -30,7 +30,7 @@ public class CrashCommand extends FCommand
 {
     public CrashCommand()
     {
-        super("crash", "Intentionally crashes the client.", "/crash");
+        super("crash", "Intentionally crashes the client.", "crash");
     }
 
     @Override

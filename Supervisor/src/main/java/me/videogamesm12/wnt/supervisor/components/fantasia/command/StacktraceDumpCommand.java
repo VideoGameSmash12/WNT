@@ -34,7 +34,7 @@ public class StacktraceDumpCommand extends FCommand
 {
     public StacktraceDumpCommand()
     {
-        super("stacktracedump", "Dumps all stacktraces from all threads", "/stacktracedump");
+        super("stacktracedump", "Dumps all stacktraces from all threads", "stacktracedump");
     }
 
     @Override

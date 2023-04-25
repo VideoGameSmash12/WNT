@@ -34,7 +34,7 @@ public class HelpCommand extends FCommand
 {
     public HelpCommand()
     {
-        super("help", "Lists all available commands and shows command help.", "/help [command]");
+        super("help", "Lists all available commands and shows command help.", "help [command]");
     }
 
     @Override

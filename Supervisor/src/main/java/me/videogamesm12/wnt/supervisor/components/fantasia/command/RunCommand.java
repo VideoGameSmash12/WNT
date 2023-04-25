@@ -30,7 +30,7 @@ public class RunCommand extends FCommand
 {
     public RunCommand()
     {
-        super("run", "Executes an in-game command. Requires you to be connected to a server for this to work.", "/run <command>");
+        super("run", "Executes an in-game command. Requires you to be connected to a server for this to work.", "run <command>");
     }
 
     @Override
