@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Video
+ * Copyright (c) 2023 Video
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,28 +20,22 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.videogamesm12.wnt.supervisor.event;
+package me.videogamesm12.wnt.supervisor.mixin.gui;
 
-import net.fabricmc.fabric.api.event.Event;
-import net.fabricmc.fabric.api.event.EventFactory;
-import net.minecraft.util.ActionResult;
+import me.videogamesm12.wnt.supervisor.event.HUDMessageAdded;
+import net.minecraft.client.gui.hud.ChatHud;
+import net.minecraft.text.Text;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-public interface ClientFreezeDetected
+@Mixin(ChatHud.class)
+public class ChatHudMixin
 {
-    Event<ClientFreezeDetected> EVENT = EventFactory.createArrayBacked(ClientFreezeDetected.class, (listeners) -> (time) ->
+    @Inject(method = "addMessage(Lnet/minecraft/text/Text;)V", at = @At("HEAD"))
+    public void addMessage(Text message, CallbackInfo ci)
     {
-        for (ClientFreezeDetected listener : listeners)
-        {
-            ActionResult result = listener.onClientFreeze(time);
-
-            if (result != ActionResult.PASS)
-            {
-                return ActionResult.FAIL;
-            }
-        }
-
-        return ActionResult.SUCCESS;
-    });
-
-    ActionResult onClientFreeze(long lastRender);
+        HUDMessageAdded.EVENT.invoker().onMessageAdded(message);
+    }
 }

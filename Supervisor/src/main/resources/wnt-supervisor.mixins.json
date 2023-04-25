@@ -10,7 +10,7 @@
     "render.BlockEntityRenderDispatcherMixin",
     "render.ClientPlayNetworkHandlerMixin",
     "render.GameRendererMixin",
-    "render.InGameHudMixin",
+    "gui.ChatHudMixin",
     "render.WorldRendererMixin"
   ],
   "injectors": {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Video
+ * Copyright (c) 2023 Video
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,8 +23,6 @@
 package me.videogamesm12.wnt.blackbox.tools;
 
 import me.videogamesm12.wnt.supervisor.event.HUDMessageAdded;
-import me.videogamesm12.wnt.util.Messenger;
-import net.kyori.adventure.text.Component;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
@@ -110,14 +108,19 @@ public class ChatWindow extends JFrame implements HUDMessageAdded
         INSTANCE = this;
     }
 
-    public static void sendMessage(String text) {
-        if (MinecraftClient.getInstance().getNetworkHandler() == null) {
+    public static void sendMessage(String text)
+    {
+        if (MinecraftClient.getInstance().getNetworkHandler() == null)
+        {
             return;
         }
 
-        if (text.startsWith("/")) {
+        if (text.startsWith("/"))
+        {
             MinecraftClient.getInstance().getNetworkHandler().sendChatCommand(text.substring(1));
-        } else {
+        }
+        else
+        {
             MinecraftClient.getInstance().getNetworkHandler().sendChatMessage(text);
         }
     }

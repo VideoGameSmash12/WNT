@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Video
+ * Copyright (c) 2023 Video
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,7 +22,7 @@
 
 package me.videogamesm12.wnt.blackbox;
 
-//import com.google.common.eventbus.Subscribe;
+import com.google.common.eventbus.Subscribe;
 import lombok.Getter;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigData;
@@ -32,17 +32,15 @@ import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import me.videogamesm12.wnt.WNT;
 import me.videogamesm12.wnt.blackbox.commands.BlackboxCommand;
 import me.videogamesm12.wnt.blackbox.menus.*;
-//import me.videogamesm12.wnt.blackbox.theming.Theme;
 import me.videogamesm12.wnt.blackbox.theming.ThemeRegistry;
 import me.videogamesm12.wnt.blackbox.theming.inbuilt.IBThemes;
 import me.videogamesm12.wnt.command.CommandSystem;
-//import me.videogamesm12.wnt.dumper.events.DumpResultEvent;
-import me.videogamesm12.wnt.supervisor.event.ClientFreezeDetected;
+import me.videogamesm12.wnt.supervisor.Supervisor;
+import me.videogamesm12.wnt.supervisor.api.event.ClientFreezeEvent;
 import me.videogamesm12.wnt.blackbox.tabs.*;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import javax.imageio.ImageIO;
@@ -55,14 +53,14 @@ import java.util.*;
 import java.util.Timer;
 
 public class Blackbox extends Thread implements ModInitializer, ClientLifecycleEvents.ClientStarted,
-        ClientLifecycleEvents.ClientStopping, ClientFreezeDetected
+        ClientLifecycleEvents.ClientStopping
 {
     public static final Identifier IDENTIFIER = Identifier.of("wnt", "blackbox");
     //--
     public static GUIConfig CONFIG = null;
     public static GUIFrame GUI = null;
     //--
-    public static TrayIcon trayIcon = null;
+    //public static TrayIcon trayIcon = null;
     //--
     private boolean started = false;
     private boolean ignore;
@@ -95,7 +93,7 @@ public class Blackbox extends Thread implements ModInitializer, ClientLifecycleE
     {
         ClientLifecycleEvents.CLIENT_STARTED.register(this);
         ClientLifecycleEvents.CLIENT_STOPPING.register(this);
-        ClientFreezeDetected.EVENT.register(this);
+        Supervisor.getEventBus().register(this);
 
         AutoConfig.register(GUIConfig.class, GsonConfigSerializer::new);
         CONFIG = AutoConfig.getConfigHolder(GUIConfig.class).getConfig();
@@ -169,17 +167,17 @@ public class Blackbox extends Thread implements ModInitializer, ClientLifecycleE
         AutoConfig.getConfigHolder(GUIConfig.class).save();
     }
 
-    @Override
-    public ActionResult onClientFreeze(long lastRender)
+    @Subscribe
+    public void onClientFreeze(ClientFreezeEvent event)
     {
         if (ignore || (CONFIG.ignoreFreezesDuringStartup() && !started) || (GUI != null && GUI.isVisible()))
         {
-            return ActionResult.PASS;
+            return;
         }
 
         long now = Instant.now().toEpochMilli();
 
-        int reaction = JOptionPane.showConfirmDialog(null, String.format("The Supervisor has detected a client-side freeze (last render was %sms ago).\nWould you like to open the Blackbox?", now - lastRender), "Client Freeze Detected", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
+        int reaction = JOptionPane.showConfirmDialog(null, String.format("The Supervisor has detected a client-side freeze (last render was %sms ago).\nWould you like to open the Blackbox?", now - event.getLastRendered()), "Client Freeze Detected", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
 
         switch (reaction)
         {
@@ -196,16 +194,16 @@ public class Blackbox extends Thread implements ModInitializer, ClientLifecycleE
 
             /*  The user clicked the Cancel button. This does the same thing as the No button, but also ignores any
                 future detections. */
-            case JOptionPane.CANCEL_OPTION -> ignore = true;
+            case JOptionPane.CANCEL_OPTION ->
+            {
+                ignore = true;
+            }
 
-            // The user clicked the No button.
+            // The user clicked the No button. Do nothing.
             case JOptionPane.NO_OPTION ->
             {
-                return ActionResult.FAIL;
             }
         }
-
-        return ActionResult.PASS;
     }
 
     public static class GUIFrame extends JFrame implements KeyListener
