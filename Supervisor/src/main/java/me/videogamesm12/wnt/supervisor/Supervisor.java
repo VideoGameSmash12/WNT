@@ -47,6 +47,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * <h1>Supervisor</h1>
@@ -64,7 +66,6 @@ public class Supervisor extends Thread
     private static Configuration config;
     //--
     private final List<SVComponent> components = new ArrayList<>();
-    //--
     @Getter
     private final Flags flags;
 

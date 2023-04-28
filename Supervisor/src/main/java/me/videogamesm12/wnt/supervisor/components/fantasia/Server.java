@@ -75,6 +75,11 @@ public class Server extends Thread
             };
             connectionListener.start();
         }
+        catch (UnsupportedOperationException ex)
+        {
+            Fantasia.getServerLogger().error("Unix sockets are not supported on this operating system. Try using something else like Telnet.");
+            return;
+        }
         catch (Throwable ex)
         {
             Fantasia.getServerLogger().error("Failed to start Fantasia server", ex);

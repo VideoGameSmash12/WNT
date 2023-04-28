@@ -14,7 +14,12 @@ public class FPSCommand extends FCommand
     @Override
     public boolean run(CommandSender sender, CommandContext<CommandSender> context, String[] args)
     {
-        sender.sendMessage(Supervisor.getInstance().getFPSText());
+        if (args.length == 0 || !args[0].equalsIgnoreCase("--full"))
+        {
+            sender.sendMessage(Supervisor.getInstance().getFPSText());
+        }
+
+        Supervisor.getInstance().getF3Info().forEach(sender::sendMessage);
         return true;
     }
 }
