@@ -30,6 +30,7 @@ import me.videogamesm12.wnt.supervisor.components.fantasia.event.SessionStartedE
 import me.videogamesm12.wnt.supervisor.components.fantasia.event.SessionStartedPreSetupEvent;
 
 import java.io.*;
+import java.net.InetAddress;
 import java.net.Socket;
 
 public class TelnetSession extends Thread implements ISession
@@ -65,6 +66,21 @@ public class TelnetSession extends Thread implements ISession
             Fantasia.getServerLogger().error("FUCK", ex);
             disconnect(true);
             return;
+        }
+
+        // Just in case...
+        if (!Supervisor.getConfig().getFantasiaSettings().isNonLocalConnectionsAllowed()
+                && !socket.getInetAddress().equals(InetAddress.getLoopbackAddress()))
+        {
+            try
+            {
+                sendMessage("This instance of Fantasia doesn't allow connections from non-local IP addresses.");
+                disconnect(true);
+                return;
+            }
+            catch (Exception ignored)
+            {
+            }
         }
 
         Supervisor.getEventBus().post(new SessionStartedEvent(this));

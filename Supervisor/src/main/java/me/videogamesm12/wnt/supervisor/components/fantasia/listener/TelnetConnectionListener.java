@@ -23,9 +23,14 @@
 package me.videogamesm12.wnt.supervisor.components.fantasia.listener;
 
 import lombok.Getter;
+import me.videogamesm12.wnt.supervisor.Supervisor;
+import me.videogamesm12.wnt.supervisor.components.fantasia.Fantasia;
 import me.videogamesm12.wnt.supervisor.components.fantasia.Server;
 import me.videogamesm12.wnt.supervisor.components.fantasia.session.TelnetSession;
 
+import java.io.BufferedWriter;
+import java.io.OutputStreamWriter;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -45,6 +50,19 @@ public class TelnetConnectionListener extends Thread implements IConnectionListe
     @Override
     public void run()
     {
+        if (Supervisor.getConfig().getFantasiaSettings().isNonLocalConnectionsAllowed())
+        {
+            Fantasia.getServerLogger().warn("*** DANGEROUS CONFIGURATION DETECTED ***");
+            Fantasia.getServerLogger().warn("You are currently running Fantasia with non-local connections enabled.");
+            Fantasia.getServerLogger().warn("While this does allow you to control it from other devices, it also means "
+                    + "that anybody on your network (even a LogMeIn Hamachi network) can connect and do whatever they "
+                    + "want with your client including crashing your client, running commands as you, and even sending "
+                    + "chat messages as you.");
+            Fantasia.getServerLogger().warn("Unless you are doing something that requires it, you are strongly urged "
+                    + "to disable non-local connections from being able to connect.");
+            Fantasia.getServerLogger().warn("You have been warned.");
+        }
+
         while (!socket.isClosed())
         {
             Socket clientSocket;

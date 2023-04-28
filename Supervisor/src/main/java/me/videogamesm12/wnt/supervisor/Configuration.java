@@ -44,6 +44,8 @@ public class Configuration
         private int port = 6969;
 
         private ConnectionType connectionType = ConnectionType.TELNET;
+
+        private boolean nonLocalConnectionsAllowed;
     }
 
     @Getter

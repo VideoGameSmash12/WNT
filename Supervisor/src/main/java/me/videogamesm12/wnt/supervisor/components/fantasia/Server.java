@@ -37,6 +37,7 @@ import me.videogamesm12.wnt.supervisor.components.fantasia.listener.UnixDomainCo
 import me.videogamesm12.wnt.supervisor.components.fantasia.session.CommandSender;
 import me.videogamesm12.wnt.supervisor.components.fantasia.session.ISession;
 
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -70,7 +71,7 @@ public class Server extends Thread
         {
             connectionListener = switch (Supervisor.getConfig().getFantasiaSettings().getConnectionType())
             {
-                case TELNET -> new TelnetConnectionListener(this, new ServerSocket(Supervisor.getConfig().getFantasiaSettings().getPort(), 999));
+                case TELNET -> new TelnetConnectionListener(this, new ServerSocket(Supervisor.getConfig().getFantasiaSettings().getPort(), 999, Supervisor.getConfig().getFantasiaSettings().isNonLocalConnectionsAllowed() ? null : InetAddress.getLoopbackAddress()));
                 case UNIX -> new UnixDomainConnectionListener(this);
             };
             connectionListener.start();
