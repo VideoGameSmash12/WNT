@@ -30,11 +30,9 @@ import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import me.videogamesm12.wnt.WNT;
-import me.videogamesm12.wnt.blackbox.commands.BlackboxCommand;
 import me.videogamesm12.wnt.blackbox.menus.*;
 import me.videogamesm12.wnt.blackbox.theming.ThemeRegistry;
 import me.videogamesm12.wnt.blackbox.theming.inbuilt.IBThemes;
-import me.videogamesm12.wnt.command.CommandSystem;
 import me.videogamesm12.wnt.supervisor.Supervisor;
 import me.videogamesm12.wnt.supervisor.api.event.ClientFreezeEvent;
 import me.videogamesm12.wnt.blackbox.tabs.*;
@@ -52,15 +50,12 @@ import java.time.Instant;
 import java.util.*;
 import java.util.Timer;
 
+@Deprecated(forRemoval = true)
 public class Blackbox extends Thread implements ModInitializer, ClientLifecycleEvents.ClientStarted,
         ClientLifecycleEvents.ClientStopping
 {
-    public static final Identifier IDENTIFIER = Identifier.of("wnt", "blackbox");
-    //--
     public static GUIConfig CONFIG = null;
     public static GUIFrame GUI = null;
-    //--
-    //public static TrayIcon trayIcon = null;
     //--
     private boolean started = false;
     private boolean ignore;
@@ -82,8 +77,6 @@ public class Blackbox extends Thread implements ModInitializer, ClientLifecycleE
                 System.setProperty("sun.java2d.xrender", "f");
             }
         }
-
-        CommandSystem.registerCommand(BlackboxCommand.class);
 
         start();
     }
@@ -115,35 +108,6 @@ public class Blackbox extends Thread implements ModInitializer, ClientLifecycleE
         {
             GUI = new GUIFrame();
             GUI.setVisible(true);
-        }
-
-        try
-        {
-            WNT.getLogger().info("Setting up system tray support...");
-            /*if (SystemTray.isSupported())
-            {
-                SystemTray tray = SystemTray.getSystemTray();
-                trayIcon = new TrayIcon(Toolkit.getDefaultToolkit().createImage(
-                        Blackbox.class.getClassLoader().getResource("assets/wnt-blackbox/supervisor_icon.png")), "WNT");
-                trayIcon.setToolTip("Blackbox - Click to Open");
-                trayIcon.setImageAutoSize(true);
-                trayIcon.addMouseListener(new MouseAdapter()
-                {
-                    @Override
-                    public void mouseClicked(MouseEvent e)
-                    {
-                        if (GUI == null)
-                            GUI = new GUIFrame();
-
-                        GUI.setVisible(true);
-                    }
-                });
-                tray.add(trayIcon);
-            }*/
-        }
-        catch (Exception ex)
-        {
-            ex.printStackTrace();
         }
     }
 
@@ -210,10 +174,7 @@ public class Blackbox extends Thread implements ModInitializer, ClientLifecycleE
     {
         // Menu Bar
         private JMenuBar menuBar;
-        @Getter
-        private WNTMenu wntMenu;
         private MitigationsMenu mitigationsMenu;
-        private SettingsMenu settingsMenu;
         private ToolsMenu toolsMenu;
         //--
         private JTabbedPane tabs;
@@ -249,15 +210,11 @@ public class Blackbox extends Thread implements ModInitializer, ClientLifecycleE
         private void initComps()
         {
             menuBar = new JMenuBar();
-            wntMenu = new WNTMenu();
             mitigationsMenu = new MitigationsMenu();
             toolsMenu = new ToolsMenu();
-            settingsMenu = new SettingsMenu();
             //--
-            menuBar.add(wntMenu);
             menuBar.add(mitigationsMenu);
             menuBar.add(toolsMenu);
-            menuBar.add(settingsMenu);
             //--
             tabs = new JTabbedPane();
             //--
@@ -272,9 +229,6 @@ public class Blackbox extends Thread implements ModInitializer, ClientLifecycleE
                             .addComponent(tabs, GroupLayout.Alignment.TRAILING)
             );
             //--
-            tabs.addTab("General", new GeneralTab());
-            tabs.addTab("Players", new PlayersTab());
-            tabs.addTab("Entities", new EntityTab());
             tabs.addTab("Maps", new MapsTab());
             //--
             if (Blackbox.CONFIG.autoUpdate())

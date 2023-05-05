@@ -13,17 +13,14 @@
   "icon": "assets/wnt-blackbox/icon.png",
   "environment": "client",
   "entrypoints": {
-    "main": [
-      "me.videogamesm12.wnt.blackbox.Blackbox"
-    ],
-    "modmenu": [
-      "me.videogamesm12.wnt.blackbox.integration.ModMenuIntegration"
+    "client": [
+      "me.videogamesm12.wnt.overhauled_blackbox.Entrypoints"
     ],
     "wnt-blackbox": [
-      "me.videogamesm12.wnt.blackbox.theming.inbuilt.IBThemeProvider",
-      "me.videogamesm12.wnt.blackbox.theming.flatlaf.FThemeProvider",
-      "me.videogamesm12.wnt.blackbox.theming.custom.flatlaf.CFThemeProvider",
-      "me.videogamesm12.wnt.blackbox.theming.custom.intellij.CIThemeProvider"
+      "me.videogamesm12.wnt.overhauled_blackbox.theming.inbuilt.IBThemeProvider",
+      "me.videogamesm12.wnt.overhauled_blackbox.theming.flatlaf.FThemeProvider",
+      "me.videogamesm12.wnt.overhauled_blackbox.theming.custom.flatlaf.CFThemeProvider",
+      "me.videogamesm12.wnt.overhauled_blackbox.theming.custom.intellij.CIThemeProvider"
     ]
   },
   "mixins": [

@@ -22,7 +22,7 @@
 
 package me.videogamesm12.poker.core.gui;
 
-import me.videogamesm12.wnt.blackbox.menus.ModMenu;
+import me.videogamesm12.wnt.overhauled_blackbox.window.menu.wnt.ModMenu;
 
 import javax.swing.*;
 

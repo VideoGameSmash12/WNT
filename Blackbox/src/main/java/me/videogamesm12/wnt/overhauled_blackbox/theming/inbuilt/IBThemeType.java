@@ -20,29 +20,20 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.videogamesm12.wnt.supervisor.components.fantasia.command;
+package me.videogamesm12.wnt.overhauled_blackbox.theming.inbuilt;
 
-import com.mojang.brigadier.context.CommandContext;
-import me.videogamesm12.wnt.supervisor.Supervisor;
-import me.videogamesm12.wnt.supervisor.components.fantasia.Fantasia;
-import me.videogamesm12.wnt.supervisor.components.fantasia.session.CommandSender;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import me.videogamesm12.wnt.overhauled_blackbox.theming.IThemeType;
 
-public class StacktraceDumpCommand extends FCommand
+@AllArgsConstructor
+@Getter
+public enum IBThemeType implements IThemeType
 {
-    public StacktraceDumpCommand()
-    {
-        super("stacktracedump", "Dumps all stacktraces from all threads", "stacktracedump");
-    }
+    BUILT_IN("Built into Java", 93812),
+    NETBEANS("From NetBeans", 32118);
 
-    @Override
-    public boolean run(CommandSender sender, CommandContext<CommandSender> context, String[] args)
-    {
-        Supervisor.getInstance().dumpThreads().forEach(string ->
-        {
-            Fantasia.getServerLogger().info(string);
-            sender.sendMessage(string);
-        });
+    private final String label;
 
-        return true;
-    }
+    private final int id;
 }

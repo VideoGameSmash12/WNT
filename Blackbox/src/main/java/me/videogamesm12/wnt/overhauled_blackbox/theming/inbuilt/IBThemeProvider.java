@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Video
+ * Copyright (c) 2023 Video
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,20 +20,35 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.videogamesm12.wnt.blackbox.menus;
+package me.videogamesm12.wnt.overhauled_blackbox.theming.inbuilt;
 
-import javax.swing.*;
+import me.videogamesm12.wnt.overhauled_blackbox.theming.ITheme;
+import me.videogamesm12.wnt.overhauled_blackbox.theming.IThemeProvider;
+import me.videogamesm12.wnt.overhauled_blackbox.theming.IThemeType;
 
-public abstract class ModMenu<T> extends JMenu
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class IBThemeProvider implements IThemeProvider
 {
-    private final Class<T> modClass;
+    private static final Map<String, ITheme> themes = new HashMap<>();
 
-    public ModMenu(String name, Class<T> mClass)
+    static
     {
-        super(name);
-        //--
-        modClass = mClass;
+        Arrays.stream(IBThemes.values()).forEach(theme -> themes.put(theme.getInternalName(), theme));
     }
 
-    public abstract T getModInstance();
+    @Override
+    public Map<String, ITheme> getThemes()
+    {
+        return themes;
+    }
+
+    @Override
+    public List<IThemeType> getTypes()
+    {
+        return List.of(IBThemeType.values());
+    }
 }

@@ -1,4 +1,4 @@
-package me.videogamesm12.wnt.blackbox.mixin;
+package me.videogamesm12.wnt.overhauled_blackbox.mixin;
 
 import net.minecraft.client.main.Main;
 import org.spongepowered.asm.mixin.Mixin;

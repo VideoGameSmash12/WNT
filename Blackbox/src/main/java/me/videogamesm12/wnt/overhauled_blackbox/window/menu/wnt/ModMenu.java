@@ -20,18 +20,20 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.videogamesm12.wnt.blackbox.integration;
+package me.videogamesm12.wnt.overhauled_blackbox.window.menu.wnt;
 
-import com.terraformersmc.modmenu.api.ConfigScreenFactory;
-import com.terraformersmc.modmenu.api.ModMenuApi;
-import me.shedaniel.autoconfig.AutoConfig;
-import me.videogamesm12.wnt.blackbox.Blackbox;
+import javax.swing.*;
 
-public class ModMenuIntegration implements ModMenuApi
+public abstract class ModMenu<T> extends JMenu
 {
-    @Override
-    public ConfigScreenFactory<?> getModConfigScreenFactory()
+    private final Class<T> modClass;
+
+    public ModMenu(String name, Class<T> mClass)
     {
-        return parent -> AutoConfig.getConfigScreen(Blackbox.GUIConfig.class, parent).get();
+        super(name);
+        //--
+        modClass = mClass;
     }
+
+    public abstract T getModInstance();
 }

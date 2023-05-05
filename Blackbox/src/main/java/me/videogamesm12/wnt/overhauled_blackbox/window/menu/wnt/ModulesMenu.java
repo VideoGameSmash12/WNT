@@ -1,4 +1,4 @@
-package me.videogamesm12.wnt.blackbox.menus;
+package me.videogamesm12.wnt.overhauled_blackbox.window.menu.wnt;
 
 import com.google.common.eventbus.Subscribe;
 import lombok.Getter;
@@ -15,7 +15,7 @@ import java.util.List;
 
 public class ModulesMenu extends JMenu
 {
-    private List<Class<? extends Module>> inList = new ArrayList<>();
+    private final List<Class<? extends Module>> inList = new ArrayList<>();
 
     public ModulesMenu()
     {

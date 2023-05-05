@@ -1,7 +1,7 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "me.videogamesm12.wnt.blackbox.mixin",
+  "package": "me.videogamesm12.wnt.overhauled_blackbox.mixin",
   "compatibilityLevel": "JAVA_16",
   "injectors": {
     "defaultRequire": 1

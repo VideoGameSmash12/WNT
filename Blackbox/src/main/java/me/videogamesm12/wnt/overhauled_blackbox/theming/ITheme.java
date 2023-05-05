@@ -20,29 +20,24 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.videogamesm12.wnt.supervisor.components.fantasia.command;
 
-import com.mojang.brigadier.context.CommandContext;
-import me.videogamesm12.wnt.supervisor.Supervisor;
-import me.videogamesm12.wnt.supervisor.components.fantasia.Fantasia;
-import me.videogamesm12.wnt.supervisor.components.fantasia.session.CommandSender;
+package me.videogamesm12.wnt.overhauled_blackbox.theming;
 
-public class StacktraceDumpCommand extends FCommand
+public interface ITheme
 {
-    public StacktraceDumpCommand()
-    {
-        super("stacktracedump", "Dumps all stacktraces from all threads", "stacktracedump");
-    }
+    String getInternalName();
 
-    @Override
-    public boolean run(CommandSender sender, CommandContext<CommandSender> context, String[] args)
-    {
-        Supervisor.getInstance().dumpThreads().forEach(string ->
-        {
-            Fantasia.getServerLogger().info(string);
-            sender.sendMessage(string);
-        });
+    String getThemeName();
 
-        return true;
-    }
+    String getThemeDescription();
+
+    IThemeType getType();
+
+    String getThemeClass();
+
+    boolean isSupposedToShow();
+
+    void apply();
+
+    void showOptionalMessage();
 }
