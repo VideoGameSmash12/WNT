@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
 public class Fantasia implements SVComponent
 {
     @Getter
-    private static Logger serverLogger = LoggerFactory.getLogger("Fantasia-Server");
+    private static final Logger serverLogger = LoggerFactory.getLogger("Fantasia-Server");
     @Getter
     private static Fantasia instance;
     //--

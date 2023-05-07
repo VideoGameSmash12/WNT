@@ -37,9 +37,9 @@ public interface IThemeType
     {
         SwingUtilities.updateComponentTreeUI(Blackbox.getInstance().getMainWindow());
 
-        /*if (ChatWindow.INSTANCE != null)
+        /*if (Console.INSTANCE != null)
         {
-            SwingUtilities.updateComponentTreeUI(ChatWindow.INSTANCE);
+            SwingUtilities.updateComponentTreeUI(Console.INSTANCE);
         }*/
     }
 }

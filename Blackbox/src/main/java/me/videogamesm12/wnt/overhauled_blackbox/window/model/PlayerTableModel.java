@@ -51,10 +51,7 @@ public class PlayerTableModel extends AbstractTableModel implements Dynamic
 
         rows.clear();
 
-        for (PlayerListEntry entry : Supervisor.getInstance().getPlayerList())
-        {
-            rows.add(playerToObjList(entry));
-        }
+        Supervisor.getInstance().getPlayerList().forEach(entry -> rows.add(playerToObjList(entry)));
 
         fireTableDataChanged();
     }

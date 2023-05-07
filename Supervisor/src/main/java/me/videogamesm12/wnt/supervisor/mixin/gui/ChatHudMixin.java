@@ -22,8 +22,10 @@
 
 package me.videogamesm12.wnt.supervisor.mixin.gui;
 
+import me.videogamesm12.wnt.WNT;
 import me.videogamesm12.wnt.supervisor.event.HUDMessageAdded;
 import net.minecraft.client.gui.hud.ChatHud;
+import net.minecraft.client.gui.hud.MessageIndicator;
 import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -33,8 +35,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ChatHud.class)
 public class ChatHudMixin
 {
-    @Inject(method = "addMessage(Lnet/minecraft/text/Text;)V", at = @At("HEAD"))
-    public void addMessage(Text message, CallbackInfo ci)
+    @Inject(method = "logChatMessage", at = @At("HEAD"))
+    private void logChatMessage(Text message, MessageIndicator indicator, CallbackInfo ci)
     {
         HUDMessageAdded.EVENT.invoker().onMessageAdded(message);
     }

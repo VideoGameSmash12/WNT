@@ -3,18 +3,17 @@ package me.videogamesm12.wnt.overhauled_blackbox.window.model;
 import me.videogamesm12.wnt.overhauled_blackbox.window.general.Dynamic;
 import me.videogamesm12.wnt.supervisor.Supervisor;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
+import net.minecraft.item.map.MapState;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class EntityTableModel extends AbstractTableModel implements Dynamic
+public class MapTableModel extends AbstractTableModel implements Dynamic
 {
-    private final List<String> columns = Arrays.asList("Name", "Type", "Location", "ID", "UUID");
-    private final List<List<String>> rows = new ArrayList<>();
+    private final List<String> columns = Arrays.asList("ID", "Scale", "World");
+    private final List<List<Object>> rows = new ArrayList<>();
 
     @Override
     public String getColumnName(int column)
@@ -35,7 +34,7 @@ public class EntityTableModel extends AbstractTableModel implements Dynamic
     }
 
     @Override
-    public String getValueAt(int rowIndex, int columnIndex)
+    public Object getValueAt(int rowIndex, int columnIndex)
     {
         return rows.get(rowIndex).get(columnIndex);
     }
@@ -50,17 +49,15 @@ public class EntityTableModel extends AbstractTableModel implements Dynamic
 
         rows.clear();
 
-        Supervisor.getInstance().getEntities().forEach(entity -> rows.add(entityToStrList(entity)));
+        Supervisor.getInstance().getMaps().forEach((entry, lol) -> rows.add(mapToObjectList(entry, lol)));
 
         fireTableDataChanged();
     }
 
-    private static List<String> entityToStrList(Entity entity)
+    public static List<Object> mapToObjectList(String id, MapState map)
     {
-        return Arrays.asList(entity.getDisplayName() != null ? entity.getDisplayName().getString() : entity.getEntityName(),
-                EntityType.getId(entity.getType()).toString(),
-                String.format("%s, %s, %s", entity.getX(), entity.getY(), entity.getZ()),
-                String.valueOf(entity.getId()),
-                entity.getUuidAsString());
+        return Arrays.asList(id,
+                String.valueOf(map.scale),
+                map.dimension.getValue().toString());
     }
 }

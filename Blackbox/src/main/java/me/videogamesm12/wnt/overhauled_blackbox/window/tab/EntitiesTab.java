@@ -25,6 +25,6 @@ public class EntitiesTab extends ScrollableTab
     @Override
     public void update()
     {
-        EventQueue.invokeLater(() -> ((Dynamic) table.getModel()).update());
+        ((Dynamic) table.getModel()).update();
     }
 }

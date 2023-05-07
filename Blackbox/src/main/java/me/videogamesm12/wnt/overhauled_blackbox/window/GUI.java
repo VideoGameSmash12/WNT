@@ -1,14 +1,18 @@
 package me.videogamesm12.wnt.overhauled_blackbox.window;
 
+import lombok.Getter;
 import me.videogamesm12.wnt.WNT;
 import me.videogamesm12.wnt.overhauled_blackbox.Blackbox;
 import me.videogamesm12.wnt.overhauled_blackbox.window.general.Dynamic;
+import me.videogamesm12.wnt.overhauled_blackbox.window.menu.MitigationsMenu;
 import me.videogamesm12.wnt.overhauled_blackbox.window.menu.SettingsMenu;
 import me.videogamesm12.wnt.overhauled_blackbox.window.menu.ToolsMenu;
 import me.videogamesm12.wnt.overhauled_blackbox.window.menu.WNTMenu;
 import me.videogamesm12.wnt.overhauled_blackbox.window.tab.EntitiesTab;
 import me.videogamesm12.wnt.overhauled_blackbox.window.tab.MainTab;
+import me.videogamesm12.wnt.overhauled_blackbox.window.tab.MapsTab;
 import me.videogamesm12.wnt.overhauled_blackbox.window.tab.PlayersTab;
+import me.videogamesm12.wnt.overhauled_blackbox.window.tool.console.Console;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -19,6 +23,9 @@ import java.util.TimerTask;
 
 public class GUI extends JFrame
 {
+    @Getter
+    private Console console;
+    //--
     private final JMenuBar menuBar;
     private final JTabbedPane tabbedPane;
     //--
@@ -38,7 +45,7 @@ public class GUI extends JFrame
         // Sets up the components
         menuBar = new JMenuBar();
         menuBar.add(new WNTMenu());
-        //menuBar.add(new MitigationsMenu());
+        menuBar.add(new MitigationsMenu());
         menuBar.add(new SettingsMenu());
         menuBar.add(new ToolsMenu());
         add(menuBar);
@@ -55,6 +62,7 @@ public class GUI extends JFrame
         tabbedPane.addTab("General", new MainTab());
         tabbedPane.addTab("Players", new PlayersTab());
         tabbedPane.addTab("Entities", new EntitiesTab());
+        tabbedPane.addTab("Maps", new MapsTab());
         // End of component setup
 
         // Sets up timers
@@ -94,6 +102,16 @@ public class GUI extends JFrame
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         setLocation(dim.width/2 - getSize().width/2, dim.height/2 - getSize().height/2);
         pack();
+    }
+
+    public void openConsoleWindow()
+    {
+        if (console == null)
+        {
+            console = new Console();
+        }
+
+        console.setVisible(true);
     }
 
     public void setupIcon()

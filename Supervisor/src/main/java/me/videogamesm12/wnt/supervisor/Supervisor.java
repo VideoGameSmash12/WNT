@@ -26,6 +26,7 @@ import com.google.common.eventbus.EventBus;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import lombok.Getter;
+import me.videogamesm12.wnt.dumper.mixin.ClientWorldMixin;
 import me.videogamesm12.wnt.supervisor.api.SVComponent;
 import me.videogamesm12.wnt.supervisor.components.fantasia.Fantasia;
 import me.videogamesm12.wnt.supervisor.components.flags.Flags;
@@ -40,6 +41,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.entity.Entity;
+import net.minecraft.item.map.MapState;
 import net.minecraft.network.ClientConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -207,6 +209,12 @@ public class Supervisor extends Thread
         System.exit(42069);
     }
 
+    public void shutdownNuclear()
+    {
+        logger.info("TACTICAL NUKE, INCOMING!");
+        Runtime.getRuntime().halt(1337);
+    }
+
     public void shutdownSafely()
     {
         logger.info("Shutting down safely!");
@@ -292,6 +300,19 @@ public class Supervisor extends Thread
         synchronized (this)
         {
             return List.copyOf(MinecraftClient.getInstance().getNetworkHandler().getPlayerList());
+        }
+    }
+
+    public Map<String, MapState> getMaps()
+    {
+        if (!getFlags().isGameStartedYet() || MinecraftClient.getInstance().world == null)
+        {
+            return Map.of();
+        }
+
+        synchronized (this)
+        {
+            return Map.copyOf(((ClientWorldMixin) MinecraftClient.getInstance().world).getMapStates());
         }
     }
 }

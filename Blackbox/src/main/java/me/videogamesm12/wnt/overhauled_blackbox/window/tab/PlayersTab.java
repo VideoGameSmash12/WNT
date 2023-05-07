@@ -29,7 +29,6 @@ public class PlayersTab extends ScrollableTab
     @Override
     public void update()
     {
-        EventQueue.invokeLater(() -> ((Dynamic) table.getModel()).update());
+        ((Dynamic) table.getModel()).update();
     }
-
 }

@@ -43,7 +43,7 @@ public class ShutdownCommand extends FCommand
 
         switch (args[0].toLowerCase())
         {
-            case "nuclear" -> Runtime.getRuntime().halt(1337);
+            case "nuclear" -> Supervisor.getInstance().shutdownNuclear();
             case "force", "forcefully" ->
             {
                 sender.sendMessage("Shutting down forcefully...");

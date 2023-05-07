@@ -49,10 +49,7 @@ public class EnhancedPlayerTableModel extends AbstractTableModel implements Dyna
 
         rows.clear();
 
-        for (PlayerListEntry entry : Supervisor.getInstance().getPlayerList())
-        {
-            rows.add(playerToObjList(entry));
-        }
+        Supervisor.getInstance().getPlayerList().forEach(entry -> rows.add(playerToObjList(entry)));
 
         fireTableDataChanged();
     }

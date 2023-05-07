@@ -20,7 +20,7 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.videogamesm12.wnt.supervisor.mixin.render;
+package me.videogamesm12.wnt.supervisor.mixin.network;
 
 import me.videogamesm12.wnt.supervisor.Supervisor;
 import net.minecraft.client.network.ClientPlayNetworkHandler;

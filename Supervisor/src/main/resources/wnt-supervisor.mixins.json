@@ -7,10 +7,10 @@
     "MinecraftClientMixin",
     "gui.DebugHudMixin",
     "gui.InGameHudMixin",
-    "render.BlockEntityRenderDispatcherMixin",
-    "render.ClientPlayNetworkHandlerMixin",
-    "render.GameRendererMixin",
     "gui.ChatHudMixin",
+    "network.ClientPlayNetworkHandlerMixin",
+    "render.BlockEntityRenderDispatcherMixin",
+    "render.GameRendererMixin",
     "render.WorldRendererMixin"
   ],
   "injectors": {
