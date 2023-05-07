@@ -22,13 +22,33 @@
 
 package me.videogamesm12.wnt.supervisor.components.fantasia.session;
 
+/**
+ * <h1>ISession</h1>
+ * <p>An interface for Fantasia sessions of all kinds.</p>
+ */
 public interface ISession
 {
+    /**
+     * Gets the connection identifier.
+     * @return  String
+     */
     String getConnectionIdentifier();
 
+    /**
+     * Returns whether the session is connected or not.
+     * @return  boolean
+     */
     boolean isConnected();
 
+    /**
+     * Disconnect the session from the server.
+     * @param quiet     boolean
+     */
     void disconnect(boolean quiet);
 
+    /**
+     * Send a message directly to the session.
+     * @param message   String
+     */
     void sendMessage(String message);
 }

@@ -8,10 +8,7 @@ import me.videogamesm12.wnt.blackbox.window.general.Dynamic;
 import me.videogamesm12.wnt.blackbox.window.menu.MitigationsMenu;
 import me.videogamesm12.wnt.blackbox.window.menu.SettingsMenu;
 import me.videogamesm12.wnt.blackbox.window.menu.ToolsMenu;
-import me.videogamesm12.wnt.blackbox.window.tab.EntitiesTab;
-import me.videogamesm12.wnt.blackbox.window.tab.MainTab;
-import me.videogamesm12.wnt.blackbox.window.tab.MapsTab;
-import me.videogamesm12.wnt.blackbox.window.tab.PlayersTab;
+import me.videogamesm12.wnt.blackbox.window.tab.*;
 import me.videogamesm12.wnt.blackbox.window.tool.console.Console;
 
 import javax.imageio.ImageIO;
@@ -63,6 +60,7 @@ public class GUI extends JFrame
         tabbedPane.addTab("Players", new PlayersTab());
         tabbedPane.addTab("Entities", new EntitiesTab());
         tabbedPane.addTab("Maps", new MapsTab());
+        tabbedPane.addTab("Inventory", new InventoryTab());
         // End of component setup
 
         // Sets up timers

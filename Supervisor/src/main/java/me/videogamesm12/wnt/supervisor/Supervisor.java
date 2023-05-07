@@ -31,6 +31,7 @@ import me.videogamesm12.wnt.supervisor.api.SVComponent;
 import me.videogamesm12.wnt.supervisor.components.fantasia.Fantasia;
 import me.videogamesm12.wnt.supervisor.components.flags.Flags;
 import me.videogamesm12.wnt.supervisor.components.watchdog.Watchdog;
+import me.videogamesm12.wnt.supervisor.enums.InventoryType;
 import me.videogamesm12.wnt.supervisor.mixin.gui.DebugHudMixin;
 import me.videogamesm12.wnt.supervisor.mixin.gui.InGameHudMixin;
 import me.videogamesm12.wnt.supervisor.util.Fallbacks;
@@ -41,6 +42,8 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.map.MapState;
 import net.minecraft.network.ClientConnection;
 import org.slf4j.Logger;
@@ -313,6 +316,27 @@ public class Supervisor extends Thread
         synchronized (this)
         {
             return Map.copyOf(((ClientWorldMixin) MinecraftClient.getInstance().world).getMapStates());
+        }
+    }
+
+    public Map<InventoryType, List<ItemStack>> getInventory()
+    {
+        if (!getFlags().isGameStartedYet() || MinecraftClient.getInstance().player == null)
+        {
+            return Map.of();
+        }
+
+        synchronized (this)
+        {
+            PlayerInventory inventory = MinecraftClient.getInstance().player.getInventory();
+
+            final Map<InventoryType, List<ItemStack>> items = new HashMap<>();
+
+            items.put(InventoryType.ARMOR, inventory.armor);
+            items.put(InventoryType.MAIN, inventory.main);
+            items.put(InventoryType.OFFHAND, inventory.offHand);
+
+            return items;
         }
     }
 }

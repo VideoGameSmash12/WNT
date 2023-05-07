@@ -12,6 +12,7 @@ public class EntitiesTab extends ScrollableTab
     public EntitiesTab()
     {
         table = new JTable(new EntityTableModel());
+        table.setCellSelectionEnabled(true);
         setup();
     }
 

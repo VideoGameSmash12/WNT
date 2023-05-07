@@ -43,6 +43,10 @@ import java.util.stream.Stream;
 
 public record CommandSender(@Getter ISession session) implements CommandSource
 {
+    /**
+     * Sends a message to the CommandSender.
+     * @param message   String
+     */
     public void sendMessage(String message)
     {
         session.sendMessage(message);
