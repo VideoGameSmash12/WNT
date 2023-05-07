@@ -78,13 +78,11 @@ public class Server extends Thread
         }
         catch (UnsupportedOperationException ex)
         {
-            Fantasia.getServerLogger().error("Unix sockets are not supported on this operating system. Try using something else like Telnet.");
-            return;
+            Fantasia.getServerLogger().error("Unix sockets are not supported on this operating system. Try using something else like Telnet. You'll still be able to access it through the Blackbox, but not through anything external.");
         }
         catch (Throwable ex)
         {
-            Fantasia.getServerLogger().error("Failed to start Fantasia server", ex);
-            return;
+            Fantasia.getServerLogger().error("Failed to start the selected connection listener. You'll still be able to access it through the Blackbox, but not through anything external. Stacktrace:", ex);
         }
 
         Fantasia.getServerLogger().info("Registering commands...");;
@@ -94,6 +92,7 @@ public class Server extends Thread
         registerCommand(ExitCommand.class);
         registerCommand(FPSCommand.class);
         registerCommand(HelpCommand.class);
+        registerCommand(ListCommand.class);
         registerCommand(RunCommand.class);
         registerCommand(ShutdownCommand.class);
         registerCommand(StacktraceDumpCommand.class);
