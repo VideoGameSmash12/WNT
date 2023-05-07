@@ -3,7 +3,7 @@ package me.videogamesm12.poker.endpoints.meteor;
 import me.videogamesm12.poker.core.gui.PModCategoryMenu;
 import me.videogamesm12.poker.core.gui.PModMenu;
 import me.videogamesm12.poker.partitions.meteor.MeteorModuleMenu;
-import me.videogamesm12.wnt.overhauled_blackbox.window.menu.WNTMenu;
+import me.videogamesm12.wnt.blackbox.window.menu.WNTMenu;
 import meteordevelopment.meteorclient.MeteorClient;
 import meteordevelopment.meteorclient.addons.MeteorAddon;
 import meteordevelopment.meteorclient.systems.modules.Modules;

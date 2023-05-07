@@ -14,13 +14,13 @@
   "environment": "client",
   "entrypoints": {
     "client": [
-      "me.videogamesm12.wnt.overhauled_blackbox.Entrypoints"
+      "me.videogamesm12.wnt.blackbox.Entrypoints"
     ],
     "wnt-blackbox": [
-      "me.videogamesm12.wnt.overhauled_blackbox.theming.inbuilt.IBThemeProvider",
-      "me.videogamesm12.wnt.overhauled_blackbox.theming.flatlaf.FThemeProvider",
-      "me.videogamesm12.wnt.overhauled_blackbox.theming.custom.flatlaf.CFThemeProvider",
-      "me.videogamesm12.wnt.overhauled_blackbox.theming.custom.intellij.CIThemeProvider"
+      "me.videogamesm12.wnt.blackbox.theming.inbuilt.IBThemeProvider",
+      "me.videogamesm12.wnt.blackbox.theming.flatlaf.FThemeProvider",
+      "me.videogamesm12.wnt.blackbox.theming.custom.flatlaf.CFThemeProvider",
+      "me.videogamesm12.wnt.blackbox.theming.custom.intellij.CIThemeProvider"
     ]
   },
   "mixins": [

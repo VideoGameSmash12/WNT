@@ -20,33 +20,20 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.videogamesm12.poker.core.gui;
-
-import me.videogamesm12.wnt.blackbox.window.menu.wnt.ModMenu;
+package me.videogamesm12.wnt.blackbox.window.menu.wnt;
 
 import javax.swing.*;
 
-public class PModMenu<T> extends ModMenu<T>
+public abstract class ModMenu<T> extends JMenu
 {
-    private final T instance;
+    private final Class<T> modClass;
 
-    public PModMenu(String name, T instance)
+    public ModMenu(String name, Class<T> mClass)
     {
-        super(name, (Class<T>) instance.getClass());
-        this.instance = instance;
+        super(name);
+        //--
+        modClass = mClass;
     }
 
-    @Override
-    public T getModInstance()
-    {
-        return instance;
-    }
-
-    public void addSubMenu(PModSubMenu subMenu)
-    {
-        if (subMenu instanceof JMenu asMenu)
-        {
-            add(asMenu);
-        }
-    }
+    public abstract T getModInstance();
 }

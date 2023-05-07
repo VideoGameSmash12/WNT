@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Video
+ * Copyright (c) 2023 Video
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,33 +20,26 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.videogamesm12.poker.core.gui;
+package me.videogamesm12.wnt.blackbox.theming;
 
-import me.videogamesm12.wnt.blackbox.window.menu.wnt.ModMenu;
+
+import me.videogamesm12.wnt.blackbox.Blackbox;
 
 import javax.swing.*;
 
-public class PModMenu<T> extends ModMenu<T>
+public interface IThemeType
 {
-    private final T instance;
+    String getLabel();
 
-    public PModMenu(String name, T instance)
-    {
-        super(name, (Class<T>) instance.getClass());
-        this.instance = instance;
-    }
+    int getId();
 
-    @Override
-    public T getModInstance()
+    default void update()
     {
-        return instance;
-    }
+        SwingUtilities.updateComponentTreeUI(Blackbox.getInstance().getMainWindow());
 
-    public void addSubMenu(PModSubMenu subMenu)
-    {
-        if (subMenu instanceof JMenu asMenu)
+        /*if (Console.INSTANCE != null)
         {
-            add(asMenu);
-        }
+            SwingUtilities.updateComponentTreeUI(Console.INSTANCE);
+        }*/
     }
 }

@@ -26,7 +26,7 @@ import me.allink.deviousmod.client.DeviousModClient;
 import me.allink.deviousmod.managers.ModuleManager;
 import me.videogamesm12.poker.core.gui.PModMenu;
 import me.videogamesm12.poker.partitions.deviousmod.DeviousModuleMenu;
-import me.videogamesm12.wnt.overhauled_blackbox.window.menu.WNTMenu;
+import me.videogamesm12.wnt.blackbox.window.menu.WNTMenu;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

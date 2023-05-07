@@ -7,6 +7,6 @@
     "defaultRequire": 1
   },
   "client": [
-    "MainMixin"
+    "me.videogamesm12.wnt.blackbox.mixin.MainMixin"
   ]
 }

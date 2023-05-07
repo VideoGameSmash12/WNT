@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Video
+ * Copyright (c) 2023 Video
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,33 +20,35 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.videogamesm12.poker.core.gui;
+package me.videogamesm12.wnt.blackbox.theming.inbuilt;
 
-import me.videogamesm12.wnt.blackbox.window.menu.wnt.ModMenu;
+import me.videogamesm12.wnt.blackbox.theming.ITheme;
+import me.videogamesm12.wnt.blackbox.theming.IThemeProvider;
+import me.videogamesm12.wnt.blackbox.theming.IThemeType;
 
-import javax.swing.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-public class PModMenu<T> extends ModMenu<T>
+public class IBThemeProvider implements IThemeProvider
 {
-    private final T instance;
+    private static final Map<String, ITheme> themes = new HashMap<>();
 
-    public PModMenu(String name, T instance)
+    static
     {
-        super(name, (Class<T>) instance.getClass());
-        this.instance = instance;
+        Arrays.stream(IBThemes.values()).forEach(theme -> themes.put(theme.getInternalName(), theme));
     }
 
     @Override
-    public T getModInstance()
+    public Map<String, ITheme> getThemes()
     {
-        return instance;
+        return themes;
     }
 
-    public void addSubMenu(PModSubMenu subMenu)
+    @Override
+    public List<IThemeType> getTypes()
     {
-        if (subMenu instanceof JMenu asMenu)
-        {
-            add(asMenu);
-        }
+        return List.of(IBThemeType.values());
     }
 }
