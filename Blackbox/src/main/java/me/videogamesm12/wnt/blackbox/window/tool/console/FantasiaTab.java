@@ -3,7 +3,10 @@ package me.videogamesm12.wnt.blackbox.window.tool.console;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import lombok.Getter;
 import me.videogamesm12.wnt.blackbox.Blackbox;
+import me.videogamesm12.wnt.supervisor.Supervisor;
 import me.videogamesm12.wnt.supervisor.components.fantasia.Fantasia;
+import me.videogamesm12.wnt.supervisor.components.fantasia.event.SessionStartedEvent;
+import me.videogamesm12.wnt.supervisor.components.fantasia.event.SessionStartedPreSetupEvent;
 import me.videogamesm12.wnt.supervisor.components.fantasia.session.CommandSender;
 import me.videogamesm12.wnt.supervisor.components.fantasia.session.ISession;
 import net.minecraft.text.Text;
@@ -62,8 +65,10 @@ public class FantasiaTab extends AbstractTab
 
         public BlackboxSession(FantasiaTab tab)
         {
+            Supervisor.getEventBus().post(new SessionStartedPreSetupEvent(this));
             this.tab = tab;
             this.sender = new CommandSender(this);
+            Supervisor.getEventBus().post(new SessionStartedEvent(this));
         }
 
         @Override
