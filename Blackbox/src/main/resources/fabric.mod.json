@@ -13,11 +13,8 @@
   "icon": "assets/wnt-blackbox/icon.png",
   "environment": "client",
   "entrypoints": {
-    "main": [
-      "me.videogamesm12.wnt.blackbox.Blackbox"
-    ],
-    "modmenu": [
-      "me.videogamesm12.wnt.blackbox.integration.ModMenuIntegration"
+    "client": [
+      "me.videogamesm12.wnt.blackbox.Entrypoints"
     ],
     "wnt-blackbox": [
       "me.videogamesm12.wnt.blackbox.theming.inbuilt.IBThemeProvider",

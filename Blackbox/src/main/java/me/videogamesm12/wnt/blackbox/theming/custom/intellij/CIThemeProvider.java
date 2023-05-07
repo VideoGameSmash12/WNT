@@ -1,8 +1,8 @@
 package me.videogamesm12.wnt.blackbox.theming.custom.intellij;
 
 import com.formdev.flatlaf.FlatLaf;
-import me.videogamesm12.wnt.blackbox.Blackbox;
 import me.videogamesm12.wnt.blackbox.theming.ITheme;
+import me.videogamesm12.wnt.blackbox.Blackbox;
 import me.videogamesm12.wnt.blackbox.theming.IThemeProvider;
 import me.videogamesm12.wnt.blackbox.theming.IThemeType;
 
@@ -55,7 +55,7 @@ public class CIThemeProvider implements IThemeProvider
 
     public static File getThemesFolder()
     {
-        File folder = new File(Blackbox.getBlackboxFolder(), "themes/intellij");
+        File folder = new File(Blackbox.getFolder(), "themes/intellij");
 
         if (!folder.exists())
         {

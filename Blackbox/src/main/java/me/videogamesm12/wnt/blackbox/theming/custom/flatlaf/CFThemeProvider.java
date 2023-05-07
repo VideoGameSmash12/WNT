@@ -1,8 +1,8 @@
 package me.videogamesm12.wnt.blackbox.theming.custom.flatlaf;
 
 import com.formdev.flatlaf.FlatLaf;
-import me.videogamesm12.wnt.blackbox.Blackbox;
 import me.videogamesm12.wnt.blackbox.theming.ITheme;
+import me.videogamesm12.wnt.blackbox.Blackbox;
 import me.videogamesm12.wnt.blackbox.theming.IThemeProvider;
 import me.videogamesm12.wnt.blackbox.theming.IThemeType;
 
@@ -54,7 +54,7 @@ public class CFThemeProvider implements IThemeProvider
 
     public static File getThemesFolder()
     {
-        File folder = new File(Blackbox.getBlackboxFolder(), "themes/flatlaf");
+        File folder = new File(Blackbox.getFolder(), "themes/flatlaf");
 
         if (!folder.exists())
         {

@@ -26,6 +26,7 @@ import com.google.common.eventbus.EventBus;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import lombok.Getter;
+import me.videogamesm12.wnt.dumper.mixin.ClientWorldMixin;
 import me.videogamesm12.wnt.supervisor.api.SVComponent;
 import me.videogamesm12.wnt.supervisor.components.fantasia.Fantasia;
 import me.videogamesm12.wnt.supervisor.components.flags.Flags;
@@ -38,6 +39,9 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.kyori.adventure.text.Component;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
+import net.minecraft.client.network.PlayerListEntry;
+import net.minecraft.entity.Entity;
+import net.minecraft.item.map.MapState;
 import net.minecraft.network.ClientConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,8 +49,8 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.util.ArrayList;
-import java.util.List;
+import java.lang.management.ManagementFactory;
+import java.util.*;
 
 /**
  * <h1>Supervisor</h1>
@@ -56,8 +60,8 @@ public class Supervisor extends Thread
 {
     @Getter
     private static final EventBus eventBus = new EventBus();
-    //
-    private static Logger logger = LoggerFactory.getLogger("Fantasia");
+    private static final Logger logger = LoggerFactory.getLogger("Fantasia");
+    //--
     @Getter
     private static Supervisor instance;
     @Getter
@@ -205,6 +209,12 @@ public class Supervisor extends Thread
         System.exit(42069);
     }
 
+    public void shutdownNuclear()
+    {
+        logger.info("TACTICAL NUKE, INCOMING!");
+        Runtime.getRuntime().halt(1337);
+    }
+
     public void shutdownSafely()
     {
         logger.info("Shutting down safely!");
@@ -217,18 +227,46 @@ public class Supervisor extends Thread
         MinecraftClient.getInstance().scheduleStop();
     }
 
-    public String getFPSText()
+    public List<String> dumpThreads()
+    {
+        List<String> all = new ArrayList<>();
+
+        Arrays.stream(ManagementFactory.getThreadMXBean().dumpAllThreads(true, true)).forEach(thread ->
+        {
+            String header = "-- == ++ STACKTRACE DUMP - " + thread.getThreadName() + " ++ == --";
+            String status = "STATUS: " + thread.getThreadState().name();
+            String details = "DETAILS: " + String.format("Suspended: %s, Native: %s", thread.isSuspended() ? "Yes" : "No", thread.isInNative() ? "Yes" : "No");
+            List<String> stacktrace = Arrays.stream(thread.getStackTrace()).map(element -> "    " + element.toString()).toList();
+
+            all.add(header);
+            all.add(status);
+            all.add(details);
+            all.addAll(stacktrace);
+        });
+
+        return all;
+    }
+
+    public Iterable<Entity> getEntities()
+    {
+        if (!getFlags().isGameStartedYet() || MinecraftClient.getInstance().world == null)
+        {
+            return Collections.emptyList();
+        }
+
+        synchronized (this)
+        {
+            return MinecraftClient.getInstance().world.getEntities();
+        }
+    }
+
+    public List<String> getF3Info()
     {
         if (!getFlags().isGameStartedYet())
         {
             throw new IllegalStateException("The Minecraft client hasn't finished starting up yet.");
         }
 
-        return MinecraftClient.getInstance().fpsDebugString;
-    }
-
-    public List<String> getF3Info()
-    {
         synchronized (this)
         {
             try
@@ -239,6 +277,42 @@ public class Supervisor extends Thread
             {
                 return Fallbacks.getLeftText();
             }
+        }
+    }
+
+    public String getFPSText()
+    {
+        if (!getFlags().isGameStartedYet())
+        {
+            throw new IllegalStateException("The Minecraft client hasn't finished starting up yet.");
+        }
+
+        return MinecraftClient.getInstance().fpsDebugString;
+    }
+
+    public List<PlayerListEntry> getPlayerList()
+    {
+        if (!getFlags().isGameStartedYet() || MinecraftClient.getInstance().getNetworkHandler() == null)
+        {
+            return Collections.emptyList();
+        }
+
+        synchronized (this)
+        {
+            return List.copyOf(MinecraftClient.getInstance().getNetworkHandler().getPlayerList());
+        }
+    }
+
+    public Map<String, MapState> getMaps()
+    {
+        if (!getFlags().isGameStartedYet() || MinecraftClient.getInstance().world == null)
+        {
+            return Map.of();
+        }
+
+        synchronized (this)
+        {
+            return Map.copyOf(((ClientWorldMixin) MinecraftClient.getInstance().world).getMapStates());
         }
     }
 }

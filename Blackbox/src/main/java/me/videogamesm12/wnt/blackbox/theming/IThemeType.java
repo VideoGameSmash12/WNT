@@ -22,8 +22,8 @@
 
 package me.videogamesm12.wnt.blackbox.theming;
 
+
 import me.videogamesm12.wnt.blackbox.Blackbox;
-import me.videogamesm12.wnt.blackbox.tools.ChatWindow;
 
 import javax.swing.*;
 
@@ -35,11 +35,11 @@ public interface IThemeType
 
     default void update()
     {
-        SwingUtilities.updateComponentTreeUI(Blackbox.GUI);
+        SwingUtilities.updateComponentTreeUI(Blackbox.getInstance().getMainWindow());
 
-        if (ChatWindow.INSTANCE != null)
+        /*if (Console.INSTANCE != null)
         {
-            SwingUtilities.updateComponentTreeUI(ChatWindow.INSTANCE);
-        }
+            SwingUtilities.updateComponentTreeUI(Console.INSTANCE);
+        }*/
     }
 }

@@ -1,92 +1,48 @@
-/*
- * Copyright (c) 2023 Video
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
- * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
- * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
- * OR OTHER DEALINGS IN THE SOFTWARE.
- */
-
 package me.videogamesm12.wnt.blackbox;
 
-import com.google.common.eventbus.Subscribe;
 import lombok.Getter;
-import me.shedaniel.autoconfig.AutoConfig;
-import me.shedaniel.autoconfig.ConfigData;
-import me.shedaniel.autoconfig.annotation.Config;
-import me.shedaniel.autoconfig.annotation.ConfigEntry;
-import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import me.videogamesm12.wnt.WNT;
-import me.videogamesm12.wnt.blackbox.commands.BlackboxCommand;
-import me.videogamesm12.wnt.blackbox.menus.*;
+import me.videogamesm12.wnt.blackbox.command.BlackboxCommand;
 import me.videogamesm12.wnt.blackbox.theming.ThemeRegistry;
 import me.videogamesm12.wnt.blackbox.theming.inbuilt.IBThemes;
+import me.videogamesm12.wnt.blackbox.window.GUI;
+import me.videogamesm12.wnt.blackbox.window.SysTray;
 import me.videogamesm12.wnt.command.CommandSystem;
 import me.videogamesm12.wnt.supervisor.Supervisor;
-import me.videogamesm12.wnt.supervisor.api.event.ClientFreezeEvent;
-import me.videogamesm12.wnt.blackbox.tabs.*;
-import net.fabricmc.api.ModInitializer;
+import me.videogamesm12.wnt.supervisor.components.fantasia.Fantasia;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-import java.io.*;
-import java.time.Instant;
-import java.util.*;
-import java.util.Timer;
 
-public class Blackbox extends Thread implements ModInitializer, ClientLifecycleEvents.ClientStarted,
-        ClientLifecycleEvents.ClientStopping
+import java.io.File;
+
+public class Blackbox extends Thread implements ClientLifecycleEvents.ClientStarted, ClientLifecycleEvents.ClientStopping
 {
-    public static final Identifier IDENTIFIER = Identifier.of("wnt", "blackbox");
+    @Getter
+    private static final Identifier identifier = new Identifier("wnt", "blackbox");
+    @Getter
+    private static Blackbox instance;
     //--
-    public static GUIConfig CONFIG = null;
-    public static GUIFrame GUI = null;
-    //--
-    //public static TrayIcon trayIcon = null;
-    //--
-    private boolean started = false;
-    private boolean ignore;
-
-    @Override
-    public void onInitialize()
+    public static void setup()
     {
-        switch (Util.getOperatingSystem())
-        {
-            case SOLARIS, UNKNOWN ->
-            {
-                WNT.getLogger().warn("The Blackbox has not been properly tested under this operating system, so in the "
-                        + "interest of maintaining client stability, it has been disabled.");
-                return;
-            }
-            case LINUX, OSX ->
-            {
-                // https://bugs.openjdk.org/browse/JDK-8056151
-                System.setProperty("sun.java2d.xrender", "f");
-            }
-        }
-
-        CommandSystem.registerCommand(BlackboxCommand.class);
-
-        start();
+        instance = new Blackbox();
+        instance.start();
     }
+
+    public static File getFolder()
+    {
+        return new File(WNT.getWNTFolderSafe(), "blackbox");
+    }
+
+    @Getter
+    private Configuration config;
+
+    @Getter
+    private GUI mainWindow;
+
+    @Getter
+    private SysTray systemTrayIcon;
 
     @Override
     public void run()
@@ -95,13 +51,12 @@ public class Blackbox extends Thread implements ModInitializer, ClientLifecycleE
         ClientLifecycleEvents.CLIENT_STOPPING.register(this);
         Supervisor.getEventBus().register(this);
 
-        AutoConfig.register(GUIConfig.class, GsonConfigSerializer::new);
-        CONFIG = AutoConfig.getConfigHolder(GUIConfig.class).getConfig();
+        config = Configuration.load();
 
         ThemeRegistry.setupThemes();
         try
         {
-            ThemeRegistry.getTheme(CONFIG.getTheme()).apply();
+            ThemeRegistry.getTheme(config.getTheme()).apply();
         }
         catch (Exception ex)
         {
@@ -109,305 +64,71 @@ public class Blackbox extends Thread implements ModInitializer, ClientLifecycleE
             ThemeRegistry.getTheme(IBThemes.METAL.getInternalName()).apply();
         }
 
-        // Non-Linux operating systems open the window earlier than Linux operating systems do.
-        // If it wasn't like this, this issue would happen: https://github.com/VideoGameSmash12/WNT/issues/11
-        if (CONFIG.showOnStartup() && GUI == null && Util.getOperatingSystem() != Util.OperatingSystem.LINUX)
+        // Non-Linux operating systems open the window and set up the system tray icons earlier than Linux operating systems do.
+        // If it wasn't like this, issues like this would happen:  https://github.com/VideoGameSmash12/WNT/issues/11
+        if (Util.getOperatingSystem() != Util.OperatingSystem.LINUX)
         {
-            GUI = new GUIFrame();
-            GUI.setVisible(true);
+            startup();
         }
 
-        try
-        {
-            WNT.getLogger().info("Setting up system tray support...");
-            /*if (SystemTray.isSupported())
-            {
-                SystemTray tray = SystemTray.getSystemTray();
-                trayIcon = new TrayIcon(Toolkit.getDefaultToolkit().createImage(
-                        Blackbox.class.getClassLoader().getResource("assets/wnt-blackbox/supervisor_icon.png")), "WNT");
-                trayIcon.setToolTip("Blackbox - Click to Open");
-                trayIcon.setImageAutoSize(true);
-                trayIcon.addMouseListener(new MouseAdapter()
-                {
-                    @Override
-                    public void mouseClicked(MouseEvent e)
-                    {
-                        if (GUI == null)
-                            GUI = new GUIFrame();
-
-                        GUI.setVisible(true);
-                    }
-                });
-                tray.add(trayIcon);
-            }*/
-        }
-        catch (Exception ex)
-        {
-            ex.printStackTrace();
-        }
+        // Registers commands in both WNT and Fantasia
+        CommandSystem.registerCommand(BlackboxCommand.Minecraft.class);
+        Fantasia.getInstance().getServer().registerCommand(BlackboxCommand.Fantasia.class);
     }
-
-    // Linux operating systems open the window later than non-Linux operating systems do.
-    // If it wasn't like this, this issue would happen: https://github.com/VideoGameSmash12/WNT/issues/11
+    
     @Override
     public void onClientStarted(MinecraftClient client)
     {
-        started = true;
-
-        if (CONFIG.showOnStartup() && GUI == null && Util.getOperatingSystem() == Util.OperatingSystem.LINUX)
+        // Linux operating systems open the window and set up the system tray icons later than non-Linux operating systems do.
+        // If it wasn't like this, issues like this would happen:  https://github.com/VideoGameSmash12/WNT/issues/11
+        if (Util.getOperatingSystem() == Util.OperatingSystem.LINUX)
         {
-            GUI = new GUIFrame();
-            GUI.setVisible(true);
+            startup();
         }
     }
 
     @Override
     public void onClientStopping(MinecraftClient client)
     {
-        AutoConfig.getConfigHolder(GUIConfig.class).save();
+        Configuration.save(config);
     }
 
-    @Subscribe
-    public void onClientFreeze(ClientFreezeEvent event)
+    private void startup()
     {
-        if (ignore || (CONFIG.ignoreFreezesDuringStartup() && !started) || (GUI != null && GUI.isVisible()))
+        setupSystemTrayIcon();
+
+        if (config.isShowOnStartupEnabled() && mainWindow == null)
         {
-            return;
-        }
-
-        long now = Instant.now().toEpochMilli();
-
-        int reaction = JOptionPane.showConfirmDialog(null, String.format("The Supervisor has detected a client-side freeze (last render was %sms ago).\nWould you like to open the Blackbox?", now - event.getLastRendered()), "Client Freeze Detected", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.INFORMATION_MESSAGE);
-
-        switch (reaction)
-        {
-            // The user clicked the Yes button
-            case JOptionPane.YES_OPTION ->
-            {
-                if (GUI == null)
-                {
-                    GUI = new GUIFrame();
-                }
-
-                GUI.setVisible(true);
-            }
-
-            /*  The user clicked the Cancel button. This does the same thing as the No button, but also ignores any
-                future detections. */
-            case JOptionPane.CANCEL_OPTION ->
-            {
-                ignore = true;
-            }
-
-            // The user clicked the No button. Do nothing.
-            case JOptionPane.NO_OPTION ->
-            {
-            }
+            openWindow();
         }
     }
 
-    public static class GUIFrame extends JFrame implements KeyListener
+    public void openWindow()
     {
-        // Menu Bar
-        private JMenuBar menuBar;
-        @Getter
-        private WNTMenu wntMenu;
-        private MitigationsMenu mitigationsMenu;
-        private SettingsMenu settingsMenu;
-        private ToolsMenu toolsMenu;
-        //--
-        private JTabbedPane tabs;
-        //--
-        private Timer timer = null;
-
-        public GUIFrame()
+        if (mainWindow == null)
         {
-            setTitle("Blackbox");
+            mainWindow = new GUI();
+        }
+
+        mainWindow.setVisible(true);
+    }
+
+    public void setupSystemTrayIcon()
+    {
+        WNT.getLogger().info("Setting up system tray integration...");
+
+        if (systemTrayIcon == null)
+        {
+            systemTrayIcon = new SysTray(this);
+
             try
             {
-                // Loads the icon from disk.
-                InputStream iconStream = Blackbox.class.getClassLoader().getResourceAsStream("assets/wnt-blackbox/icon.png");
-                setIconImage(ImageIO.read(iconStream));
+                systemTrayIcon.addIcon();
             }
             catch (Exception ex)
             {
-                WNT.getLogger().error("Failed to load icon image", ex);
-            }
-
-            setMinimumSize(new Dimension(420, 560));
-            setPreferredSize(new Dimension(420, 560));
-            //--
-            initComps();
-            //--
-            Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-            setLocation(dim.width/2 - getSize().width/2, dim.height/2 - getSize().height/2);
-            pack();
-            //--
-            //WNT.getEventBus().register(this);
-        }
-
-        private void initComps()
-        {
-            menuBar = new JMenuBar();
-            wntMenu = new WNTMenu();
-            mitigationsMenu = new MitigationsMenu();
-            toolsMenu = new ToolsMenu();
-            settingsMenu = new SettingsMenu();
-            //--
-            menuBar.add(wntMenu);
-            menuBar.add(mitigationsMenu);
-            menuBar.add(toolsMenu);
-            menuBar.add(settingsMenu);
-            //--
-            tabs = new JTabbedPane();
-            //--
-            GroupLayout layout = new GroupLayout(getContentPane());
-            getContentPane().setLayout(layout);
-            layout.setHorizontalGroup(
-                    layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                            .addComponent(tabs, GroupLayout.Alignment.TRAILING)
-            );
-            layout.setVerticalGroup(
-                    layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                            .addComponent(tabs, GroupLayout.Alignment.TRAILING)
-            );
-            //--
-            tabs.addTab("General", new GeneralTab());
-            tabs.addTab("Players", new PlayersTab());
-            tabs.addTab("Entities", new EntityTab());
-            tabs.addTab("Maps", new MapsTab());
-            //--
-            if (Blackbox.CONFIG.autoUpdate())
-                scheduleRefresh();
-            //--
-            tabs.addKeyListener(this);
-            //--
-            setJMenuBar(menuBar);
-        }
-
-        /**
-         * Disables the timer used for the automatic refresh.
-         */
-        public void cancelRefresh()
-        {
-            if (timer != null)
-            {
-                timer.cancel();
-                timer = null;
+                WNT.getLogger().warn("Failed to set up system tray integration", ex);
             }
         }
-
-        /**
-         * Creates the timer used by the automatic refresh and schedules it.
-         * @implNote If there is a timer already present, it kills that timer and starts anew.
-         */
-        public void scheduleRefresh()
-        {
-            if (timer != null)
-                cancelRefresh();
-
-            timer = new Timer();
-            //--
-            timer.schedule(new TimerTask()
-            {
-                @Override
-                public void run()
-                {
-                    ((SupervisorTab) tabs.getSelectedComponent()).update();
-                }
-            }, 0, 1000);
-        }
-
-        @Override
-        public void keyTyped(KeyEvent e)
-        {
-        }
-
-        @Override
-        public void keyPressed(KeyEvent e)
-        {
-            if (e.getKeyCode() == KeyEvent.VK_F5)
-                ((SupervisorTab) tabs.getSelectedComponent()).update();
-        }
-
-        @Override
-        public void keyReleased(KeyEvent e)
-        {
-        }
-
-        /*@Subscribe
-        public void onDumpResult(DumpResultEvent event)
-        {
-            if (event.getRequester().equals(IDENTIFIER))
-            {
-                String title = event.getResult() == ActionResult.SUCCESS ? "Success" : "Error";
-                int messageType = event.getResult() == ActionResult.SUCCESS ? JOptionPane.INFORMATION_MESSAGE : JOptionPane.ERROR_MESSAGE;
-
-                JOptionPane.showMessageDialog(null, event.getMessage().toString(), title, messageType);
-            }
-        }*/
-    }
-
-    @Config(name = "wnt-blackbox")
-    public static class GUIConfig implements ConfigData
-    {
-        private boolean showOnStartup;
-        private boolean ignoreFreezesDuringStartup = true;
-        private boolean autoUpdate = true;
-
-        @ConfigEntry.Gui.Excluded
-        private String theme = "DARK";
-
-        public String getTheme()
-        {
-            return theme;
-        }
-
-        public void setTheme(String theme)
-        {
-            this.theme = theme;
-        }
-
-        public boolean ignoreFreezesDuringStartup()
-        {
-            return ignoreFreezesDuringStartup;
-        }
-
-        public void setIgnoreFreezesDuringStartup(boolean bool)
-        {
-            this.ignoreFreezesDuringStartup = bool;
-        }
-
-        public boolean autoUpdate()
-        {
-            return autoUpdate;
-        }
-
-        public void setAutoUpdate(boolean value)
-        {
-            this.autoUpdate = value;
-        }
-
-        public boolean showOnStartup()
-        {
-            return showOnStartup;
-        }
-
-        public void setShowOnStartup(boolean value)
-        {
-            this.showOnStartup = value;
-        }
-    }
-
-    public static File getBlackboxFolder()
-    {
-        File folder = new File(WNT.getWNTFolder(), "blackbox");
-
-        if (!folder.exists())
-        {
-            folder.mkdirs();
-        }
-
-        return folder;
     }
 }

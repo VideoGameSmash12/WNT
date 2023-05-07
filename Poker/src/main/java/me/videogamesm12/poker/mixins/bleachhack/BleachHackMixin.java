@@ -25,7 +25,7 @@ package me.videogamesm12.poker.mixins.bleachhack;
 import me.videogamesm12.poker.core.gui.PModCategoryMenu;
 import me.videogamesm12.poker.core.gui.PModMenu;
 import me.videogamesm12.poker.partitions.bleachhack.BleachModuleMenu;
-import me.videogamesm12.wnt.blackbox.menus.WNTMenu;
+import me.videogamesm12.wnt.blackbox.window.menu.WNTMenu;
 import org.apache.commons.lang3.StringUtils;
 import org.bleachhack.BleachHack;
 import org.bleachhack.module.ModuleCategory;
@@ -51,6 +51,6 @@ public class BleachHackMixin
             menu.addSubMenu(cMenu);
         });
 
-        WNTMenu.getQueue().add(menu);
+        WNTMenu.queueModMenu(menu);
     }
 }

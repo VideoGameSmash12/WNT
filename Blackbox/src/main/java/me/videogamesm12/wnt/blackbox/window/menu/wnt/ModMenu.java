@@ -20,13 +20,20 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.videogamesm12.wnt.blackbox.tabs;
+package me.videogamesm12.wnt.blackbox.window.menu.wnt;
 
-/**
- * <h1>DynamicTableModel</h1>
- * Interface specifically for managing tabs with tables in them.
- */
-public interface DynamicTableModel
+import javax.swing.*;
+
+public abstract class ModMenu<T> extends JMenu
 {
-    void update();
+    private final Class<T> modClass;
+
+    public ModMenu(String name, Class<T> mClass)
+    {
+        super(name);
+        //--
+        modClass = mClass;
+    }
+
+    public abstract T getModInstance();
 }

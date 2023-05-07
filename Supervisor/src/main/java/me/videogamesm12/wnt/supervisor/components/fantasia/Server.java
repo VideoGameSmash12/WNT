@@ -135,7 +135,7 @@ public class Server extends Thread
         sessions.clear();
     }
 
-    private void registerCommand(Class<? extends FCommand> cmd)
+    public void registerCommand(Class<? extends FCommand> cmd)
     {
         try
         {

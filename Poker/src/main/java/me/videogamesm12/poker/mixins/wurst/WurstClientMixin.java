@@ -25,7 +25,7 @@ package me.videogamesm12.poker.mixins.wurst;
 import me.videogamesm12.poker.core.gui.PModCategoryMenu;
 import me.videogamesm12.poker.core.gui.PModMenu;
 import me.videogamesm12.poker.partitions.wurst.WurstModuleMenu;
-import me.videogamesm12.wnt.blackbox.menus.WNTMenu;
+import me.videogamesm12.wnt.blackbox.window.menu.WNTMenu;
 import net.wurstclient.Category;
 import net.wurstclient.WurstClient;
 import org.spongepowered.asm.mixin.Mixin;
@@ -52,6 +52,6 @@ public class WurstClientMixin
         });
 
         // Adds the final product
-        WNTMenu.getQueue().add(menu);
+        WNTMenu.queueModMenu(menu);
     }
 }

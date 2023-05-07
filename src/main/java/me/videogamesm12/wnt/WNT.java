@@ -30,6 +30,7 @@ import me.videogamesm12.wnt.module.Module;
 import me.videogamesm12.wnt.module.ModuleManager;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -104,6 +105,18 @@ public class WNT implements ModInitializer, ClientLifecycleEvents.ClientStopping
     public static File getWNTFolder()
     {
         File file = new File(MinecraftClient.getInstance().runDirectory, "wnt");
+
+        if (!file.isDirectory())
+        {
+            file.mkdirs();
+        }
+
+        return file;
+    }
+
+    public static File getWNTFolderSafe()
+    {
+        File file = new File(FabricLoader.getInstance().getGameDir().toFile(), "wnt");
 
         if (!file.isDirectory())
         {
