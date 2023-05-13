@@ -27,6 +27,10 @@ import lombok.RequiredArgsConstructor;
 import me.videogamesm12.wnt.event.CustomEvent;
 import me.videogamesm12.wnt.supervisor.components.fantasia.session.ISession;
 
+/**
+ * <h1>SessionStartedPreSetupEvent</h1>
+ * <p>An event that is called just before an ISession implementation sets up everything it needs.</p>
+ */
 @Getter
 @RequiredArgsConstructor
 public class SessionStartedPreSetupEvent extends CustomEvent

@@ -28,18 +28,23 @@ import me.videogamesm12.wnt.supervisor.components.fantasia.Fantasia;
 import me.videogamesm12.wnt.supervisor.components.fantasia.Server;
 import me.videogamesm12.wnt.supervisor.components.fantasia.event.SessionStartedEvent;
 import me.videogamesm12.wnt.supervisor.components.fantasia.event.SessionStartedPreSetupEvent;
+import me.videogamesm12.wnt.supervisor.components.fantasia.event.SessionPreProcessCommandEvent;
 
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
 
+/**
+ * <h1>TelnetSession</h1>
+ * <p>An implementation of ISession for Telnet connections.</p>
+ */
 public class TelnetSession extends Thread implements ISession
 {
-    private Server server;
+    private final Server server;
     private final Socket socket;
     private BufferedWriter writer;
     private BufferedReader reader;
-    private CommandSender sender;
+    private final CommandSender sender;
 
     public TelnetSession(Server server, Socket socket)
     {
@@ -109,8 +114,13 @@ public class TelnetSession extends Thread implements ISession
 
             try
             {
-                Fantasia.getServerLogger().info(sender.getSession().getConnectionIdentifier() + " issued client command '" + command + "'");
-                Fantasia.getInstance().getServer().getDispatcher().execute(command, sender);
+                final SessionPreProcessCommandEvent event = new SessionPreProcessCommandEvent(sender.session(), command);
+                Supervisor.getEventBus().post(event);
+
+                if (!event.isCancelled())
+                {
+                    Fantasia.getInstance().getServer().getDispatcher().execute(command, sender);
+                }
             }
             catch (CommandSyntaxException ignored)
             {

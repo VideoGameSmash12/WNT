@@ -20,32 +20,53 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.videogamesm12.wnt.supervisor;
+package me.videogamesm12.wnt.supervisor.components.fantasia.session;
 
-import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
-import net.fabricmc.loader.api.entrypoint.PreLaunchEntrypoint;
+import lombok.Getter;
+import me.videogamesm12.wnt.util.Messenger;
+import net.kyori.adventure.text.Component;
 import net.minecraft.client.MinecraftClient;
 
-public class Entrypoints implements PreLaunchEntrypoint, ClientModInitializer, ClientLifecycleEvents.ClientStopping
+/**
+ * <h1>InGameSession</h1>
+ * <p>An implementation of ISession for connections from in-game.</p>
+ */
+@Getter
+public final class InGameSession implements ISession
 {
-    @Override
-    public void onPreLaunch()
+    private final CommandSender sender;
+
+    public InGameSession()
     {
-        Supervisor.setup();
+        this.sender = new CommandSender(this);
+    }
+
+    /**
+     * Returns the username of the current in-game session.
+     * @return String
+     */
+    @Override
+    public String getConnectionIdentifier()
+    {
+        return MinecraftClient.getInstance().getSession().getUsername();
     }
 
     @Override
-    public void onInitializeClient()
+    public boolean isConnected()
     {
-        Supervisor.getInstance().getFlags().setGameStartedYet(true);
-        ClientLifecycleEvents.CLIENT_STOPPING.register(this);
-        Supervisor.getInstance().postStartup();
+        // You are always connected in-game
+        return true;
     }
 
     @Override
-    public void onClientStopping(MinecraftClient client)
+    public void disconnect(boolean quiet)
     {
-        Supervisor.getInstance().shutdown();
+        // Do nothing, you cannot disconnect from in-game
+    }
+
+    @Override
+    public void sendMessage(String message)
+    {
+        Messenger.sendChatMessage(Component.text(message));
     }
 }

@@ -5,6 +5,7 @@ import lombok.Getter;
 import me.videogamesm12.wnt.blackbox.Blackbox;
 import me.videogamesm12.wnt.supervisor.Supervisor;
 import me.videogamesm12.wnt.supervisor.components.fantasia.Fantasia;
+import me.videogamesm12.wnt.supervisor.components.fantasia.event.SessionPreProcessCommandEvent;
 import me.videogamesm12.wnt.supervisor.components.fantasia.event.SessionStartedEvent;
 import me.videogamesm12.wnt.supervisor.components.fantasia.event.SessionStartedPreSetupEvent;
 import me.videogamesm12.wnt.supervisor.components.fantasia.session.CommandSender;
@@ -42,8 +43,13 @@ public class FantasiaTab extends AbstractTab
 
         try
         {
-            Fantasia.getServerLogger().info(session.getConnectionIdentifier() + " issued client command '" + command + "'");
-            Fantasia.getInstance().getServer().getDispatcher().execute(command, sender);
+            final SessionPreProcessCommandEvent event = new SessionPreProcessCommandEvent(sender.session(), command);
+            Supervisor.getEventBus().post(event);
+
+            if (!event.isCancelled())
+            {
+                Fantasia.getInstance().getServer().getDispatcher().execute(command, sender);
+            }
         }
         catch (CommandSyntaxException ignored)
         {
@@ -56,6 +62,10 @@ public class FantasiaTab extends AbstractTab
         }
     }
 
+    /**
+     * <h2>BlackboxSession</h2>
+     * <p>An implementation of ISession for connections from the Blackbox.</p>
+     */
     public static class BlackboxSession implements ISession
     {
         @Getter

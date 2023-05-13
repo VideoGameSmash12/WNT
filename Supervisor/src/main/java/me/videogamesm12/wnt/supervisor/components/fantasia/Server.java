@@ -29,6 +29,7 @@ import lombok.Getter;
 import me.videogamesm12.wnt.supervisor.Supervisor;
 import me.videogamesm12.wnt.supervisor.api.event.ClientFreezeEvent;
 import me.videogamesm12.wnt.supervisor.components.fantasia.command.*;
+import me.videogamesm12.wnt.supervisor.components.fantasia.event.SessionPreProcessCommandEvent;
 import me.videogamesm12.wnt.supervisor.components.fantasia.event.SessionStartedEvent;
 import me.videogamesm12.wnt.supervisor.components.fantasia.event.SessionStartedPreSetupEvent;
 import me.videogamesm12.wnt.supervisor.components.fantasia.listener.IConnectionListener;
@@ -85,7 +86,7 @@ public class Server extends Thread
             Fantasia.getServerLogger().error("Failed to start the selected connection listener. You'll still be able to access it through the Blackbox, but not through anything external. Stacktrace:", ex);
         }
 
-        Fantasia.getServerLogger().info("Registering commands...");;
+        Fantasia.getServerLogger().info("Registering commands...");
         registerCommand(CrashCommand.class);
         registerCommand(ChatCommand.class);
         registerCommand(DisconnectCommand.class);
@@ -184,5 +185,11 @@ public class Server extends Thread
                 """);
         session.sendMessage(" --");
         session.sendMessage(" Use 'help' for a list of commands.");
+    }
+
+    @Subscribe
+    public void onSessionPreProcessCommand(SessionPreProcessCommandEvent event)
+    {
+        Fantasia.getServerLogger().info(event.getSession().getConnectionIdentifier() + " issued client command '" + event.getCommand() + "'");
     }
 }

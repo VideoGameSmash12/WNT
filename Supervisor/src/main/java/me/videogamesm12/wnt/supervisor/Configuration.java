@@ -46,6 +46,8 @@ public class Configuration
         private ConnectionType connectionType = ConnectionType.TELNET;
 
         private boolean nonLocalConnectionsAllowed;
+
+        private boolean runningCommandsFromInGameAllowed;
     }
 
     @Getter

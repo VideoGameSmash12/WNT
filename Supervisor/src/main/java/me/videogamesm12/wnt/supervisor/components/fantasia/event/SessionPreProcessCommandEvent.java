@@ -20,32 +20,23 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package me.videogamesm12.wnt.supervisor;
+package me.videogamesm12.wnt.supervisor.components.fantasia.event;
 
-import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
-import net.fabricmc.loader.api.entrypoint.PreLaunchEntrypoint;
-import net.minecraft.client.MinecraftClient;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import me.videogamesm12.wnt.event.CustomEvent;
+import me.videogamesm12.wnt.supervisor.components.fantasia.session.ISession;
 
-public class Entrypoints implements PreLaunchEntrypoint, ClientModInitializer, ClientLifecycleEvents.ClientStopping
+/**
+ * <h1>SessionPreProcessCommandEvent</h1>
+ * <p>An event that is called right before a command is processed.</p>
+ * <p>This event can be cancelled.</p>
+ */
+@Getter
+@RequiredArgsConstructor
+public class SessionPreProcessCommandEvent extends CustomEvent
 {
-    @Override
-    public void onPreLaunch()
-    {
-        Supervisor.setup();
-    }
+    private final ISession session;
 
-    @Override
-    public void onInitializeClient()
-    {
-        Supervisor.getInstance().getFlags().setGameStartedYet(true);
-        ClientLifecycleEvents.CLIENT_STOPPING.register(this);
-        Supervisor.getInstance().postStartup();
-    }
-
-    @Override
-    public void onClientStopping(MinecraftClient client)
-    {
-        Supervisor.getInstance().shutdown();
-    }
+    private final String command;
 }

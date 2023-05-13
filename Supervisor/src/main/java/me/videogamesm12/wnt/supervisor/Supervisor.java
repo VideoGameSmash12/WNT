@@ -25,9 +25,12 @@ package me.videogamesm12.wnt.supervisor;
 import com.google.common.eventbus.EventBus;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import lombok.Getter;
+import me.videogamesm12.wnt.command.CommandSystem;
 import me.videogamesm12.wnt.dumper.mixin.ClientWorldMixin;
 import me.videogamesm12.wnt.supervisor.api.SVComponent;
+import me.videogamesm12.wnt.supervisor.commands.FantasiaCommand;
 import me.videogamesm12.wnt.supervisor.components.fantasia.Fantasia;
 import me.videogamesm12.wnt.supervisor.components.flags.Flags;
 import me.videogamesm12.wnt.supervisor.components.watchdog.Watchdog;
@@ -36,8 +39,11 @@ import me.videogamesm12.wnt.supervisor.mixin.gui.DebugHudMixin;
 import me.videogamesm12.wnt.supervisor.mixin.gui.InGameHudMixin;
 import me.videogamesm12.wnt.supervisor.util.Fallbacks;
 import me.videogamesm12.wnt.util.Messenger;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.loader.api.FabricLoader;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.PlayerListEntry;
@@ -137,6 +143,11 @@ public class Supervisor extends Thread
         }
     }
 
+    public void postStartup()
+    {
+        CommandSystem.registerCommand(FantasiaCommand.class);
+    }
+
     public void chatMessage(String message)
     {
         if (!getFlags().isGameStartedYet())
@@ -198,6 +209,18 @@ public class Supervisor extends Thread
         }
 
         MinecraftClient.getInstance().getNetworkHandler().sendChatCommand(command);
+    }
+
+    public void runClientCommand(String input, FabricClientCommandSource source)
+    {
+        try
+        {
+            ClientCommandManager.getActiveDispatcher().execute(input, source);
+        }
+        catch (CommandSyntaxException e)
+        {
+            source.sendError(Messenger.convert(Component.text(e.getMessage(), NamedTextColor.RED)));
+        }
     }
 
     public void shutdown()

@@ -20,7 +20,6 @@
  * OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-
 package me.videogamesm12.wnt.supervisor.components.fantasia.command;
 
 import com.mojang.brigadier.Command;

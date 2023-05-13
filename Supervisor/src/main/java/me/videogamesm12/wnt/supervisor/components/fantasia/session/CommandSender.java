@@ -41,6 +41,11 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
 
+/**
+ * <h1>CommandSender</h1>
+ * <p>An implementation of CommandSource that allows commands to be run in the Fantasia console.</p>
+ * @param session   An implementation of ISession
+ */
 public record CommandSender(@Getter ISession session) implements CommandSource
 {
     /**
