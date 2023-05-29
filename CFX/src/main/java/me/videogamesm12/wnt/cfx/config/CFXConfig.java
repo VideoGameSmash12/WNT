@@ -109,6 +109,10 @@ public class CFXConfig implements ConfigData
     {
         @ConfigEntry.Category("text")
         @ConfigEntry.Gui.CollapsibleObject(startExpanded = true)
+        private GText generalPatches = new GText();
+
+        @ConfigEntry.Category("text")
+        @ConfigEntry.Gui.CollapsibleObject(startExpanded = true)
         private TText translatePatches = new TText();
 
         @ConfigEntry.Category("text")
@@ -145,6 +149,21 @@ public class CFXConfig implements ConfigData
 
             @ConfigEntry.Gui.Tooltip
             private boolean placeholderLimitEnabled = true;
+        }
+
+        @Getter
+        @Setter
+        public static class GText
+        {
+            @ConfigEntry.Gui.Tooltip
+            private DAFMode doubleArrayFix = DAFMode.VANILLA;
+
+            public enum DAFMode
+            {
+                OBVIOUS,    // Replaces payloads with text saying "*** Component array is empty ***"
+                OFF,        // No intervention
+                VANILLA     // Throws a JSON parse exception instead
+            }
         }
     }
 }
