@@ -1,6 +1,5 @@
 package me.videogamesm12.wnt.blackbox.theming.custom.flatlaf;
 
-import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.FlatPropertiesLaf;
 import me.videogamesm12.wnt.WNT;
 import me.videogamesm12.wnt.blackbox.theming.ITheme;

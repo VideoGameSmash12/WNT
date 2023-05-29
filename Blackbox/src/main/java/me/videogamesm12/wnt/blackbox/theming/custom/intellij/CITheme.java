@@ -6,7 +6,8 @@ import me.videogamesm12.wnt.WNT;
 import me.videogamesm12.wnt.blackbox.theming.ITheme;
 import me.videogamesm12.wnt.blackbox.theming.IThemeType;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
 
 public class CITheme implements ITheme
 {

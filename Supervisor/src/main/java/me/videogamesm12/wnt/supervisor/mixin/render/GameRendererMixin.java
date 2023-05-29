@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Video
+ * Copyright (c) 2023 Video
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -43,7 +43,7 @@ public class GameRendererMixin
     public void startRender(float tickDelta, long startTime, boolean tick, CallbackInfo ci)
     {
         // Refuses to render anything period.
-        if (Supervisor.CONFIG.rendering().disableGameRendering())
+        if (Supervisor.getConfig().getRenderingSettings().isGameRenderingDisabled())
         {
             ci.cancel();
         }

@@ -1,0 +1,5 @@
+{
+  "wnt.supervisor.command.fantasia.not_allowed": "Running Fantasia commands from in-game is currently disabled in the Supervisor configuration.",
+  "wnt.supervisor.command.fantasia.running": "Running command: %s",
+  "wnt.supervisor.command.fantasia.unknown_command": "Unknown command: %s"
+}

@@ -29,6 +29,11 @@ import net.minecraft.util.ActionResult;
 
 import java.util.UUID;
 
+/**
+ * <h1>HUDMessageAdded</h1>
+ * <p>A Fabric event that is called whenever a message is sent to the chat and picked up by the Minecraft client.</p>
+ * <p>The reason this event hasn't been converted to a CustomEvent is because message spam could result in dozens if not hundreds of instances of the event being sent, which would eat up RAM like crazy.</p>
+ */
 public interface HUDMessageAdded
 {
     Event<HUDMessageAdded> EVENT = EventFactory.createArrayBacked(HUDMessageAdded.class, (listeners) -> (message) ->

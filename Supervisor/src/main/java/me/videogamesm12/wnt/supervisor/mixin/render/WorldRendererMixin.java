@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Video
+ * Copyright (c) 2023 Video
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -41,8 +41,8 @@ public class WorldRendererMixin
         CallbackInfo ci)
     {
         // Don't render the world if it's disabled by the Supervisor.
-        if (Supervisor.CONFIG.rendering().disableWorldRendering()
-                || Supervisor.CONFIG.rendering().disableGameRendering())
+        if (Supervisor.getConfig().getRenderingSettings().isWorldRenderingDisabled()
+                || Supervisor.getConfig().getRenderingSettings().isGameRenderingDisabled())
         {
             ci.cancel();
         }
@@ -52,8 +52,8 @@ public class WorldRendererMixin
     public void startRenderWeather(LightmapTextureManager manager, float f, double d, double e, double g, CallbackInfo ci)
     {
         // Don't render any weather if it's disabled.
-        if (Supervisor.CONFIG.rendering().disableWeatherRendering()
-                || Supervisor.CONFIG.rendering().disableGameRendering())
+        if (Supervisor.getConfig().getRenderingSettings().isWeatherRenderingDisabled()
+                || Supervisor.getConfig().getRenderingSettings().isGameRenderingDisabled())
         {
             ci.cancel();
         }
@@ -64,8 +64,8 @@ public class WorldRendererMixin
         MatrixStack matrices, VertexConsumerProvider vertexConsumers, CallbackInfo ci)
     {
         // Don't render entities if disabled.
-        if (Supervisor.CONFIG.rendering().disableEntityRendering()
-                || Supervisor.CONFIG.rendering().disableGameRendering())
+        if (Supervisor.getConfig().getRenderingSettings().isEntityRenderingDisabled()
+                || Supervisor.getConfig().getRenderingSettings().isGameRenderingDisabled())
         {
             ci.cancel();
         }
