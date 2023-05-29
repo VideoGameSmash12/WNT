@@ -36,10 +36,6 @@ public interface IThemeType
     default void update()
     {
         SwingUtilities.updateComponentTreeUI(Blackbox.getInstance().getMainWindow());
-
-        /*if (Console.INSTANCE != null)
-        {
-            SwingUtilities.updateComponentTreeUI(Console.INSTANCE);
-        }*/
+        SwingUtilities.updateComponentTreeUI(Blackbox.getInstance().getMainWindow().getConsole());
     }
 }
