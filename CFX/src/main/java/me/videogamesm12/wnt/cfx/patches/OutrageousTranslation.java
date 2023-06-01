@@ -83,33 +83,42 @@ public class OutrageousTranslation
 			String key = JsonHelper.getString(from, "translate");
 			Matcher matcher = PLACEHOLDER_PATTERN.matcher(key);
 			amount += matcher.results().count();
-
-			// Recursively figure out how many placeholders the component has in the "with" shit
-			if (from.has("with"))
-			{
-				JsonArray array = JsonHelper.getArray(from, "with");
-
-				for (JsonElement within : array)
-				{
-					long amountWithin = getNumberOfPlaceholders(within);
-
-					if (amountWithin == 1)
-					{
-						amount++;
-					}
-					else if (amountWithin > 1)
-					{
-						amount = amount * amountWithin;
-					}
-				}
-			}
 		}
+
+		// This apparently exists as of 1.19.4, so we'll take that into account as well
+		if (from.has("fallback"))
+		{
+			String key = JsonHelper.getString(from, "fallback");
+			Matcher matcher = PLACEHOLDER_PATTERN.matcher(key);
+			amount += matcher.results().count();
+		}
+
 		// Also applies to keybind components, but to a lesser extent
-		else if (from.has("keybind"))
+		if (from.has("keybind"))
 		{
 			String key = JsonHelper.getString(from, "keybind");
 			Matcher matcher = PLACEHOLDER_PATTERN.matcher(key);
 			amount += matcher.results().count();
+		}
+
+		// Recursively figure out how many placeholders the component has in the "with" shit
+		if (from.has("with"))
+		{
+			JsonArray array = JsonHelper.getArray(from, "with");
+
+			for (JsonElement within : array)
+			{
+				long amountWithin = getNumberOfPlaceholders(within);
+
+				if (amountWithin == 1)
+				{
+					amount++;
+				}
+				else if (amountWithin > 1)
+				{
+					amount = amount * amountWithin;
+				}
+			}
 		}
 
 		return amount;

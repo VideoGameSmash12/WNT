@@ -22,7 +22,7 @@
 
 package me.videogamesm12.wnt.supervisor.api;
 
-import net.kyori.adventure.key.Key;
+import net.minecraft.util.Identifier;
 
 /**
  * <h1>SVComponent</h1>
@@ -30,7 +30,7 @@ import net.kyori.adventure.key.Key;
  */
 public interface SVComponent
 {
-    Key identifier();
+    String identifier();
 
     void setup();
 

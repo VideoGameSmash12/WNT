@@ -25,6 +25,7 @@ package me.videogamesm12.wnt.supervisor.components.fantasia;
 import lombok.Getter;
 import me.videogamesm12.wnt.supervisor.api.SVComponent;
 import net.kyori.adventure.key.Key;
+import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,15 +40,13 @@ public class Fantasia implements SVComponent
     @Getter
     private static Fantasia instance;
     //--
-    private final Key identifier = Key.key("wnt", "fantasia");
-    //--
     @Getter
     private Server server;
 
     @Override
-    public Key identifier()
+    public String identifier()
     {
-        return identifier;
+        return "wnt:fantasia";
     }
 
     @Override

@@ -26,7 +26,7 @@ import me.videogamesm12.wnt.WNT;
 import me.videogamesm12.wnt.supervisor.Supervisor;
 import me.videogamesm12.wnt.supervisor.api.SVComponent;
 import me.videogamesm12.wnt.supervisor.api.event.ClientFreezeEvent;
-import net.kyori.adventure.key.Key;
+import net.minecraft.util.Identifier;
 
 import java.time.Instant;
 import java.util.concurrent.ScheduledExecutorService;
@@ -37,13 +37,12 @@ public class Watchdog extends Thread implements SVComponent
 {
     public static long LAST_RENDERED_TIME = 0L;
     //--
-    private final Key identifier = Key.key("wnt", "watchdog");
     private final ScheduledExecutorService freezeDetector = new ScheduledThreadPoolExecutor(1);
 
     @Override
-    public Key identifier()
+    public String identifier()
     {
-        return identifier;
+        return "wnt:watchdog";
     }
 
     @Override

@@ -156,13 +156,24 @@ public class CFXConfig implements ConfigData
         public static class GText
         {
             @ConfigEntry.Gui.Tooltip
-            private DAFMode doubleArrayFix = DAFMode.VANILLA;
+            private Mode doubleArrayFix = Mode.VANILLA;
 
-            public enum DAFMode
+            @ConfigEntry.Gui.Tooltip
+            private Mode arrayDepthFix = Mode.OBVIOUS;
+
+            @ConfigEntry.Gui.Tooltip
+            private long arrayDepthMaximum = 16;
+
+            public enum Mode
             {
-                OBVIOUS,    // Replaces payloads with text saying "*** Component array is empty ***"
+                OBVIOUS,    // Replaces payloads with text explaining the issue
                 OFF,        // No intervention
                 VANILLA     // Throws a JSON parse exception instead
+            }
+
+            public boolean isArrayDepthFixEnabled()
+            {
+                return arrayDepthFix != Mode.OFF;
             }
         }
     }
