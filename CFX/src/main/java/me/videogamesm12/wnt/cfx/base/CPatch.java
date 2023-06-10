@@ -28,7 +28,7 @@ import java.lang.annotation.RetentionPolicy;
 /**
  * <h1>CPatch</h1>
  * Annotation that provides some metadata in regards to a series of patches. Used to determine whether or not a patch
- *  should be applied based on what mods are currently loaded in-game.
+ *  should be applied based on what mods are currently loaded in-game and the current version of the game.
  */
 @Retention(RetentionPolicy.RUNTIME)
 public @interface CPatch
@@ -38,4 +38,6 @@ public @interface CPatch
     String description();
 
     String[] conflicts() default {};
+
+    String[] supportedVersions() default {"*"};
 }

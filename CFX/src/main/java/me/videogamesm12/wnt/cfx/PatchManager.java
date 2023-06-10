@@ -24,11 +24,15 @@ package me.videogamesm12.wnt.cfx;
 
 import me.videogamesm12.wnt.cfx.base.CPatch;
 import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.api.ModContainer;
+import net.fabricmc.loader.api.SemanticVersion;
+import net.fabricmc.loader.api.Version;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -44,7 +48,7 @@ public class PatchManager implements IMixinConfigPlugin
     @Override
     public void onLoad(String mixinPackage)
     {
-        CFX.getLogger().info("Starting up...");
+        CFX.getLogger().info("Setting up patches...");
     }
 
     @Override
@@ -64,17 +68,18 @@ public class PatchManager implements IMixinConfigPlugin
 
         try
         {
-            Class<?> patchClass = Class.forName(mixinClassName);
+            final Class<?> patchClass = Class.forName(mixinClassName);
 
             // WTF?
             if (!patchClass.isAnnotationPresent(CPatch.class))
             {
-                CFX.getLogger().warn("The patch class " + mixinClassName + " is missing the CPatch annotation!");
+                CFX.getLogger().warn("Ignoring patch class " + mixinClassName + " as it is missing the CPatch annotation");
+                CFX.getLogger().warn("This should normally never show up in a non-development environment, so if you're seeing this in such an environment, open an issue on GitHub immediately!");
                 return false;
             }
 
             // Gets the patch metadata
-            CPatch metadata = patchClass.getAnnotation(CPatch.class);
+            final CPatch metadata = patchClass.getAnnotation(CPatch.class);
 
             // Ignore patches if mods they conflict with are loaded
             for (String id : metadata.conflicts())
@@ -82,6 +87,25 @@ public class PatchManager implements IMixinConfigPlugin
                 if (loader.isModLoaded(id))
                 {
                     CFX.getLogger().warn("Ignoring patch " + mixinClassName + " as it conflicts with mod '" + id + "'");
+                    return false;
+                }
+            }
+
+            // Ignore patches if they are not compatible with the version of Minecraft that is currently running
+            for (String version : metadata.supportedVersions())
+            {
+                final Optional<ModContainer> minecraftContainer = loader.getModContainer("minecraft");
+
+                if (minecraftContainer.isEmpty())
+                {
+                    CFX.getLogger().error("Ignoring patch " + mixinClassName + " as the Minecraft mod container doesn't exist. This should never happen unless something has gone seriously wrong somewhere down the line.");
+                    return false;
+                }
+
+                // We're running a newer version of the game that doesn't support this patch. Ignore it.
+                if (minecraftContainer.get().getMetadata().getVersion() instanceof SemanticVersion sem && sem.compareTo(Version.parse(version)) < 0)
+                {
+                    CFX.getLogger().warn("Ignoring patch " + mixinClassName + " as it doesn't support this version of Minecraft (patch only supports versions " + version + ", we are running on Minecraft " + sem.getFriendlyString() + ")");
                     return false;
                 }
             }

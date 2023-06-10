@@ -29,7 +29,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
-@CPatch(name = "wnt.cfx.excessive_hearts", description = "wnt.cfx.excessive_hearts.desc")
+@CPatch(name = "wnt.cfx.excessive_hearts", description = "wnt.cfx.excessive_hearts.desc", supportedVersions = "<1.20")
 @Mixin(InGameHud.class)
 public class ExcessiveHearts
 {
