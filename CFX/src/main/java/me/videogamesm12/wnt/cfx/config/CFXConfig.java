@@ -162,7 +162,7 @@ public class CFXConfig implements ConfigData
             private Mode arrayDepthFix = Mode.OBVIOUS;
 
             @ConfigEntry.Gui.Tooltip
-            private long arrayDepthMaximum = 16;
+            private long arrayDepthMaximum = 64;
 
             public enum Mode
             {
